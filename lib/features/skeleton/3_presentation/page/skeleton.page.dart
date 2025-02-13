@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:le_spawn_frontend/core/configs/app-routes.config.dart';
+import 'package:le_spawn_frontend/features/auth/3_presentation/bloc/auth.cubit.dart';
+import 'package:le_spawn_frontend/features/auth/3_presentation/bloc/auth.state.dart';
+import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
+import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_state.dart';
+import 'package:le_spawn_frontend/features/skeleton/3_presentation/widgets/navbar.widget.dart';
+
+class SkeletonPage extends StatelessWidget {
+  final StatefulNavigationShell navigationShell;
+  
+  const SkeletonPage({
+    super.key,
+    required this.navigationShell,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<AuthCubit>(
+      create: (context) => AuthCubit()..appStarted(),
+      child: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          return switch (state) {
+            AuthLoadingState() => buildLoadingContent(),
+            UnauthenticatedState() => _handleUnauthenticated(context),
+            AuthenticatedState() => _buildAuthenticatedLayout(context),
+            _ => Container(),
+          };
+        },
+      ),
+    );
+  }
+
+  Widget buildLoadingContent() => const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Le Spawn'),
+            SizedBox(height: 16),
+            CircularProgressIndicator(),
+          ],
+        ),
+      );
+
+  Widget _handleUnauthenticated(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.go(AppRoutes.auth);
+    });
+    return Container();
+  }
+
+  Widget _buildAuthenticatedLayout(BuildContext context) {
+    return BlocProvider(
+      create: (context) => TabsCubit(),
+      child: BlocBuilder<TabsCubit, TabsState>(
+        builder: (context, tabsState) {
+          return Scaffold(
+            body: navigationShell,
+            bottomNavigationBar: NavbarWidget(
+              currentIndex: navigationShell.currentIndex,
+              onTabTapped: (index) => _onTabTapped(context, index),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _onTabTapped(BuildContext context, int index) {
+    navigationShell.goBranch(
+      index,
+      initialLocation: index == navigationShell.currentIndex,
+    );
+    context.read<TabsCubit>().setTabIndex(index);
+  }
+}
