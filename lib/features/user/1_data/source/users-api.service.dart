@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:le_spawn_frontend/features/auth/1_data/source/auth-local.service.dart';
-import 'package:le_spawn_frontend/core/constants/api-urls.dart';
+import 'package:le_spawn_frontend/core/constant/api-url.constant.dart';
 import 'package:le_spawn_frontend/core/network/dio_client.dart';
 import 'package:le_spawn_frontend/service-locator.dart';
 
@@ -17,10 +17,11 @@ class UsersApiServiceImpl extends UsersApiService {
   @override
   Future<Either> getMyProfile() async {
     try {
-      final accessToken = await serviceLocator<AuthLocalService>().getAccessToken();
+      final accessToken =
+          await serviceLocator<AuthLocalService>().getAccessToken();
 
       final response = await serviceLocator<DioClient>().get(
-        ApiUrls.getMyProfile,
+        ApiUrlConstant.getMyProfile,
         options: Options(
           headers: {
             'Authorization': 'Bearer $accessToken',
@@ -38,10 +39,11 @@ class UsersApiServiceImpl extends UsersApiService {
   @override
   Future<Either> getUserProfile(String userId) async {
     try {
-      final accessToken = await serviceLocator<AuthLocalService>().getAccessToken();
+      final accessToken =
+          await serviceLocator<AuthLocalService>().getAccessToken();
 
       final response = await serviceLocator<DioClient>().get(
-        '${ApiUrls.getUserProfile}/$userId',
+        '${ApiUrlConstant.getUserProfile}/$userId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $accessToken',
@@ -60,7 +62,7 @@ class UsersApiServiceImpl extends UsersApiService {
   Future<Either> checkIfPseudoExist(String pseudo) async {
     try {
       final response = await serviceLocator<DioClient>().get(
-        ApiUrls.checkIfPseudoExist,
+        ApiUrlConstant.checkIfPseudoExist,
         queryParameters: {
           'pseudo': pseudo,
         },

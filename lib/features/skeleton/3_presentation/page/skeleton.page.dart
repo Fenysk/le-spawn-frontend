@@ -6,11 +6,12 @@ import 'package:le_spawn_frontend/features/auth/3_presentation/bloc/auth.cubit.d
 import 'package:le_spawn_frontend/features/auth/3_presentation/bloc/auth.state.dart';
 import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
 import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_state.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/widgets/navbar.widget.dart';
+import 'package:le_spawn_frontend/features/skeleton/3_presentation/widgets/bottom-navbar.widget.dart';
+import 'package:le_spawn_frontend/features/skeleton/3_presentation/widgets/top-app-bar.widget.dart';
 
 class SkeletonPage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
-  
+
   const SkeletonPage({
     super.key,
     required this.navigationShell,
@@ -46,7 +47,7 @@ class SkeletonPage extends StatelessWidget {
 
   Widget _handleUnauthenticated(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.go(AppRoutes.auth);
+      context.go(AppRoutesConfig.auth);
     });
     return Container();
   }
@@ -57,8 +58,11 @@ class SkeletonPage extends StatelessWidget {
       child: BlocBuilder<TabsCubit, TabsState>(
         builder: (context, tabsState) {
           return Scaffold(
+            appBar: TopAppBarWidget(
+              tabsState: tabsState,
+            ),
             body: navigationShell,
-            bottomNavigationBar: NavbarWidget(
+            bottomNavigationBar: BottomNavbarWidget(
               currentIndex: navigationShell.currentIndex,
               onTabTapped: (index) => _onTabTapped(context, index),
             ),

@@ -31,4 +31,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true 
   assets:
+    - assets/images/
     - .env
+  fonts:
+    - family: Acephimere
+      fonts:
+        - asset: assets/fonts/acephimere/acephimere.ttf
+    - family: Grobold
+      fonts:
+        - asset: assets/fonts/grobold/grobold.ttf

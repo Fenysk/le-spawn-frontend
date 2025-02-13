@@ -116,7 +116,7 @@ class _RegisterTabState extends State<RegisterTab> {
       child: BlocListener<LoadingButtonCubit, LoadingButtonState>(
         listener: (context, state) {
           if (state is LoadingButtonSuccessState) {
-            context.go(AppRoutes.collections);
+            context.go(AppRoutesConfig.collections);
           }
 
           if (state is LoadingButtonFailureState) {

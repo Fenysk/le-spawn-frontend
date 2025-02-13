@@ -19,7 +19,7 @@ class LogoutButton extends StatelessWidget {
       child: BlocListener<LoadingButtonCubit, LoadingButtonState>(
         listener: (context, state) {
           if (state is LoadingButtonSuccessState) {
-            context.go(AppRoutes.auth);
+            context.go(AppRoutesConfig.auth);
           }
         },
         child: Builder(

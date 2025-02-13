@@ -12,14 +12,14 @@ final _collectionsNavigatorKey = GlobalKey<NavigatorState>();
 final _bankNavigatorKey = GlobalKey<NavigatorState>();
 final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
-final goRouter = GoRouter(
+final goRouterConfig = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutes.collections,
-   debugLogDiagnostics: true,
+  initialLocation: AppRoutesConfig.collections,
+  debugLogDiagnostics: true,
   routes: [
     GoRoute(
-      path: AppRoutes.auth,
-      name: AppRoutes.auth,
+      path: AppRoutesConfig.auth,
+      name: AppRoutesConfig.auth,
       builder: (context, state) => const AuthPage(),
     ),
     StatefulShellRoute.indexedStack(
@@ -31,8 +31,8 @@ final goRouter = GoRouter(
           navigatorKey: _collectionsNavigatorKey,
           routes: [
             GoRoute(
-              path: AppRoutes.collections,
-              name: AppRoutes.collections,
+              path: AppRoutesConfig.collections,
+              name: AppRoutesConfig.collections,
               builder: (context, state) => const CollectionsPage(),
             ),
           ],
@@ -41,8 +41,8 @@ final goRouter = GoRouter(
           navigatorKey: _bankNavigatorKey,
           routes: [
             GoRoute(
-              path: AppRoutes.bank,
-              name: AppRoutes.bank,
+              path: AppRoutesConfig.bank,
+              name: AppRoutesConfig.bank,
               builder: (context, state) => const BankPage(),
             ),
           ],
@@ -51,8 +51,8 @@ final goRouter = GoRouter(
           navigatorKey: _profileNavigatorKey,
           routes: [
             GoRoute(
-              path: AppRoutes.profile,
-              name: AppRoutes.profile,
+              path: AppRoutesConfig.profile,
+              name: AppRoutesConfig.profile,
               builder: (context, state) => const ProfilePage(),
             ),
           ],

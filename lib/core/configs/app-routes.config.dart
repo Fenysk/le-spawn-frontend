@@ -1,4 +1,4 @@
-class AppRoutes {
+class AppRoutesConfig {
   static const String auth = '/auth';
 
   static const String collections = '/collections';
