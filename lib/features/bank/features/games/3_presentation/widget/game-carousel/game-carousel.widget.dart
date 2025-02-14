@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:le_spawn_frontend/features/bank/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'dart:math';
-import 'package:le_spawn_frontend/features/bank/games/3_presentation/game-carousel/game-cover.widget.dart';
-import 'package:le_spawn_frontend/features/bank/games/3_presentation/game-carousel/game-carousel-debug.widget.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/3_presentation/widget/game-carousel/game-cover.widget.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/3_presentation/widget/game-carousel/game-carousel-debug.widget.dart';
 
 class GameCarouselWidget extends StatefulWidget {
   const GameCarouselWidget({

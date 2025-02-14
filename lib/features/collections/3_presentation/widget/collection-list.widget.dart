@@ -14,7 +14,7 @@ class CollectionListWidget extends StatelessWidget {
       create: (context) => CollectionsCubit()..loadCollections(),
       child: BlocBuilder<CollectionsCubit, CollectionsState>(
         builder: (context, state) => switch (state) {
-          CollectionsLoadedState() => _buildLoadedContent(state.collections),
+          CollectionsSuccessState() => _buildLoadedContent(state.collections),
           CollectionsLoadingState() => _buildLoadingContent(),
           CollectionsFailureState() => _buildFailureContent(state.errorMessage),
           _ => const SizedBox.shrink(),

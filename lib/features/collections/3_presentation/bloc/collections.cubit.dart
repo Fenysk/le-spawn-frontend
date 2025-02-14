@@ -14,7 +14,7 @@ class CollectionsCubit extends Cubit<CollectionsState> {
     final result = await serviceLocator<GetMyCollectionsUsecase>().execute();
     result.fold(
       (failure) => emit(CollectionsFailureState(errorMessage: failure.toString())),
-      (collections) => emit(CollectionsLoadedState(collections: collections)),
+      (collections) => emit(CollectionsSuccessState(collections: collections)),
     );
   }
 }

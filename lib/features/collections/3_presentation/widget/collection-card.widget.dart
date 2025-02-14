@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_frontend/core/theme/app.theme.dart';
-import 'package:le_spawn_frontend/features/bank/games/3_presentation/game-carousel/game-carousel.widget.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/3_presentation/widget/game-carousel/game-carousel.widget.dart';
 import 'package:le_spawn_frontend/features/collections/2_domain/entity/collection.entity.dart';
 
 class CollectionCard extends StatelessWidget {

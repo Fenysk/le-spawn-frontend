@@ -11,10 +11,10 @@ class CollectionsInitialState extends CollectionsState {}
 
 class CollectionsLoadingState extends CollectionsState {}
 
-class CollectionsLoadedState extends CollectionsState {
+class CollectionsSuccessState extends CollectionsState {
   final List<CollectionEntity> collections;
 
-  const CollectionsLoadedState({
+  const CollectionsSuccessState({
     required this.collections,
   });
 

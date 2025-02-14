@@ -1,7 +1,6 @@
-
 import 'dart:convert';
 
-import 'package:le_spawn_frontend/features/bank/platforms/2_domain/entity/platform.entity.dart';
+import 'package:le_spawn_frontend/features/bank/features/platforms/2_domain/entity/platform.entity.dart';
 import 'package:le_spawn_frontend/features/collections/1_data/model/many-game-paltform.model.dart';
 
 class PlatformModel {
@@ -28,8 +27,7 @@ class PlatformModel {
       'name': name,
       'abbreviation': abbreviation,
       'generation': generation,
-      'gamesRelation':
-          gamesRelation.map((relation) => relation.toMap()).toList(),
+      'gamesRelation': gamesRelation.map((relation) => relation.toMap()).toList(),
     };
   }
 
@@ -43,7 +41,6 @@ extension PlatformModelExtension on PlatformModel {
         name: name,
         abbreviation: abbreviation,
         generation: generation,
-        gamesRelation:
-            gamesRelation.map((relation) => relation.toEntity()).toList(),
+        gamesRelation: gamesRelation.map((relation) => relation.toEntity()).toList(),
       );
 }

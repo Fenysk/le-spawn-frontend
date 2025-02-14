@@ -1,4 +1,4 @@
-import 'package:le_spawn_frontend/features/bank/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/2_domain/entity/game.entity.dart';
 
 class GameCollectionItemEntity {
   final String id;

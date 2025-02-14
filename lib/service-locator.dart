@@ -8,6 +8,10 @@ import 'package:le_spawn_frontend/features/auth/2_domain/usecase/is-logged-in.us
 import 'package:le_spawn_frontend/features/auth/2_domain/usecase/login.usecase.dart';
 import 'package:le_spawn_frontend/features/auth/2_domain/usecase/logout.usecase.dart';
 import 'package:le_spawn_frontend/features/auth/2_domain/usecase/register.usecase.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/1_data/repository/games.repository-impl.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/1_data/source/games-api.service.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/2_domain/repository/games.repository.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/2_domain/usecase/get-game-from-barcode.usecase.dart';
 import 'package:le_spawn_frontend/features/collections/1_data/repository/collections.repository-impl.dart';
 import 'package:le_spawn_frontend/features/collections/1_data/source/collections-api.service.dart';
 import 'package:le_spawn_frontend/features/collections/2_domain/repository/collections.repository.dart';
@@ -32,11 +36,13 @@ void setupServiceLocator() {
   serviceLocator.registerSingleton<UsersApiService>(UsersApiServiceImpl());
   serviceLocator.registerSingleton<UserLocalService>(UserLocalServiceImpl());
   serviceLocator.registerSingleton<CollectionsApiService>(CollectionsApiServiceImpl());
+  serviceLocator.registerSingleton<GamesApiService>(GamesApiServiceImpl());
 
   //// Repositories
   serviceLocator.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   serviceLocator.registerSingleton<UsersRepository>(UsersRepositoryImpl());
   serviceLocator.registerSingleton<CollectionsRepository>(CollectionsRepositoryImpl());
+  serviceLocator.registerSingleton<GamesRepository>(GamesRepositoryImpl());
 
   //// Usecases
   serviceLocator.registerSingleton<RegisterUsecase>(RegisterUsecase());
@@ -47,4 +53,5 @@ void setupServiceLocator() {
   serviceLocator.registerSingleton<LogoutUsecase>(LogoutUsecase());
   serviceLocator.registerSingleton<LoginUsecase>(LoginUsecase());
   serviceLocator.registerSingleton<GetMyCollectionsUsecase>(GetMyCollectionsUsecase());
+  serviceLocator.registerSingleton<GetGameFromBarcodeUsecase>(GetGameFromBarcodeUsecase());
 }

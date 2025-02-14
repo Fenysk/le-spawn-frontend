@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_frontend/core/theme/app.theme.dart';
+import 'package:le_spawn_frontend/features/collections/features/add-new-game/widget/button-add-new-item.widget.dart';
 import 'package:le_spawn_frontend/features/collections/3_presentation/widget/collection-list.widget.dart';
 import 'package:outlined_text/outlined_text.dart';
 
@@ -9,27 +10,33 @@ class CollectionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appTheme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CollectionListWidget(),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: OutlinedText(
-              text: Text(
-                'Ma collection',
-                style: appTheme.textTheme.titleLarge,
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CollectionListWidget(),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: OutlinedText(
+                  text: Text(
+                    'Ma collection',
+                    style: appTheme.textTheme.titleLarge,
+                  ),
+                  strokes: [
+                    OutlinedTextStroke(width: 3, color: AppTheme.primaryText),
+                  ],
+                ),
               ),
-              strokes: [
-                OutlinedTextStroke(width: 3, color: AppTheme.primaryText),
-              ],
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+        ButtonAddNewItemWidget(),
+      ],
     );
   }
 }

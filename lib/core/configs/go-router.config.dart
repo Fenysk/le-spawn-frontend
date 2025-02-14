@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:le_spawn_frontend/core/configs/app-routes.config.dart';
 import 'package:le_spawn_frontend/features/auth/3_presentation/page/auth.page.dart';
 import 'package:le_spawn_frontend/features/bank/3_presentation/page/bank.page.dart';
+import 'package:le_spawn_frontend/features/collections/features/add-new-game/3_presentation/page/add-new-game.page.dart';
 import 'package:le_spawn_frontend/features/collections/3_presentation/page/collections.page.dart';
 import 'package:le_spawn_frontend/features/skeleton/3_presentation/page/skeleton.page.dart';
 import 'package:le_spawn_frontend/features/user/3_presentation/page/profile.page.dart';
@@ -34,6 +35,30 @@ final goRouterConfig = GoRouter(
               path: AppRoutesConfig.collections,
               name: AppRoutesConfig.collections,
               builder: (context, state) => const CollectionsPage(),
+              routes: [
+                GoRoute(
+                  path: AppRoutesConfig.addNewGamePath,
+                  name: "${AppRoutesConfig.collections}/${AppRoutesConfig.addNewGamePath}",
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const AddNewGamePage(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      return SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeInOut,
+                          ),
+                        ),
+                        child: child,
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),

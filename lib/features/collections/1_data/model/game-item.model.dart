@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:le_spawn_frontend/features/bank/games/1_data/model/game.model.dart';
+import 'package:le_spawn_frontend/features/bank/features/games/1_data/model/game.model.dart';
 import 'package:le_spawn_frontend/features/collections/2_domain/entity/game-item.entity.dart';
 
 class GameCollectionItemModel {
