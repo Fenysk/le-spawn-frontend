@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:le_spawn_frontend/features/bank/games/1_data/model/game.model.dart';
 import 'package:le_spawn_frontend/features/collections/2_domain/entity/game-item.entity.dart';
 
 class GameCollectionItemModel {
@@ -11,6 +12,7 @@ class GameCollectionItemModel {
   final String? statePaper;
   final String gameId;
   final String collectionId;
+  final GameModel game;
 
   GameCollectionItemModel({
     required this.id,
@@ -22,6 +24,7 @@ class GameCollectionItemModel {
     this.statePaper,
     required this.gameId,
     required this.collectionId,
+    required this.game,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +38,7 @@ class GameCollectionItemModel {
       'statePaper': statePaper,
       'gameId': gameId,
       'collectionId': collectionId,
+      'game': game.toMap(),
     };
   }
 
@@ -49,13 +53,13 @@ class GameCollectionItemModel {
       statePaper: map['statePaper'],
       gameId: map['gameId'] ?? '',
       collectionId: map['collectionId'] ?? '',
+      game: GameModel.fromMap(map['game'] ?? {}),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory GameCollectionItemModel.fromJson(String source) =>
-      GameCollectionItemModel.fromMap(json.decode(source));
+  factory GameCollectionItemModel.fromJson(String source) => GameCollectionItemModel.fromMap(json.decode(source));
 }
 
 extension GameCollectionItemModelExtension on GameCollectionItemModel {
@@ -69,5 +73,6 @@ extension GameCollectionItemModelExtension on GameCollectionItemModel {
         statePaper: statePaper,
         gameId: gameId,
         collectionId: collectionId,
+        game: game.toEntity(),
       );
 }

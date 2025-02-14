@@ -22,4 +22,11 @@ class ApiUrlConstant {
   static String get getMyProfile => '$baseUrl/users/my-profile';
   static String get getUserProfile => '$baseUrl/users/profile';
   static String get checkIfPseudoExist => '$baseUrl/users/check-pseudo';
+
+  // Collections
+  static String get getMyCollections => '$baseUrl/collections';
+  static String get getCollectionById => '$baseUrl/collections';
+  static String get createCollection => '$baseUrl/collections';
+  static String get updateCollection => '$baseUrl/collections';
+  static String get deleteCollection => '$baseUrl/collections';
 }

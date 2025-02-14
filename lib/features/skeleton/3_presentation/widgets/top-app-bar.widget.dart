@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_frontend/core/constant/image.constant.dart';
 import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_state.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/widgets/navbar-button.widget.dart';
 
 class TopAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final TabsState tabsState;

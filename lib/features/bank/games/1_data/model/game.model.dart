@@ -51,14 +51,33 @@ class GameModel {
       'screenshotsUrl': screenshotsUrl,
       'storyline': storyline,
       'summary': summary,
-      'platformsRelation':
-          platformsRelation.map((relation) => relation.toMap()).toList(),
-      'gameCollectionItem':
-          gameCollectionItem.map((item) => item.toMap()).toList(),
+      'platformsRelation': platformsRelation.map((relation) => relation.toMap()).toList(),
+      'gameCollectionItem': gameCollectionItem.map((item) => item.toMap()).toList(),
     };
   }
 
+  factory GameModel.fromMap(Map<String, dynamic> map) {
+    return GameModel(
+      id: map['id'],
+      igdbGameId: map['igdbGameId'],
+      barcodes: List<String>.from(map['barcodes']),
+      category: GameCategoryEnum.values.firstWhere((e) => e.toString().split('.').last == map['category']),
+      coverUrl: map['coverUrl'],
+      firstReleaseDate: DateTime.parse(map['firstReleaseDate']),
+      franchises: List<String>.from(map['franchises']),
+      genres: List<String>.from(map['genres']),
+      name: map['name'],
+      screenshotsUrl: List<String>.from(map['screenshotsUrl']),
+      storyline: map['storyline'],
+      summary: map['summary'],
+      platformsRelation: List<ManyGamePlatformModel>.from(map['platformsRelation']?.map((x) => ManyGamePlatformModel.fromMap(x)) ?? []),
+      gameCollectionItem: List<GameCollectionItemModel>.from(map['gameCollectionItem']?.map((x) => GameCollectionItemModel.fromMap(x)) ?? []),
+    );
+  }
+
   String toJson() => json.encode(toMap());
+
+  factory GameModel.fromJson(String source) => GameModel.fromMap(json.decode(source));
 }
 
 extension GameModelExtension on GameModel {
@@ -75,9 +94,7 @@ extension GameModelExtension on GameModel {
         screenshotsUrl: screenshotsUrl,
         storyline: storyline,
         summary: summary,
-        platformsRelation:
-            platformsRelation.map((relation) => relation.toEntity()).toList(),
-        gameCollectionItem:
-            gameCollectionItem.map((item) => item.toEntity()).toList(),
+        platformsRelation: platformsRelation.map((relation) => relation.toEntity()).toList(),
+        gameCollectionItem: gameCollectionItem.map((item) => item.toEntity()).toList(),
       );
 }

@@ -12,4 +12,11 @@ class CollectionEntity {
     required this.gameItems,
     required this.userId,
   });
+
+  factory CollectionEntity.empty() => CollectionEntity(
+        id: '',
+        title: '',
+        gameItems: [],
+        userId: '',
+      );
 }

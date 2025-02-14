@@ -10,6 +10,13 @@ class ManyGamePlatformModel {
     required this.platformId,
   });
 
+  factory ManyGamePlatformModel.fromMap(Map<String, dynamic> map) {
+    return ManyGamePlatformModel(
+      gameId: map['gameId'] as String,
+      platformId: map['platformId'] as String,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'gameId': gameId,

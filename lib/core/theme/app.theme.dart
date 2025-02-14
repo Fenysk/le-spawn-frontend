@@ -20,8 +20,10 @@ class AppTheme {
         fontFamily: FontConstant.acephimere,
         textTheme: TextTheme(
           titleLarge: TextStyle(
+            color: primaryBackground,
             fontSize: 24,
             fontFamily: FontConstant.grobold,
+            letterSpacing: 1,
             shadows: [
               Shadow(
                 color: Colors.black,
@@ -29,8 +31,6 @@ class AppTheme {
               ),
             ],
           ),
-          bodyLarge: const TextStyle(color: primaryText),
-          bodyMedium: const TextStyle(color: secondaryText),
         ),
         colorScheme: const ColorScheme.light(
           primary: accentRed,

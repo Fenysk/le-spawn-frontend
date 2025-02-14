@@ -17,7 +17,7 @@ class LoginTab extends StatelessWidget {
     required this.onGoToRegisterTab,
   });
 
-  final _emailController = TextEditingController(text: 'test@test.test');
+  final _emailController = TextEditingController(text: 'inbox@fenysk.fr');
   final _passwordController = TextEditingController(text: 'Password1@');
 
   @override
