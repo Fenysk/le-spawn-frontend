@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:le_spawn_frontend/core/network/refresh-token.interceptor.dart';
+import 'package:le_spawn_fr/core/network/refresh-token.interceptor.dart';
 import 'logger.interceptor.dart';
 
 class DioClient {

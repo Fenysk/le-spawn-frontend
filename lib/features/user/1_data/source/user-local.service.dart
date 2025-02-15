@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:le_spawn_frontend/features/user/1_data/model/user.model.dart';
+import 'package:le_spawn_fr/features/user/1_data/model/user.model.dart';
 
 abstract class UserLocalService {
   Future<UserModel> getCurrentUser();

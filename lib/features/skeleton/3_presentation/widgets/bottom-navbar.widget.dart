@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/widgets/navbar-button.widget.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/widgets/navbar-button.widget.dart';
 
 class BottomNavbarWidget extends StatelessWidget {
   final int currentIndex;

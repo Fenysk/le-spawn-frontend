@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_frontend/features/user/2_domain/entity/user.entity.dart';
-import 'package:le_spawn_frontend/features/user/3_presentation/bloc/user-display.cubit.dart';
-import 'package:le_spawn_frontend/features/user/3_presentation/bloc/user-display.state.dart';
+import 'package:le_spawn_fr/features/user/2_domain/entity/user.entity.dart';
+import 'package:le_spawn_fr/features/user/3_presentation/bloc/user-display.cubit.dart';
+import 'package:le_spawn_fr/features/user/3_presentation/bloc/user-display.state.dart';
 
 class UserDisplayWidget extends StatelessWidget {
   final String? userId;

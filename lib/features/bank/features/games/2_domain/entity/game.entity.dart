@@ -1,6 +1,6 @@
-import 'package:le_spawn_frontend/core/enums/game-category.enum.dart';
-import 'package:le_spawn_frontend/features/collections/2_domain/entity/game-item.entity.dart';
-import 'package:le_spawn_frontend/features/collections/2_domain/entity/many-game-platform.entity.dart';
+import 'package:le_spawn_fr/core/enums/game-category.enum.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/entity/many-game-platform.entity.dart';
 
 class GameEntity {
   final String id;

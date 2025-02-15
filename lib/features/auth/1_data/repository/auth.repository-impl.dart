@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:le_spawn_frontend/features/auth/1_data/dto/login.request.dart';
-import 'package:le_spawn_frontend/features/auth/1_data/dto/register.request.dart';
-import 'package:le_spawn_frontend/features/auth/1_data/source/auth-api.service.dart';
-import 'package:le_spawn_frontend/features/auth/1_data/source/auth-local.service.dart';
-import 'package:le_spawn_frontend/features/auth/2_domain/repository/auth.repository.dart';
-import 'package:le_spawn_frontend/features/user/1_data/model/user.model.dart';
-import 'package:le_spawn_frontend/features/user/1_data/source/user-local.service.dart';
-import 'package:le_spawn_frontend/service-locator.dart';
+import 'package:le_spawn_fr/features/auth/1_data/dto/login.request.dart';
+import 'package:le_spawn_fr/features/auth/1_data/dto/register.request.dart';
+import 'package:le_spawn_fr/features/auth/1_data/source/auth-api.service.dart';
+import 'package:le_spawn_fr/features/auth/1_data/source/auth-local.service.dart';
+import 'package:le_spawn_fr/features/auth/2_domain/repository/auth.repository.dart';
+import 'package:le_spawn_fr/features/user/1_data/model/user.model.dart';
+import 'package:le_spawn_fr/features/user/1_data/source/user-local.service.dart';
+import 'package:le_spawn_fr/service-locator.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   @override

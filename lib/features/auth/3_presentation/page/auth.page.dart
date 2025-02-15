@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:le_spawn_frontend/features/auth/3_presentation/widget/login.tab.dart';
-import 'package:le_spawn_frontend/features/auth/3_presentation/widget/register.tab.dart';
+import 'package:le_spawn_fr/features/auth/3_presentation/widget/login.tab.dart';
+import 'package:le_spawn_fr/features/auth/3_presentation/widget/register.tab.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});

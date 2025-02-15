@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:le_spawn_frontend/core/configs/go-router.config.dart';
-import 'package:le_spawn_frontend/core/theme/app.theme.dart';
-import 'package:le_spawn_frontend/service-locator.dart';
+import 'package:le_spawn_fr/core/configs/go-router.config.dart';
+import 'package:le_spawn_fr/core/theme/app.theme.dart';
+import 'package:le_spawn_fr/service-locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:le_spawn_frontend/features/bank/features/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
 abstract class AddNewGameState extends Equatable {
   const AddNewGameState();

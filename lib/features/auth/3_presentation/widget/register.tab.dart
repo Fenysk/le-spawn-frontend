@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:le_spawn_frontend/core/configs/app-routes.config.dart';
-import 'package:le_spawn_frontend/core/widgets/loading-button/bloc/loading-button.state-cubit.dart';
-import 'package:le_spawn_frontend/core/widgets/loading-button/bloc/loading-button.state.dart';
-import 'package:le_spawn_frontend/core/widgets/loading-button/custom-loading-button.widget.dart';
-import 'package:le_spawn_frontend/features/auth/1_data/dto/register.request.dart';
-import 'package:le_spawn_frontend/features/auth/2_domain/usecase/register.usecase.dart';
-import 'package:le_spawn_frontend/features/user/2_domain/repository/users.repository.dart';
-import 'package:le_spawn_frontend/service-locator.dart';
+import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
+import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.state-cubit.dart';
+import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.state.dart';
+import 'package:le_spawn_fr/core/widgets/loading-button/custom-loading-button.widget.dart';
+import 'package:le_spawn_fr/features/auth/1_data/dto/register.request.dart';
+import 'package:le_spawn_fr/features/auth/2_domain/usecase/register.usecase.dart';
+import 'package:le_spawn_fr/features/user/2_domain/repository/users.repository.dart';
+import 'package:le_spawn_fr/service-locator.dart';
 import 'dart:async';
 
 class RegisterTab extends StatefulWidget {
@@ -45,8 +45,7 @@ class _RegisterTabState extends State<RegisterTab> {
       return 'Email is required';
     }
 
-    final emailRegex =
-        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     if (!emailRegex.hasMatch(email)) {
       return 'Invalid email format';
     }
@@ -59,8 +58,7 @@ class _RegisterTabState extends State<RegisterTab> {
       return 'Password is required';
     }
 
-    final passwordRegex = RegExp(
-        r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+    final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
     if (!passwordRegex.hasMatch(password)) {
       return 'Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character';
     }
@@ -71,12 +69,9 @@ class _RegisterTabState extends State<RegisterTab> {
   Future<void> _checkIfPseudoExist(String pseudo) async {
     _checkIfPseudoExistDebounce?.cancel();
 
-    _checkIfPseudoExistDebounce =
-        Timer(const Duration(milliseconds: 300), () async {
-      final result =
-          await serviceLocator<UsersRepository>().checkIfPseudoExist(pseudo);
-      _checkIfPseudoExistErrorMessage =
-          result.fold((error) => error, (_) => null);
+    _checkIfPseudoExistDebounce = Timer(const Duration(milliseconds: 300), () async {
+      final result = await serviceLocator<UsersRepository>().checkIfPseudoExist(pseudo);
+      _checkIfPseudoExistErrorMessage = result.fold((error) => error, (_) => null);
       _formKey.currentState?.validate();
     });
   }

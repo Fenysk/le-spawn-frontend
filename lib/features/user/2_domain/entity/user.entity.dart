@@ -1,5 +1,5 @@
-import 'package:le_spawn_frontend/core/enums/role.enum.dart';
-import 'package:le_spawn_frontend/features/user/2_domain/entity/profile.entity.dart';
+import 'package:le_spawn_fr/core/enums/role.enum.dart';
+import 'package:le_spawn_fr/features/user/2_domain/entity/profile.entity.dart';
 
 class UserEntity {
   final String id;

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_frontend/features/bank/features/games/2_domain/usecase/get-game-from-barcode.usecase.dart';
-import 'package:le_spawn_frontend/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.state.dart';
-import 'package:le_spawn_frontend/service-locator.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/get-game-from-barcode.usecase.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.state.dart';
+import 'package:le_spawn_fr/service-locator.dart';
 
 class AddNewGameCubit extends Cubit<AddNewGameState> {
   AddNewGameCubit() : super(AddNewGameInitialState());

@@ -1,17 +1,12 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:le_spawn_frontend/core/theme/app.theme.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
+import 'package:le_spawn_fr/core/theme/app.theme.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
 
-IconData getIconData({required TabType type, required bool isFilled}) =>
-    switch (type) {
-      TabType.collections =>
-        isFilled ? Icons.gamepad_rounded : Icons.games_outlined,
-      TabType.bank => isFilled
-          ? FluentIcons.compass_northwest_28_filled
-          : FluentIcons.compass_northwest_28_regular,
-      TabType.profile =>
-        isFilled ? FluentIcons.person_32_filled : FluentIcons.person_32_regular,
+IconData getIconData({required TabType type, required bool isFilled}) => switch (type) {
+      TabType.collections => isFilled ? Icons.gamepad_rounded : Icons.games_outlined,
+      TabType.bank => isFilled ? FluentIcons.compass_northwest_28_filled : FluentIcons.compass_northwest_28_regular,
+      TabType.profile => isFilled ? FluentIcons.person_32_filled : FluentIcons.person_32_regular,
     };
 
 String getLabelData({required TabType type}) => switch (type) {
@@ -54,9 +49,7 @@ class NavbarButtonWidget extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   child: Icon(
                     getIconData(type: type, isFilled: isActive),
-                    color: isActive
-                        ? AppTheme.primaryBackground
-                        : themeData.colorScheme.onSurface,
+                    color: isActive ? AppTheme.primaryBackground : themeData.colorScheme.onSurface,
                     shadows: [
                       if (isActive)
                         BoxShadow(
@@ -73,9 +66,7 @@ class NavbarButtonWidget extends StatelessWidget {
                   style: themeData.textTheme.bodySmall!.copyWith(
                     fontSize: isActive ? 14 : 12,
                     fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-                    color: isActive
-                        ? AppTheme.primaryBackground
-                        : themeData.colorScheme.onSurface,
+                    color: isActive ? AppTheme.primaryBackground : themeData.colorScheme.onSurface,
                     shadows: [
                       if (isActive)
                         BoxShadow(

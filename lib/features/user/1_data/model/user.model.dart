@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:le_spawn_frontend/core/enums/role.enum.dart';
-import 'package:le_spawn_frontend/features/collections/1_data/model/collection.model.dart';
-import 'package:le_spawn_frontend/features/user/1_data/model/profile.model.dart';
-import 'package:le_spawn_frontend/features/user/2_domain/entity/user.entity.dart';
+import 'package:le_spawn_fr/core/enums/role.enum.dart';
+import 'package:le_spawn_fr/features/collections/1_data/model/collection.model.dart';
+import 'package:le_spawn_fr/features/user/1_data/model/profile.model.dart';
+import 'package:le_spawn_fr/features/user/2_domain/entity/user.entity.dart';
 
 class UserModel {
   final String id;
@@ -29,12 +29,9 @@ class UserModel {
       'email': email,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
-      'roles': roles
-          .map((role) => role.toString().split('.').last.toLowerCase())
-          .toList(),
+      'roles': roles.map((role) => role.toString().split('.').last.toLowerCase()).toList(),
       'profile': profile?.toMap(),
-      'collections':
-          collections.map((collection) => collection.toMap()).toList(),
+      'collections': collections.map((collection) => collection.toMap()).toList(),
     };
   }
 

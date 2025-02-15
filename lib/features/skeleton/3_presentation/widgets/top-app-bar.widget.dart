@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:le_spawn_frontend/core/constant/image.constant.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_state.dart';
+import 'package:le_spawn_fr/core/constant/image.constant.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_state.dart';
 
 class TopAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final TabsState tabsState;

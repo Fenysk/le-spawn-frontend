@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:le_spawn_frontend/features/bank/features/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
 class AddNewGameFormTab extends StatelessWidget {
   final GameEntity? game;

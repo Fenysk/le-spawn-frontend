@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:le_spawn_frontend/core/enums/game-category.enum.dart';
-import 'package:le_spawn_frontend/features/bank/features/games/2_domain/entity/game.entity.dart';
-import 'package:le_spawn_frontend/features/collections/1_data/model/game-item.model.dart';
-import 'package:le_spawn_frontend/features/collections/1_data/model/many-game-paltform.model.dart';
+import 'package:le_spawn_fr/core/enums/game-category.enum.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_fr/features/collections/1_data/model/game-item.model.dart';
+import 'package:le_spawn_fr/features/collections/1_data/model/many-game-paltform.model.dart';
 
 class GameModel {
   final String id;

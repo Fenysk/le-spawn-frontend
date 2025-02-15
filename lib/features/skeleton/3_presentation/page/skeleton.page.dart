@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:le_spawn_frontend/core/configs/app-routes.config.dart';
-import 'package:le_spawn_frontend/features/auth/3_presentation/bloc/auth.cubit.dart';
-import 'package:le_spawn_frontend/features/auth/3_presentation/bloc/auth.state.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_state.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/widgets/bottom-navbar.widget.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/widgets/top-app-bar.widget.dart';
+import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
+import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth.cubit.dart';
+import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth.state.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_state.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/widgets/bottom-navbar.widget.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/widgets/top-app-bar.widget.dart';
 
 class SkeletonPage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;

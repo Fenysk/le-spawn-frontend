@@ -1,4 +1,4 @@
-import 'package:le_spawn_frontend/features/collections/2_domain/entity/many-game-platform.entity.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/entity/many-game-platform.entity.dart';
 
 class PlatformEntity {
   final String id;

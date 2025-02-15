@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_frontend/features/collections/2_domain/entity/collection.entity.dart';
-import 'package:le_spawn_frontend/features/collections/2_domain/usecase/get-my-collections.usecase.dart';
-import 'package:le_spawn_frontend/service-locator.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.entity.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/usecase/get-my-collections.usecase.dart';
+import 'package:le_spawn_fr/service-locator.dart';
 
 part 'collections.state.dart';
 

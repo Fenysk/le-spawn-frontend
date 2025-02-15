@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:le_spawn_frontend/features/auth/1_data/source/auth-local.service.dart';
-import 'package:le_spawn_frontend/core/constant/api-url.constant.dart';
-import 'package:le_spawn_frontend/core/network/dio_client.dart';
-import 'package:le_spawn_frontend/service-locator.dart';
+import 'package:le_spawn_fr/features/auth/1_data/source/auth-local.service.dart';
+import 'package:le_spawn_fr/core/constant/api-url.constant.dart';
+import 'package:le_spawn_fr/core/network/dio_client.dart';
+import 'package:le_spawn_fr/service-locator.dart';
 
 abstract class CollectionsApiService {
   Future<Either<String, List<dynamic>>> getMyCollections();

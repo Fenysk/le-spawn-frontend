@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:le_spawn_frontend/features/collections/1_data/model/game-item.model.dart';
-import 'package:le_spawn_frontend/features/collections/2_domain/entity/collection.entity.dart';
+import 'package:le_spawn_fr/features/collections/1_data/model/game-item.model.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.entity.dart';
 
 class CollectionModel {
   final String id;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:le_spawn_frontend/core/configs/app-routes.config.dart';
-import 'package:le_spawn_frontend/core/theme/app.theme.dart';
+import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
+import 'package:le_spawn_fr/core/theme/app.theme.dart';
 
 class ButtonAddNewItemWidget extends StatelessWidget {
   const ButtonAddNewItemWidget({super.key});

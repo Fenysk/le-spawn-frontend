@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:le_spawn_frontend/features/collections/1_data/model/collection.model.dart';
-import 'package:le_spawn_frontend/features/collections/1_data/source/collections-api.service.dart';
-import 'package:le_spawn_frontend/features/collections/2_domain/entity/collection.entity.dart';
-import 'package:le_spawn_frontend/features/collections/2_domain/repository/collections.repository.dart';
-import 'package:le_spawn_frontend/service-locator.dart';
+import 'package:le_spawn_fr/features/collections/1_data/model/collection.model.dart';
+import 'package:le_spawn_fr/features/collections/1_data/source/collections-api.service.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.entity.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/repository/collections.repository.dart';
+import 'package:le_spawn_fr/service-locator.dart';
 
 class CollectionsRepositoryImpl implements CollectionsRepository {
   @override

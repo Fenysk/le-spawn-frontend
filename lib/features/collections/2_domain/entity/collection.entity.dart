@@ -1,4 +1,4 @@
-import 'package:le_spawn_frontend/features/collections/2_domain/entity/game-item.entity.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
 
 class CollectionEntity {
   final String id;

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:le_spawn_frontend/features/user/2_domain/entity/profile.entity.dart';
+import 'package:le_spawn_fr/features/user/2_domain/entity/profile.entity.dart';
 
 class ProfileModel {
   final String? pseudo;

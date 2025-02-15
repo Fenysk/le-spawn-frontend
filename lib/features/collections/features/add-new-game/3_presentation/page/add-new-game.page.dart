@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_frontend/features/bank/features/games/2_domain/entity/game.entity.dart';
-import 'package:le_spawn_frontend/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.cubit.dart';
-import 'package:le_spawn_frontend/features/collections/features/add-new-game/3_presentation/tabs/1_game-detection.tab.dart';
-import 'package:le_spawn_frontend/features/collections/features/add-new-game/3_presentation/tabs/2_add-new-game-form.tab.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/tabs/1_game-detection.tab.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/tabs/2_add-new-game-form.tab.dart';
 
 class AddNewGamePage extends StatefulWidget {
   const AddNewGamePage({super.key});

@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_frontend/features/bank/features/games/2_domain/entity/game.entity.dart';
-import 'package:le_spawn_frontend/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.cubit.dart';
-import 'package:le_spawn_frontend/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.state.dart';
-import 'package:le_spawn_frontend/features/collections/features/add-new-game/widget/barcode-scanner.widget.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.state.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-game/widget/barcode-scanner.widget.dart';
 
 class GameDetectionTab extends StatefulWidget {
   final Function(GameEntity) onGameFetched;

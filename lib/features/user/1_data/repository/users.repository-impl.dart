@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:le_spawn_frontend/features/user/1_data/model/user.model.dart';
-import 'package:le_spawn_frontend/features/user/1_data/source/user-local.service.dart';
-import 'package:le_spawn_frontend/features/user/1_data/source/users-api.service.dart';
-import 'package:le_spawn_frontend/features/user/2_domain/entity/user.entity.dart';
-import 'package:le_spawn_frontend/features/user/2_domain/repository/users.repository.dart';
-import 'package:le_spawn_frontend/service-locator.dart';
+import 'package:le_spawn_fr/features/user/1_data/model/user.model.dart';
+import 'package:le_spawn_fr/features/user/1_data/source/user-local.service.dart';
+import 'package:le_spawn_fr/features/user/1_data/source/users-api.service.dart';
+import 'package:le_spawn_fr/features/user/2_domain/entity/user.entity.dart';
+import 'package:le_spawn_fr/features/user/2_domain/repository/users.repository.dart';
+import 'package:le_spawn_fr/service-locator.dart';
 
 class UsersRepositoryImpl extends UsersRepository {
   @override

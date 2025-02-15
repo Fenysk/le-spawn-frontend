@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:le_spawn_frontend/core/constant/font.constant.dart';
+import 'package:le_spawn_fr/core/constant/font.constant.dart';
 
 class AppTheme {
   static const Color primaryText = Colors.black;

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:le_spawn_frontend/features/user/2_domain/entity/user.entity.dart';
+import 'package:le_spawn_fr/features/user/2_domain/entity/user.entity.dart';
 
 abstract class UserDisplayState extends Equatable {
   const UserDisplayState();
@@ -11,7 +11,7 @@ abstract class UserDisplayState extends Equatable {
 class UserDisplayLoading extends UserDisplayState {}
 
 class UserDisplayLoaded extends UserDisplayState {
-  final UserEntity user;  
+  final UserEntity user;
 
   const UserDisplayLoaded({required this.user});
 }

@@ -1,7 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_frontend/features/skeleton/3_presentation/bloc/tabs_state.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_state.dart';
 
-enum TabType { collections, bank, profile }
+enum TabType {
+  collections,
+  bank,
+  profile
+}
 
 class TabsCubit extends Cubit<TabsState> {
   TabsCubit() : super(const TabsState(currentTab: TabType.collections));

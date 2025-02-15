@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:le_spawn_frontend/features/bank/features/platforms/2_domain/entity/platform.entity.dart';
-import 'package:le_spawn_frontend/features/collections/1_data/model/many-game-paltform.model.dart';
+import 'package:le_spawn_fr/features/bank/features/platforms/2_domain/entity/platform.entity.dart';
+import 'package:le_spawn_fr/features/collections/1_data/model/many-game-paltform.model.dart';
 
 class PlatformModel {
   final String id;
