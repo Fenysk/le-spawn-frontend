@@ -25,9 +25,9 @@ class RegisterTab extends StatefulWidget {
 
 class _RegisterTabState extends State<RegisterTab> {
   final _formKey = GlobalKey<FormState>();
-  final _pseudoController = TextEditingController(text: 'Test');
-  final _emailController = TextEditingController(text: 'test@test.test');
-  final _passwordController = TextEditingController(text: 'Password1@');
+  final _pseudoController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   Timer? _checkIfPseudoExistDebounce;
   String? _checkIfPseudoExistErrorMessage;

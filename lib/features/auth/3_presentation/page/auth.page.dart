@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:le_spawn_fr/core/constant/image.constant.dart';
+import 'package:le_spawn_fr/core/theme/app.theme.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/widget/login.tab.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/widget/register.tab.dart';
 
@@ -34,7 +36,6 @@ class _AuthPageState extends State<AuthPage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -42,12 +43,12 @@ class _AuthPageState extends State<AuthPage> with SingleTickerProviderStateMixin
         child: Stack(
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 2 / 9),
-                Text(
-                  'Le Spawn, l\'application ultime\npour les collectionneurs !',
-                  style: themeData.textTheme.headlineLarge,
-                  textAlign: TextAlign.center,
+                const SizedBox(height: 32),
+                Image.asset(
+                  ImageConstant.logoTextTransparentPath,
+                  height: 60,
                 ),
                 const SizedBox(height: 16),
                 Expanded(
