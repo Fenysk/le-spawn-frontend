@@ -1,6 +1,6 @@
 import 'package:le_spawn_fr/core/enums/game-category.enum.dart';
+import 'package:le_spawn_fr/features/bank/features/platforms/2_domain/entity/platform.entity.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
-import 'package:le_spawn_fr/features/collections/2_domain/entity/many-game-platform.entity.dart';
 
 class GameEntity {
   final String id;
@@ -15,8 +15,8 @@ class GameEntity {
   final List<String> screenshotsUrl;
   final String? storyline;
   final String? summary;
-  final List<ManyGamePlatformEntity> platformsRelation;
-  final List<GameCollectionItemEntity> gameCollectionItem;
+  final List<PlatformEntity> platforms;
+  final List<GameItemEntity> gameItems;
 
   GameEntity({
     required this.id,
@@ -31,7 +31,7 @@ class GameEntity {
     required this.screenshotsUrl,
     this.storyline,
     this.summary,
-    required this.platformsRelation,
-    required this.gameCollectionItem,
+    required this.platforms,
+    required this.gameItems,
   });
 }

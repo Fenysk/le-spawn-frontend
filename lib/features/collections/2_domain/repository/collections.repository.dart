@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.entity.dart';
 
 abstract class CollectionsRepository {
+  List<CollectionEntity> get collectionsCache;
+
   Future<Either<String, List<CollectionEntity>>> getMyCollections();
 
   Future<Either<String, CollectionEntity>> getCollectionById(String collectionId);

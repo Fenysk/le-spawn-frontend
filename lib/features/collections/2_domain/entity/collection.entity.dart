@@ -3,7 +3,7 @@ import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entit
 class CollectionEntity {
   final String id;
   final String title;
-  final List<GameCollectionItemEntity> gameItems;
+  final List<GameItemEntity> gameItems;
   final String userId;
 
   CollectionEntity({

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth.cubit.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth.state.dart';
+import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_state.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/widgets/bottom-navbar.widget.dart';
@@ -53,8 +54,11 @@ class SkeletonPage extends StatelessWidget {
   }
 
   Widget _buildAuthenticatedLayout(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TabsCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => TabsCubit()),
+        BlocProvider(create: (context) => CollectionsCubit()..loadCollections()),
+      ],
       child: BlocBuilder<TabsCubit, TabsState>(
         builder: (context, tabsState) {
           return Scaffold(

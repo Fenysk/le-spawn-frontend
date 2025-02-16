@@ -16,6 +16,10 @@ import 'package:le_spawn_fr/features/collections/1_data/repository/collections.r
 import 'package:le_spawn_fr/features/collections/1_data/source/collections-api.service.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/repository/collections.repository.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/usecase/get-my-collections.usecase.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/repository/new-item.repository-impl.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/source/new-item-api.service.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/repository/new-item.repository.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/usecase/add-game-item-to-collection.usecase.dart';
 import 'package:le_spawn_fr/features/user/1_data/repository/users.repository-impl.dart';
 import 'package:le_spawn_fr/features/user/1_data/source/user-local.service.dart';
 import 'package:le_spawn_fr/features/user/1_data/source/users-api.service.dart';
@@ -37,12 +41,14 @@ void setupServiceLocator() {
   serviceLocator.registerSingleton<UserLocalService>(UserLocalServiceImpl());
   serviceLocator.registerSingleton<CollectionsApiService>(CollectionsApiServiceImpl());
   serviceLocator.registerSingleton<GamesApiService>(GamesApiServiceImpl());
+  serviceLocator.registerSingleton<NewItemApiService>(NewItemApiServiceImpl());
 
   //// Repositories
   serviceLocator.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   serviceLocator.registerSingleton<UsersRepository>(UsersRepositoryImpl());
   serviceLocator.registerSingleton<CollectionsRepository>(CollectionsRepositoryImpl());
   serviceLocator.registerSingleton<GamesRepository>(GamesRepositoryImpl());
+  serviceLocator.registerSingleton<NewItemRepository>(NewItemRepositoryImpl());
 
   //// Usecases
   serviceLocator.registerSingleton<RegisterUsecase>(RegisterUsecase());
@@ -54,4 +60,5 @@ void setupServiceLocator() {
   serviceLocator.registerSingleton<LoginUsecase>(LoginUsecase());
   serviceLocator.registerSingleton<GetMyCollectionsUsecase>(GetMyCollectionsUsecase());
   serviceLocator.registerSingleton<GetGameFromBarcodeUsecase>(GetGameFromBarcodeUsecase());
+  serviceLocator.registerSingleton<AddGameItemToCollectionUsecase>(AddGameItemToCollectionUsecase());
 }

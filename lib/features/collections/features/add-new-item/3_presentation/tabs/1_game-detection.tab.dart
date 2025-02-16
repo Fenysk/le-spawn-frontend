@@ -1,20 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.cubit.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/bloc/add-new-game.state.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-game/widget/barcode-scanner.widget.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/widget/barcode-scanner.widget.dart';
 
 class GameDetectionTab extends StatefulWidget {
-  final Function(GameEntity) onGameFetched;
-  final Function() skipStep;
-
   const GameDetectionTab({
     super.key,
-    required this.onGameFetched,
-    required this.skipStep,
   });
 
   @override
@@ -43,8 +35,12 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
   void _showBarcodeDrawer() {
     showModalBottomSheet<void>(
       context: context,
-      builder: (context) => BarcodeScannerWidget(
-        onCodeDetected: _onCodeDetected,
+      isScrollControlled: true,
+      builder: (modalContext) => BlocProvider.value(
+        value: BlocProvider.of<AddNewGameCubit>(context),
+        child: BarcodeScannerWidget(
+          onCodeDetected: _onCodeDetected,
+        ),
       ),
     );
   }
@@ -69,17 +65,6 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddNewGameCubit, AddNewGameState>(
-        builder: (context, state) => switch (state) {
-              AddNewGameInitialState() => _buildMethodSelectionDetection(),
-              AddNewGameLoadingState() => _buildLoadingContent(),
-              AddNewGameSuccessState() => _buildSuccessContent(state.game),
-              AddNewGameFailureState() => _buildFailureContent(),
-              _ => const SizedBox.shrink(),
-            });
-  }
-
-  Center _buildMethodSelectionDetection() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +79,7 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
           ),
           const SizedBox(height: 20),
           Tooltip(
-            message: photoShouldEnable ? null : '⚠️ Mobile only',
+            message: photoShouldEnable ? '' : '⚠️ Mobile only',
             child: ElevatedButton.icon(
               onPressed: barcodeShouldEnable ? _showBarcodeDrawer : null,
               icon: const Icon(Icons.qr_code_scanner),
@@ -103,7 +88,7 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
           ),
           const SizedBox(height: 20),
           Tooltip(
-            message: photoShouldEnable ? null : '⚠️ Mobile only',
+            message: photoShouldEnable ? '' : '⚠️ Mobile only',
             child: ElevatedButton.icon(
               onPressed: photoShouldEnable ? _showPhotoCaptureDrawer : null,
               icon: const Icon(Icons.camera_alt),
@@ -116,27 +101,8 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
             icon: const Icon(Icons.upload_file),
             label: const Text('Upload File'),
           ),
-          const SizedBox(height: 40),
-          SizedBox(width: 200, child: const Divider()),
-          const SizedBox(height: 40),
-          ElevatedButton.icon(
-            onPressed: widget.skipStep,
-            icon: const Icon(Icons.skip_next),
-            label: const Text('Skip step'),
-          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildLoadingContent() => const Center(child: CircularProgressIndicator());
-
-  Widget _buildFailureContent() => const Center(child: Text('Failure!'));
-
-  Widget _buildSuccessContent(GameEntity gameData) {
-    widget.onGameFetched(gameData);
-    return Center(
-      child: Text('Success! ${gameData.name}'),
     );
   }
 }

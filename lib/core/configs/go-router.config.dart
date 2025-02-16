@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/page/auth.page.dart';
 import 'package:le_spawn_fr/features/bank/3_presentation/page/bank.page.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-game/3_presentation/page/add-new-game.page.dart';
+import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/page/add-new-game.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/page/collections.page.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/page/skeleton.page.dart';
 import 'package:le_spawn_fr/features/user/3_presentation/page/profile.page.dart';
@@ -34,7 +36,11 @@ final goRouterConfig = GoRouter(
             GoRoute(
               path: AppRoutesConfig.collections,
               name: AppRoutesConfig.collections,
-              builder: (context, state) => const CollectionsPage(),
+              builder: (context, state) {
+                final shouldRefresh = state.uri.queryParameters['shouldRefresh'] == 'true';
+                if (shouldRefresh) BlocProvider.of<CollectionsCubit>(context).loadCollections();
+                return const CollectionsPage();
+              },
               routes: [
                 GoRoute(
                   path: AppRoutesConfig.addNewGamePath,

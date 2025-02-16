@@ -23,6 +23,17 @@ class AddNewGameSuccessState extends AddNewGameState {
       ];
 }
 
+class AddNewGameValidState extends AddNewGameState {
+  final GameEntity game;
+
+  const AddNewGameValidState({required this.game});
+
+  @override
+  List<Object> get props => [
+        game
+      ];
+}
+
 class AddNewGameFailureState extends AddNewGameState {
   final String errorMessage;
 

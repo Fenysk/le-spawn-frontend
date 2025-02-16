@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:le_spawn_fr/features/bank/features/games/1_data/model/game.model.dart';
 import 'package:le_spawn_fr/features/bank/features/platforms/2_domain/entity/platform.entity.dart';
-import 'package:le_spawn_fr/features/collections/1_data/model/many-game-paltform.model.dart';
 
 class PlatformModel {
   final String id;
@@ -9,7 +9,7 @@ class PlatformModel {
   final String name;
   final String abbreviation;
   final int? generation;
-  final List<ManyGamePlatformModel> gamesRelation;
+  final List<GameModel> games;
 
   PlatformModel({
     required this.id,
@@ -17,8 +17,23 @@ class PlatformModel {
     required this.name,
     required this.abbreviation,
     this.generation,
-    required this.gamesRelation,
+    required this.games,
   });
+
+  factory PlatformModel.fromMap(Map<String, dynamic> map) {
+    return PlatformModel(
+      id: map['id'] as String,
+      igdbPlatformId: map['igdbPlatformId'] as int?,
+      name: map['name'] as String,
+      abbreviation: map['abbreviation'] as String,
+      generation: map['generation'] as int?,
+      games: List<GameModel>.from(
+        (map['games'] as List<dynamic>).map(
+          (x) => GameModel.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,11 +42,13 @@ class PlatformModel {
       'name': name,
       'abbreviation': abbreviation,
       'generation': generation,
-      'gamesRelation': gamesRelation.map((relation) => relation.toMap()).toList(),
+      'games': games.map((game) => game.toMap()).toList(),
     };
   }
 
   String toJson() => json.encode(toMap());
+
+  factory PlatformModel.fromJson(String source) => PlatformModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 extension PlatformModelExtension on PlatformModel {
@@ -41,6 +58,6 @@ extension PlatformModelExtension on PlatformModel {
         name: name,
         abbreviation: abbreviation,
         generation: generation,
-        gamesRelation: gamesRelation.map((relation) => relation.toEntity()).toList(),
+        games: games.map((game) => game.toEntity()).toList(),
       );
 }

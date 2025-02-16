@@ -66,7 +66,11 @@ class AuthRepositoryImpl extends AuthRepository {
     Either result = await serviceLocator<AuthApiService>().logout();
 
     return result.fold(
-      (error) => Left(error),
+      (error) async {
+        await serviceLocator<AuthLocalService>().clearTokens();
+
+        return Left(error);
+      },
       (data) async {
         await serviceLocator<AuthLocalService>().clearTokens();
 
@@ -82,7 +86,11 @@ class AuthRepositoryImpl extends AuthRepository {
     Either result = await serviceLocator<AuthApiService>().refresh(refreshToken);
 
     return result.fold(
-      (error) => Left(error),
+      (error) async {
+        await serviceLocator<AuthLocalService>().clearTokens();
+
+        return Left(error);
+      },
       (data) async {
         Response response = data;
 

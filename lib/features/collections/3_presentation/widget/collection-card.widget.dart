@@ -13,7 +13,7 @@ class CollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gamesToShow = collection.gameItems.take(10).map((gameItem) => gameItem.game).toList();
+    final gamesToShow = collection.gameItems.map((gameItem) => gameItem.game).toList();
     return Container(
       decoration: BoxDecoration(
           border: Border.all(

@@ -1,6 +1,6 @@
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
-class GameCollectionItemEntity {
+class GameItemEntity {
   final String id;
   final bool hasBox;
   final bool hasGame;
@@ -12,7 +12,7 @@ class GameCollectionItemEntity {
   final GameEntity game;
   final String collectionId;
 
-  GameCollectionItemEntity({
+  GameItemEntity({
     required this.id,
     required this.hasBox,
     required this.hasGame,

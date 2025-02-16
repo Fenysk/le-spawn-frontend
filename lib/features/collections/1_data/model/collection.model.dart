@@ -5,7 +5,7 @@ import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.enti
 class CollectionModel {
   final String id;
   final String title;
-  final List<GameCollectionItemModel> gameItems;
+  final List<GameItemModel> gameItems;
   final String userId;
 
   CollectionModel({
@@ -19,7 +19,7 @@ class CollectionModel {
     return {
       'id': id,
       'title': title,
-      'gameItems': gameItems.map((item) => item.toMap()).toList(),
+      'gamesItems': gameItems.map((item) => item.toMap()).toList(),
       'userId': userId,
     };
   }
@@ -32,7 +32,7 @@ class CollectionModel {
     return CollectionModel(
       id: map['id'],
       title: map['title'],
-      gameItems: List<GameCollectionItemModel>.from(map['gameItems']?.map((x) => GameCollectionItemModel.fromMap(x))),
+      gameItems: List<GameItemModel>.from(map['gameItems']?.map((x) => GameItemModel.fromMap(x)) ?? []),
       userId: map['userId'],
     );
   }

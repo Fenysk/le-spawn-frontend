@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:le_spawn_fr/core/enums/game-category.enum.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_fr/features/bank/features/platforms/1_data/model/platform.model.dart';
 import 'package:le_spawn_fr/features/collections/1_data/model/game-item.model.dart';
-import 'package:le_spawn_fr/features/collections/1_data/model/many-game-paltform.model.dart';
 
 class GameModel {
   final String id;
@@ -17,8 +17,8 @@ class GameModel {
   final List<String> screenshotsUrl;
   final String? storyline;
   final String? summary;
-  final List<ManyGamePlatformModel> platformsRelation;
-  final List<GameCollectionItemModel> gameCollectionItem;
+  final List<PlatformModel> platforms;
+  final List<GameItemModel> gameCollectionItem;
 
   GameModel({
     required this.id,
@@ -33,9 +33,26 @@ class GameModel {
     required this.screenshotsUrl,
     this.storyline,
     this.summary,
-    required this.platformsRelation,
+    required this.platforms,
     required this.gameCollectionItem,
   });
+
+  static GameModel get empty => GameModel(
+        id: '',
+        igdbGameId: null,
+        barcodes: [],
+        category: GameCategoryEnum.mainGame,
+        coverUrl: null,
+        firstReleaseDate: DateTime.now(),
+        franchises: [],
+        genres: [],
+        name: '',
+        screenshotsUrl: [],
+        storyline: null,
+        summary: null,
+        platforms: [],
+        gameCollectionItem: [],
+      );
 
   Map<String, dynamic> toMap() {
     return {
@@ -51,7 +68,7 @@ class GameModel {
       'screenshotsUrl': screenshotsUrl,
       'storyline': storyline,
       'summary': summary,
-      'platformsRelation': platformsRelation.map((relation) => relation.toMap()).toList(),
+      'platforms': platforms.map((platform) => platform.toMap()).toList(),
       'gameCollectionItem': gameCollectionItem.map((item) => item.toMap()).toList(),
     };
   }
@@ -70,8 +87,8 @@ class GameModel {
       screenshotsUrl: List<String>.from(map['screenshotsUrl']),
       storyline: map['storyline'],
       summary: map['summary'],
-      platformsRelation: List<ManyGamePlatformModel>.from(map['platformsRelation']?.map((x) => ManyGamePlatformModel.fromMap(x)) ?? []),
-      gameCollectionItem: List<GameCollectionItemModel>.from(map['gameCollectionItem']?.map((x) => GameCollectionItemModel.fromMap(x)) ?? []),
+      platforms: List<PlatformModel>.from(map['platforms']?.map((x) => PlatformModel.fromMap(x)) ?? []),
+      gameCollectionItem: List<GameItemModel>.from(map['gameCollectionItem']?.map((x) => GameItemModel.fromMap(x)) ?? []),
     );
   }
 
@@ -94,7 +111,7 @@ extension GameModelExtension on GameModel {
         screenshotsUrl: screenshotsUrl,
         storyline: storyline,
         summary: summary,
-        platformsRelation: platformsRelation.map((relation) => relation.toEntity()).toList(),
-        gameCollectionItem: gameCollectionItem.map((item) => item.toEntity()).toList(),
+        platforms: platforms.map((platform) => platform.toEntity()).toList(),
+        gameItems: gameCollectionItem.map((item) => item.toEntity()).toList(),
       );
 }

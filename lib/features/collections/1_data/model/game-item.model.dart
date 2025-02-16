@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:le_spawn_fr/features/bank/features/games/1_data/model/game.model.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
 
-class GameCollectionItemModel {
+class GameItemModel {
   final String id;
   final bool hasBox;
   final bool hasGame;
@@ -14,7 +14,7 @@ class GameCollectionItemModel {
   final String collectionId;
   final GameModel game;
 
-  GameCollectionItemModel({
+  GameItemModel({
     required this.id,
     required this.hasBox,
     required this.hasGame,
@@ -42,8 +42,8 @@ class GameCollectionItemModel {
     };
   }
 
-  factory GameCollectionItemModel.fromMap(Map<String, dynamic> map) {
-    return GameCollectionItemModel(
+  factory GameItemModel.fromMap(Map<String, dynamic> map) {
+    return GameItemModel(
       id: map['id'] ?? '',
       hasBox: map['hasBox'] ?? false,
       hasGame: map['hasGame'] ?? false,
@@ -53,17 +53,17 @@ class GameCollectionItemModel {
       statePaper: map['statePaper'],
       gameId: map['gameId'] ?? '',
       collectionId: map['collectionId'] ?? '',
-      game: GameModel.fromMap(map['game'] ?? {}),
+      game: GameModel.fromMap(map['game']),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory GameCollectionItemModel.fromJson(String source) => GameCollectionItemModel.fromMap(json.decode(source));
+  factory GameItemModel.fromJson(String source) => GameItemModel.fromMap(json.decode(source));
 }
 
-extension GameCollectionItemModelExtension on GameCollectionItemModel {
-  GameCollectionItemEntity toEntity() => GameCollectionItemEntity(
+extension GameCollectionItemModelExtension on GameItemModel {
+  GameItemEntity toEntity() => GameItemEntity(
         id: id,
         hasBox: hasBox,
         hasGame: hasGame,

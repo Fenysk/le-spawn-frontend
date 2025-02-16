@@ -1,4 +1,4 @@
-import 'package:le_spawn_fr/features/collections/2_domain/entity/many-game-platform.entity.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
 class PlatformEntity {
   final String id;
@@ -6,7 +6,7 @@ class PlatformEntity {
   final String name;
   final String abbreviation;
   final int? generation;
-  final List<ManyGamePlatformEntity> gamesRelation;
+  final List<GameEntity> games;
 
   PlatformEntity({
     required this.id,
@@ -14,6 +14,6 @@ class PlatformEntity {
     required this.name,
     required this.abbreviation,
     this.generation,
-    required this.gamesRelation,
+    required this.games,
   });
 }

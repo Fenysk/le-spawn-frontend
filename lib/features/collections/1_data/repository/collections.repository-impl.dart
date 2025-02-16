@@ -6,6 +6,13 @@ import 'package:le_spawn_fr/features/collections/2_domain/repository/collections
 import 'package:le_spawn_fr/service-locator.dart';
 
 class CollectionsRepositoryImpl implements CollectionsRepository {
+  List<CollectionEntity> _collectionsCache = [];
+
+  saveToCache(List<CollectionEntity> collections) => _collectionsCache = collections;
+
+  @override
+  List<CollectionEntity> get collectionsCache => _collectionsCache;
+
   @override
   Future<Either<String, List<CollectionEntity>>> getMyCollections() async {
     Either<String, List<dynamic>> response = await serviceLocator<CollectionsApiService>().getMyCollections();
@@ -15,6 +22,7 @@ class CollectionsRepositoryImpl implements CollectionsRepository {
       (data) {
         List<CollectionModel> collections = data.map((item) => CollectionModel.fromMap(item)).toList();
         List<CollectionEntity> collectionEntities = collections.map((model) => model.toEntity()).toList();
+        saveToCache(collectionEntities);
         return Right(collectionEntities);
       },
     );
