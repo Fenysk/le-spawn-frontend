@@ -1,0 +1,2 @@
+C:/Users/alexi/Documents/dev/Le Spawn - 2025/le_spawn_frontend/android/app/.cxx/RelWithDebInfo/3r3z162z/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/alexi/Documents/dev/Le Spawn - 2025/le_spawn_frontend/android/app/.cxx/RelWithDebInfo/3r3z162z/x86_64/CMakeFiles/rebuild_cache.dir
