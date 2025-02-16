@@ -21,7 +21,8 @@ class _AddNewGamePageState extends State<AddNewGamePage> with SingleTickerProvid
         create: (context) => AddNewGameCubit(),
         child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
             builder: (context, state) => switch (state) {
-                  AddNewGameInitialState() || AddNewGameFailureState() => GameDetectionTab(),
+                  AddNewGameInitialState() => buildInitialContent(),
+                  AddNewGameFailureState() => buildInitialContent(),
                   AddNewGameLoadingState() => _buildLoadingContent(),
                   AddNewGameSuccessState() => ConfirmGameTab(
                       game: state.game,
@@ -35,5 +36,13 @@ class _AddNewGamePageState extends State<AddNewGamePage> with SingleTickerProvid
     );
   }
 
-  Widget _buildLoadingContent() => const Center(child: CircularProgressIndicator());
+  Widget buildInitialContent() {
+    if (!mounted) return const SizedBox.shrink();
+    return const GameDetectionTab();
+  }
+
+  Widget _buildLoadingContent() {
+    if (!mounted) return const SizedBox.shrink();
+    return const Center(child: CircularProgressIndicator());
+  }
 }

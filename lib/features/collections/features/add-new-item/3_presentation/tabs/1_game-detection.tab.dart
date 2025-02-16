@@ -14,53 +14,72 @@ class GameDetectionTab extends StatefulWidget {
 }
 
 class _GameDetectionTabState extends State<GameDetectionTab> {
-  bool barcodeShouldEnable = false;
-  bool photoShouldEnable = false;
-  bool fileShouldEnable = true;
+  bool _barcodeShouldEnable = false;
+  bool _photoShouldEnable = false;
+  bool _fileShouldEnable = true;
+
+  static const double _buttonSpacing = 20.0;
+  static const String _mobileOnlyTooltip = '⚠️ Mobile only';
 
   @override
   void initState() {
-    checkPlatform();
+    _initializePlatformFeatures();
     super.initState();
   }
 
-  void checkPlatform() {
-    if (Platform.isAndroid || Platform.isIOS)
+  void _initializePlatformFeatures() {
+    if (Platform.isAndroid || Platform.isIOS) {
       setState(() {
-        barcodeShouldEnable = true;
-        photoShouldEnable = true;
+        _barcodeShouldEnable = true;
+        _photoShouldEnable = true;
       });
+    }
   }
 
   void _showBarcodeDrawer() {
+    if (!mounted) return;
+
+    final cubit = BlocProvider.of<AddNewGameCubit>(context);
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      builder: (modalContext) => BlocProvider.value(
-        value: BlocProvider.of<AddNewGameCubit>(context),
-        child: BarcodeScannerWidget(
-          onCodeDetected: _onCodeDetected,
-        ),
+      builder: (BuildContext modalContext) => BarcodeScannerWidget(
+        addNewGameCubit: cubit,
       ),
     );
   }
 
   void _showPhotoCaptureDrawer() {
+    if (!mounted) return;
     showModalBottomSheet<void>(
       context: context,
-      builder: (context) => Center(child: Text('Photo capture')),
+      builder: (_) => const Center(child: Text('Photo capture')),
     );
   }
 
   void _showFileUploadDrawer() {
+    if (!mounted) return;
     showModalBottomSheet<void>(
       context: context,
-      builder: (context) => Center(child: Text('File upload')),
+      builder: (_) => const Center(child: Text('File upload')),
     );
   }
 
-  void _onCodeDetected(String code) {
-    BlocProvider.of<AddNewGameCubit>(context).fetchGameData(barcode: code);
+  Widget _buildActionButton({
+    required VoidCallback? onPressed,
+    required IconData icon,
+    required String label,
+    String? tooltip,
+    Color? backgroundColor,
+  }) {
+    final button = ElevatedButton.icon(
+      style: backgroundColor != null ? ElevatedButton.styleFrom(backgroundColor: backgroundColor) : null,
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label),
+    );
+
+    return tooltip != null ? Tooltip(message: tooltip, child: button) : button;
   }
 
   @override
@@ -69,37 +88,31 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.yellow,
-            ),
+          _buildActionButton(
             onPressed: _showBarcodeDrawer,
-            icon: const Icon(Icons.qr_code_scanner),
-            label: const Text('Debug Scan Barcode'),
+            icon: Icons.qr_code_scanner,
+            label: 'Debug Scan Barcode',
+            backgroundColor: Colors.yellow,
           ),
-          const SizedBox(height: 20),
-          Tooltip(
-            message: photoShouldEnable ? '' : '⚠️ Mobile only',
-            child: ElevatedButton.icon(
-              onPressed: barcodeShouldEnable ? _showBarcodeDrawer : null,
-              icon: const Icon(Icons.qr_code_scanner),
-              label: const Text('Scan Barcode'),
-            ),
+          const SizedBox(height: _buttonSpacing),
+          _buildActionButton(
+            onPressed: _barcodeShouldEnable ? _showBarcodeDrawer : null,
+            icon: Icons.qr_code_scanner,
+            label: 'Scan Barcode',
+            tooltip: _barcodeShouldEnable ? '' : _mobileOnlyTooltip,
           ),
-          const SizedBox(height: 20),
-          Tooltip(
-            message: photoShouldEnable ? '' : '⚠️ Mobile only',
-            child: ElevatedButton.icon(
-              onPressed: photoShouldEnable ? _showPhotoCaptureDrawer : null,
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Take Photo'),
-            ),
+          const SizedBox(height: _buttonSpacing),
+          _buildActionButton(
+            onPressed: _photoShouldEnable ? _showPhotoCaptureDrawer : null,
+            icon: Icons.camera_alt,
+            label: 'Take Photo',
+            tooltip: _photoShouldEnable ? '' : _mobileOnlyTooltip,
           ),
-          const SizedBox(height: 20),
-          ElevatedButton.icon(
-            onPressed: fileShouldEnable ? _showFileUploadDrawer : null,
-            icon: const Icon(Icons.upload_file),
-            label: const Text('Upload File'),
+          const SizedBox(height: _buttonSpacing),
+          _buildActionButton(
+            onPressed: _fileShouldEnable ? _showFileUploadDrawer : null,
+            icon: Icons.upload_file,
+            label: 'Upload File',
           ),
         ],
       ),

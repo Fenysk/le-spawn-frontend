@@ -5,34 +5,51 @@ import 'package:le_spawn_fr/features/collections/features/add-new-item/3_present
 import 'package:le_spawn_fr/service-locator.dart';
 
 class AddNewGameCubit extends Cubit<AddNewGameState> {
+  final _gameFromBarcodeUsecase = serviceLocator<GetGameFromBarcodeUsecase>();
+
+  GameEntity? _game;
+
   AddNewGameCubit() : super(AddNewGameInitialState());
 
-  GameEntity? game;
+  Future<void> fetchGameData({String? barcode}) async {
+    if (state is AddNewGameLoadingState || state is AddNewGameFailureState) return;
 
-  Future<void> fetchGameData({
-    String? barcode,
-  }) async {
+    if (barcode == null || barcode.isEmpty) {
+      return emit(const AddNewGameFailureState(
+        errorMessage: 'Barcode cannot be empty',
+      ));
+    }
+
     emit(AddNewGameLoadingState());
-    final result = await serviceLocator<GetGameFromBarcodeUsecase>().execute(request: barcode);
 
-    game = result.fold(
-      (failure) => null,
-      (gameData) => gameData,
-    );
+    final result = await _gameFromBarcodeUsecase.execute(request: barcode);
 
     result.fold(
-      (failure) => emit(AddNewGameFailureState(errorMessage: failure)),
-      (gameData) => emit(AddNewGameSuccessState(game: gameData)),
+      (failure) async {
+        _game = null;
+        emit(AddNewGameFailureState(errorMessage: failure));
+
+        await Future.delayed(const Duration(seconds: 2), () {
+          emit(AddNewGameInitialState());
+        });
+      },
+      (gameData) {
+        _game = gameData;
+        emit(AddNewGameSuccessState(game: gameData));
+      },
     );
   }
 
-  Future<void> resetGame() async {
-    if (game == null) return emit(AddNewGameInitialState());
+  void resetGame() {
+    _game = null;
     emit(AddNewGameInitialState());
   }
 
-  Future<void> confirmGame() async {
-    if (game == null) return emit(AddNewGameInitialState());
-    emit(AddNewGameValidState(game: game!));
+  void confirmGame() {
+    if (_game == null) {
+      emit(AddNewGameInitialState());
+      return;
+    }
+    emit(AddNewGameValidState(game: _game!));
   }
 }
