@@ -22,16 +22,31 @@ class _AddNewGamePageState extends State<AddNewGamePage> with SingleTickerProvid
         child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
             builder: (context, state) => switch (state) {
                   AddNewGameInitialState() => buildInitialContent(),
-                  AddNewGameFailureState() => buildInitialContent(),
+                  AddNewGameFailureState() => buildFailureContent(context, state.errorMessage),
                   AddNewGameLoadingState() => _buildLoadingContent(),
-                  AddNewGameSuccessState() => ConfirmGameTab(
-                      game: state.game,
+                  AddNewGameLoadedGamesState() => ConfirmGameTab(
+                      games: state.games,
                       onGoBack: () => BlocProvider.of<AddNewGameCubit>(context).resetGame(),
-                      onConfirm: () => BlocProvider.of<AddNewGameCubit>(context).confirmGame(),
                     ),
-                  AddNewGameValidState() => NewItemFormTab(game: state.game),
+                  AddNewGameItemInfoState() => NewItemFormTab(game: state.game),
                   _ => const SizedBox.shrink(),
                 }),
+      ),
+    );
+  }
+
+  Widget buildFailureContent(BuildContext context, String errorMessage) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(errorMessage),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => BlocProvider.of<AddNewGameCubit>(context).resetGame(),
+            child: const Text('Try Again'),
+          ),
+        ],
       ),
     );
   }

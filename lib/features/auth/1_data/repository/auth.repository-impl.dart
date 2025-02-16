@@ -65,17 +65,11 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<Either> logout() async {
     Either result = await serviceLocator<AuthApiService>().logout();
 
+    await serviceLocator<AuthLocalService>().clearTokens();
+
     return result.fold(
-      (error) async {
-        await serviceLocator<AuthLocalService>().clearTokens();
-
-        return Left(error);
-      },
-      (data) async {
-        await serviceLocator<AuthLocalService>().clearTokens();
-
-        return Right(data);
-      },
+      (error) async => Left(error),
+      (data) async => Right(data),
     );
   }
 

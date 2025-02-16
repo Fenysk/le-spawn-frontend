@@ -9,8 +9,6 @@ class LoadingButtonCubit extends Cubit<LoadingButtonState> {
   void execute({dynamic params, required Usecase usecase}) async {
     emit(LoadingButtonLoadingState());
 
-    await Future.delayed(const Duration(seconds: 2));
-
     try {
       Either result = await usecase.execute(request: params);
 

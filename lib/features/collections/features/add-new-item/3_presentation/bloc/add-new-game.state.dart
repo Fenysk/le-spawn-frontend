@@ -12,21 +12,21 @@ class AddNewGameInitialState extends AddNewGameState {}
 
 class AddNewGameLoadingState extends AddNewGameState {}
 
-class AddNewGameSuccessState extends AddNewGameState {
-  final GameEntity game;
+class AddNewGameLoadedGamesState extends AddNewGameState {
+  final List<GameEntity> games;
 
-  const AddNewGameSuccessState({required this.game});
+  const AddNewGameLoadedGamesState({required this.games});
 
   @override
   List<Object> get props => [
-        game
+        games
       ];
 }
 
-class AddNewGameValidState extends AddNewGameState {
+class AddNewGameItemInfoState extends AddNewGameState {
   final GameEntity game;
 
-  const AddNewGameValidState({required this.game});
+  const AddNewGameItemInfoState({required this.game});
 
   @override
   List<Object> get props => [

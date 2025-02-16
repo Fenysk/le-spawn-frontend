@@ -6,10 +6,12 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 class BarcodeScannerWidget extends StatefulWidget {
   final AddNewGameCubit addNewGameCubit;
+  final bool isDebug;
 
   const BarcodeScannerWidget({
     super.key,
     required this.addNewGameCubit,
+    this.isDebug = false,
   });
 
   @override
@@ -25,6 +27,21 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
     super.initState();
     cameraController = MobileScannerController();
     widget.addNewGameCubit.resetGame();
+    initDebugMode();
+  }
+
+  void initDebugMode() async {
+    if (!widget.isDebug) return;
+
+    await Future.delayed(const Duration(seconds: 2));
+    onDetect(BarcodeCapture(
+      barcodes: [
+        Barcode(rawValue: '711719000013')
+      ],
+      image: null,
+    ));
+
+    if (!mounted) Navigator.of(context).pop();
   }
 
   void onDetect(BarcodeCapture capture) async {
@@ -45,7 +62,7 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
 
   Widget _buildLoadingOverlay() {
     return Container(
-      color: Colors.black.withOpacity(0.7),
+      color: Colors.black.withAlpha(179),
       child: const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -95,51 +112,59 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
 
     return BlocProvider.value(
       value: widget.addNewGameCubit,
-      child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
-        builder: (context, state) {
-          return Stack(
-            children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            isTorchOn ? Icons.flash_on : Icons.flash_off,
-                            color: isTorchOn ? Colors.yellow : Colors.grey,
-                          ),
-                          onPressed: () async {
-                            if (cameraController != null) {
-                              await cameraController!.toggleTorch();
-                              setState(() {
-                                isTorchOn = !isTorchOn;
-                              });
-                            }
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.cameraswitch),
-                          onPressed: () => cameraController?.switchCamera(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: MobileScanner(
-                      controller: cameraController!,
-                      onDetect: onDetect,
-                    ),
-                  ),
-                ],
-              ),
-              if (state is AddNewGameLoadingState) _buildLoadingOverlay(),
-              if (state is AddNewGameFailureState) _buildErrorOverlay(state.errorMessage),
-            ],
-          );
+      child: BlocListener<AddNewGameCubit, AddNewGameState>(
+        listener: (context, state) {
+          if (state is AddNewGameLoadedGamesState) {
+            if (mounted) Navigator.of(context).pop();
+          }
         },
+        child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
+          builder: (context, state) {
+            return Stack(
+              children: [
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              isTorchOn ? Icons.flash_on : Icons.flash_off,
+                              color: isTorchOn ? Colors.yellow : Colors.grey,
+                            ),
+                            onPressed: () async {
+                              if (cameraController != null) {
+                                await cameraController!.toggleTorch();
+                                setState(() {
+                                  isTorchOn = !isTorchOn;
+                                });
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.cameraswitch),
+                            onPressed: () => cameraController?.switchCamera(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (!widget.isDebug)
+                      Expanded(
+                        child: MobileScanner(
+                          controller: cameraController!,
+                          onDetect: onDetect,
+                        ),
+                      ),
+                  ],
+                ),
+                if (state is AddNewGameLoadingState) _buildLoadingOverlay(),
+                if (state is AddNewGameFailureState) _buildErrorOverlay(state.errorMessage),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

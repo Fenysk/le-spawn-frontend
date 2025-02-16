@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/bank/features/games/3_presentation/widget/game-carousel/game-cover.widget.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
 
 class ConfirmGameTab extends StatefulWidget {
-  final GameEntity game;
+  final List<GameEntity> games;
   final VoidCallback onGoBack;
-  final VoidCallback onConfirm;
 
   const ConfirmGameTab({
     super.key,
-    required this.game,
+    required this.games,
     required this.onGoBack,
-    required this.onConfirm,
   });
 
   @override
@@ -21,13 +21,19 @@ class ConfirmGameTab extends StatefulWidget {
 class _ConfirmGameTabState extends State<ConfirmGameTab> {
   @override
   Widget build(BuildContext context) {
+    if (widget.games.length == 1) return _buildOneGameContent(context, widget.games.first);
+
+    return _buildManyGamesContent();
+  }
+
+  SingleChildScrollView _buildOneGameContent(BuildContext context, GameEntity game) {
     return SingleChildScrollView(
       child: Column(
         children: [
           const SizedBox(height: 24),
-          GameCoverWidget(game: widget.game, width: 150, height: 200),
+          GameCoverWidget(game: game, width: 150, height: 200),
           const SizedBox(height: 24),
-          Text(widget.game.name, style: Theme.of(context).textTheme.bodySmall),
+          Text(game.name, style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 24),
           Text('Est-ce le bon jeu ?', style: Theme.of(context).textTheme.bodyLarge),
           const SizedBox(height: 24),
@@ -40,7 +46,7 @@ class _ConfirmGameTabState extends State<ConfirmGameTab> {
               ),
               const SizedBox(width: 24),
               ElevatedButton(
-                onPressed: widget.onConfirm,
+                onPressed: () => BlocProvider.of<AddNewGameCubit>(context).confirmGame(widget.games.first.id),
                 child: const Text('Oui, c\'est bon'),
               ),
             ],
@@ -48,6 +54,77 @@ class _ConfirmGameTabState extends State<ConfirmGameTab> {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+
+  Widget _buildManyGamesContent() {
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverToBoxAdapter(
+            child: Text(
+              'Sélectionnez le jeu correct',
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.7,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final game = widget.games[index];
+                return GestureDetector(
+                  onTap: () => BlocProvider.of<AddNewGameCubit>(context).confirmGame(game.id),
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: GameCoverWidget(
+                            game: game,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            game.name,
+                            style: Theme.of(context).textTheme.titleSmall,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              childCount: widget.games.length,
+            ),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverToBoxAdapter(
+            child: ElevatedButton(
+              onPressed: widget.onGoBack,
+              child: const Text('Aucun jeu ne correspond'),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

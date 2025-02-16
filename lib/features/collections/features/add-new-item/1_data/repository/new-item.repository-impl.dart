@@ -1,6 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:le_spawn_fr/features/bank/features/games/1_data/model/game.model.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/collections/1_data/model/game-item.model.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-barcode-to-game.request.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-new-game-to-collection.request.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/source/new-item-api.service.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/repository/new-item.repository.dart';
@@ -15,6 +18,19 @@ class NewItemRepositoryImpl implements NewItemRepository {
       (error) => Left(error),
       (data) {
         GameItemModel gameCollectionItem = GameItemModel.fromMap(data);
+        return Right(gameCollectionItem.toEntity());
+      },
+    );
+  }
+
+  @override
+  Future<Either<String, GameEntity>> addBarcodeToGame(AddBarcodeToGameRequest dto) async {
+    Either<String, dynamic> response = await serviceLocator<NewItemApiService>().addBarcodeToGame(dto);
+
+    return response.fold(
+      (error) => Left(error),
+      (data) {
+        GameModel gameCollectionItem = GameModel.fromMap(data);
         return Right(gameCollectionItem.toEntity());
       },
     );

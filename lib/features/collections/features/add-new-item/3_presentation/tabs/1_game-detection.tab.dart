@@ -16,7 +16,7 @@ class GameDetectionTab extends StatefulWidget {
 class _GameDetectionTabState extends State<GameDetectionTab> {
   bool _barcodeShouldEnable = false;
   bool _photoShouldEnable = false;
-  bool _fileShouldEnable = true;
+  final bool _fileShouldEnable = true;
 
   static const double _buttonSpacing = 20.0;
   static const String _mobileOnlyTooltip = '⚠️ Mobile only';
@@ -36,7 +36,7 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
     }
   }
 
-  void _showBarcodeDrawer() {
+  void _showBarcodeDrawer({bool isDebug = false}) {
     if (!mounted) return;
 
     final cubit = BlocProvider.of<AddNewGameCubit>(context);
@@ -45,12 +45,14 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
       isScrollControlled: true,
       builder: (BuildContext modalContext) => BarcodeScannerWidget(
         addNewGameCubit: cubit,
+        isDebug: isDebug,
       ),
     );
   }
 
   void _showPhotoCaptureDrawer() {
     if (!mounted) return;
+
     showModalBottomSheet<void>(
       context: context,
       builder: (_) => const Center(child: Text('Photo capture')),
@@ -59,6 +61,7 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
 
   void _showFileUploadDrawer() {
     if (!mounted) return;
+
     showModalBottomSheet<void>(
       context: context,
       builder: (_) => const Center(child: Text('File upload')),
@@ -89,7 +92,7 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildActionButton(
-            onPressed: _showBarcodeDrawer,
+            onPressed: () => _showBarcodeDrawer(isDebug: true),
             icon: Icons.qr_code_scanner,
             label: 'Debug Scan Barcode',
             backgroundColor: Colors.yellow,

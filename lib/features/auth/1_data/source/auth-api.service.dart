@@ -70,9 +70,9 @@ class AuthApiServiceImpl extends AuthApiService {
 
   @override
   Future<Either> logout() async {
-    try {
-      final accessToken = await serviceLocator<AuthLocalService>().getAccessToken();
+    final accessToken = await serviceLocator<AuthLocalService>().getAccessToken();
 
+    try {
       final response = await serviceLocator<DioClient>().post(
         ApiUrlConstant.logout,
         options: Options(

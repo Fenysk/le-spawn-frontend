@@ -19,6 +19,7 @@ import 'package:le_spawn_fr/features/collections/2_domain/usecase/get-my-collect
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/repository/new-item.repository-impl.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/source/new-item-api.service.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/repository/new-item.repository.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/usecase/add-barcode-to-game.usecase.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/usecase/add-game-item-to-collection.usecase.dart';
 import 'package:le_spawn_fr/features/user/1_data/repository/users.repository-impl.dart';
 import 'package:le_spawn_fr/features/user/1_data/source/user-local.service.dart';
@@ -59,6 +60,7 @@ void setupServiceLocator() {
   serviceLocator.registerSingleton<LogoutUsecase>(LogoutUsecase());
   serviceLocator.registerSingleton<LoginUsecase>(LoginUsecase());
   serviceLocator.registerSingleton<GetMyCollectionsUsecase>(GetMyCollectionsUsecase());
-  serviceLocator.registerSingleton<GetGameFromBarcodeUsecase>(GetGameFromBarcodeUsecase());
+  serviceLocator.registerSingleton<GetGamesFromBarcodeUsecase>(GetGamesFromBarcodeUsecase());
   serviceLocator.registerSingleton<AddGameItemToCollectionUsecase>(AddGameItemToCollectionUsecase());
+  serviceLocator.registerSingleton<AddBarcodeToGameUsecase>(AddBarcodeToGameUsecase());
 }

@@ -3,29 +3,25 @@ import 'package:dio/dio.dart';
 import 'package:le_spawn_fr/features/auth/1_data/source/auth-local.service.dart';
 import 'package:le_spawn_fr/core/constant/api-url.constant.dart';
 import 'package:le_spawn_fr/core/network/dio_client.dart';
-import 'package:le_spawn_fr/features/bank/features/games/1_data/model/game.model.dart';
-import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/service-locator.dart';
 
 abstract class GamesApiService {
-  Future<Either<String, GameEntity>> getGameFromBarcode(String? request);
+  Future<Either<String, dynamic>> getGamesFromBarcode(String? request);
 }
 
 class GamesApiServiceImpl implements GamesApiService {
   @override
-  Future<Either<String, GameEntity>> getGameFromBarcode(String? request) async {
+  Future<Either<String, dynamic>> getGamesFromBarcode(String? request) async {
     try {
       final accessToken = await serviceLocator<AuthLocalService>().getAccessToken();
       final response = await serviceLocator<DioClient>().get(
-        '${ApiUrlConstant.getGameFromBarcode}/$request',
+        '${ApiUrlConstant.getGamesFromBarcode}/$request',
         options: Options(headers: {
           'Authorization': 'Bearer $accessToken'
         }),
       );
 
-      final game = GameModel.fromMap(response.data).toEntity();
-
-      return Right(game);
+      return Right(response.data);
     } on DioException catch (error) {
       return Left(error.response?.data['message'] ?? error.message ?? 'An error occurred');
     }
