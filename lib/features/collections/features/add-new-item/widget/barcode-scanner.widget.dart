@@ -54,7 +54,7 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
       final barcode = barcodes.first;
       if (barcode.rawValue == null) return;
 
-      widget.addNewGameCubit.fetchGameData(barcode: barcode.rawValue!);
+      widget.addNewGameCubit.fetchGamesFromBarcode(barcode: barcode.rawValue!);
     } catch (e) {
       debugPrint('Error in barcode detection: $e');
     }

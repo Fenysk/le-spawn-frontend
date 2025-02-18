@@ -8,7 +8,7 @@ class GameEntity {
   final List<String> barcodes;
   final GameCategoryEnum category;
   final String? coverUrl;
-  final DateTime firstReleaseDate;
+  final DateTime? firstReleaseDate;
   final List<String> franchises;
   final List<String> genres;
   final String name;
@@ -24,7 +24,7 @@ class GameEntity {
     required this.barcodes,
     required this.category,
     this.coverUrl,
-    required this.firstReleaseDate,
+    this.firstReleaseDate,
     required this.franchises,
     required this.genres,
     required this.name,

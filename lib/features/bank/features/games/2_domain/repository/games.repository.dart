@@ -3,5 +3,6 @@ import 'package:le_spawn_fr/features/bank/features/games/1_data/dto/search-games
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
 abstract class GamesRepository {
-  Future<Either<String, List<GameEntity>>> getGames(SearchGamesRequest? request);
+  Future<Either<String, List<GameEntity>>> searchGamesInBank(SearchGamesRequest? request);
+  Future<Either<String, List<GameEntity>>> searchGamesInProviders(SearchGamesRequest? request);
 }

@@ -10,7 +10,7 @@ class GameModel {
   final List<String> barcodes;
   final GameCategoryEnum category;
   final String? coverUrl;
-  final DateTime firstReleaseDate;
+  final DateTime? firstReleaseDate;
   final List<String> franchises;
   final List<String> genres;
   final String name;
@@ -26,7 +26,7 @@ class GameModel {
     required this.barcodes,
     required this.category,
     this.coverUrl,
-    required this.firstReleaseDate,
+    this.firstReleaseDate,
     required this.franchises,
     required this.genres,
     required this.name,
@@ -43,7 +43,7 @@ class GameModel {
         barcodes: [],
         category: GameCategoryEnum.mainGame,
         coverUrl: null,
-        firstReleaseDate: DateTime.now(),
+        firstReleaseDate: null,
         franchises: [],
         genres: [],
         name: '',
@@ -61,7 +61,7 @@ class GameModel {
       'barcodes': barcodes,
       'category': category.toString().split('.').last,
       'coverUrl': coverUrl,
-      'firstReleaseDate': firstReleaseDate.toIso8601String(),
+      'firstReleaseDate': firstReleaseDate?.toIso8601String(),
       'franchises': franchises,
       'genres': genres,
       'name': name,
@@ -80,14 +80,14 @@ class GameModel {
       barcodes: List<String>.from(map['barcodes']),
       category: GameCategoryEnum.values.firstWhere((e) => e.toString().split('.').last == map['category']),
       coverUrl: map['coverUrl'],
-      firstReleaseDate: DateTime.parse(map['firstReleaseDate']),
+      firstReleaseDate: map['firstReleaseDate'] != null ? DateTime.parse(map['firstReleaseDate']) : null,
       franchises: List<String>.from(map['franchises']),
       genres: List<String>.from(map['genres']),
       name: map['name'],
       screenshotsUrl: List<String>.from(map['screenshotsUrl']),
       storyline: map['storyline'],
       summary: map['summary'],
-      platforms: List<PlatformModel>.from(map['platforms']?.map((x) => PlatformModel.fromMap(x)) ?? []),
+      platforms: (map['platformsRelation'] as List<dynamic>?)?.map((relation) => PlatformModel.fromMap(relation['platform'] as Map<String, dynamic>)).toList() ?? [],
       gameCollectionItem: List<GameItemModel>.from(map['gameCollectionItem']?.map((x) => GameItemModel.fromMap(x)) ?? []),
     );
   }

@@ -8,8 +8,25 @@ import 'package:le_spawn_fr/service-locator.dart';
 
 class GamesRepositoryImpl implements GamesRepository {
   @override
-  Future<Either<String, List<GameEntity>>> getGames(SearchGamesRequest? request) async {
-    Either<String, dynamic> response = await serviceLocator<GamesApiService>().getGames(request);
+  Future<Either<String, List<GameEntity>>> searchGamesInBank(SearchGamesRequest? request) async {
+    Either<String, dynamic> response = await serviceLocator<GamesApiService>().searchGamesInBank(request);
+
+    return response.fold(
+      (error) => Left(error),
+      (data) {
+        if (data is List) {
+          List<GameModel> games = data.map((e) => GameModel.fromMap(e as Map<String, dynamic>)).toList();
+          List<GameEntity> gameEntities = games.map((e) => e.toEntity()).toList();
+          return Right(gameEntities);
+        }
+        return Left('Unexpected response format from API');
+      },
+    );
+  }
+
+  @override
+  Future<Either<String, List<GameEntity>>> searchGamesInProviders(SearchGamesRequest? request) async {
+    Either<String, dynamic> response = await serviceLocator<GamesApiService>().searchGamesInProviders(request);
 
     return response.fold(
       (error) => Left(error),

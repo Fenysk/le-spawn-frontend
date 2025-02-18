@@ -19,11 +19,35 @@ class ConfirmGameTab extends StatefulWidget {
 }
 
 class _ConfirmGameTabState extends State<ConfirmGameTab> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    if (widget.games.length == 1) return _buildOneGameContent(context, widget.games.first);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      child: Column(
+        children: [
+          _buildSearchGameSection(),
+          Expanded(
+            child: widget.games.length == 1 ? _buildOneGameContent(context, widget.games.first) : _buildManyGamesContent(),
+          )
+        ],
+      ),
+    );
+  }
 
-    return _buildManyGamesContent();
+  _buildSearchGameSection() {
+    return Column(
+      children: [
+        TextField(
+          controller: _searchController,
+          decoration: const InputDecoration(
+            labelText: 'Search your game',
+          ),
+          onSubmitted: (value) => context.read<AddNewGameCubit>().searchGames(value),
+        ),
+      ],
+    );
   }
 
   SingleChildScrollView _buildOneGameContent(BuildContext context, GameEntity game) {
@@ -82,31 +106,45 @@ class _ConfirmGameTabState extends State<ConfirmGameTab> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final game = widget.games[index];
-                return GestureDetector(
-                  onTap: () => BlocProvider.of<AddNewGameCubit>(context).confirmGame(game.id),
-                  child: Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: GameCoverWidget(
-                            game: game,
-                            width: double.infinity,
-                            height: double.infinity,
+                return MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => BlocProvider.of<AddNewGameCubit>(context).confirmGame(game.id),
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: GameCoverWidget(
+                              game: game,
+                              width: double.infinity,
+                              height: double.infinity,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            game.name,
-                            style: Theme.of(context).textTheme.titleSmall,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  game.name,
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  game.platforms.map((platform) => platform.name).toList().join(', '),
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

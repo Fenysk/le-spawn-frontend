@@ -6,16 +6,18 @@ import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.en
 class GameCoverWidget extends StatelessWidget {
   final GameEntity game;
   final double intensity;
-  final double width;
   final double height;
+  final double? _width;
+
+  double get width => _width ?? height * 2 / 3;
 
   const GameCoverWidget({
     super.key,
     required this.game,
     this.intensity = 0,
-    required this.width,
     required this.height,
-  });
+    double? width,
+  }) : _width = width;
 
   @override
   Widget build(BuildContext context) {

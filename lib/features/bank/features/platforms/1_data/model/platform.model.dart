@@ -9,7 +9,7 @@ class PlatformModel {
   final String name;
   final String abbreviation;
   final int? generation;
-  final List<GameModel> games;
+  final List<GameModel>? games;
 
   PlatformModel({
     required this.id,
@@ -17,7 +17,7 @@ class PlatformModel {
     required this.name,
     required this.abbreviation,
     this.generation,
-    required this.games,
+    this.games,
   });
 
   factory PlatformModel.fromMap(Map<String, dynamic> map) {
@@ -27,11 +27,13 @@ class PlatformModel {
       name: map['name'] as String,
       abbreviation: map['abbreviation'] as String,
       generation: map['generation'] as int?,
-      games: List<GameModel>.from(
-        (map['games'] as List<dynamic>).map(
-          (x) => GameModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      games: map['games'] != null
+          ? List<GameModel>.from(
+              (map['games'] as List<dynamic>).map(
+                (x) => GameModel.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
     );
   }
 
@@ -42,7 +44,7 @@ class PlatformModel {
       'name': name,
       'abbreviation': abbreviation,
       'generation': generation,
-      'games': games.map((game) => game.toMap()).toList(),
+      'games': games?.map((game) => game.toMap()).toList(),
     };
   }
 
@@ -58,6 +60,6 @@ extension PlatformModelExtension on PlatformModel {
         name: name,
         abbreviation: abbreviation,
         generation: generation,
-        games: games.map((game) => game.toEntity()).toList(),
+        games: games?.map((game) => game.toEntity()).toList(),
       );
 }

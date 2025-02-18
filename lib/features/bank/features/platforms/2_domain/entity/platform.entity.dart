@@ -6,7 +6,7 @@ class PlatformEntity {
   final String name;
   final String abbreviation;
   final int? generation;
-  final List<GameEntity> games;
+  final List<GameEntity>? games;
 
   PlatformEntity({
     required this.id,
@@ -14,6 +14,6 @@ class PlatformEntity {
     required this.name,
     required this.abbreviation,
     this.generation,
-    required this.games,
+    this.games,
   });
 }
