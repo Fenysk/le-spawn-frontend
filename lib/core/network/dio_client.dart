@@ -22,6 +22,7 @@ class DioClient {
 
   Future<Response> get(
     String url, {
+    dynamic data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -30,6 +31,7 @@ class DioClient {
     try {
       final Response response = await _dio.get(
         url,
+        data: data,
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,

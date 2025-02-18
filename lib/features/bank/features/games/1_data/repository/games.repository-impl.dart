@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:le_spawn_fr/features/bank/features/games/1_data/dto/search-games.request.dart';
 import 'package:le_spawn_fr/features/bank/features/games/1_data/model/game.model.dart';
 import 'package:le_spawn_fr/features/bank/features/games/1_data/source/games-api.service.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
@@ -7,8 +8,8 @@ import 'package:le_spawn_fr/service-locator.dart';
 
 class GamesRepositoryImpl implements GamesRepository {
   @override
-  Future<Either<String, List<GameEntity>>> getGamesFromBarcode(String? request) async {
-    Either<String, dynamic> response = await serviceLocator<GamesApiService>().getGamesFromBarcode(request);
+  Future<Either<String, List<GameEntity>>> getGames(SearchGamesRequest? request) async {
+    Either<String, dynamic> response = await serviceLocator<GamesApiService>().getGames(request);
 
     return response.fold(
       (error) => Left(error),

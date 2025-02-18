@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_fr/core/constant/image.constant.dart';
-import 'package:le_spawn_fr/core/theme/app.theme.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/widget/login.tab.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/widget/register.tab.dart';
 
