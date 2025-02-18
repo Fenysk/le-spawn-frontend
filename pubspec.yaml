@@ -1,7 +1,7 @@
 name: le_spawn_fr
 description: "L'application ultime des collectionneurs !"
 publish_to: 'none'
-version: 0.1.0-final+3597a29
+version: 0.1.1-dev+23978de
 
 environment:
   sdk: ^3.6.1
@@ -28,6 +28,7 @@ dependencies:
   intl: ^0.19.0
   soft_edge_blur: ^0.1.3
   permission_handler: ^11.3.1
+  package_info_plus: ^8.2.1
 
 dev_dependencies:
   flutter_test:
