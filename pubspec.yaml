@@ -29,11 +29,14 @@ dependencies:
   soft_edge_blur: ^0.1.3
   permission_handler: ^11.3.1
   package_info_plus: ^8.2.1
+  webview_flutter: ^4.10.0
+  google_sign_in: ^6.2.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  rename: ^3.0.2
 
 flutter:
   uses-material-design: true 

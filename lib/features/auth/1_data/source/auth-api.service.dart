@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:le_spawn_fr/core/constant/api-url.constant.dart';
 import 'package:le_spawn_fr/core/network/dio_client.dart';
 import 'package:le_spawn_fr/features/auth/1_data/dto/login.request.dart';
@@ -12,11 +15,15 @@ abstract class AuthApiService {
 
   Future<Either> getMyProfile();
 
-  Future<Either> login(LoginRequest loginRequest);
+  Future<Either<String, dynamic>> login(LoginRequest loginRequest);
 
   Future<Either> logout();
 
   Future<Either> refresh(String refreshToken);
+
+  Future<GoogleSignInAccount?> signInWithGoogle();
+
+  Future<Either<String, dynamic>> googleLoginFromApp(GoogleSignInAccount googleProfile);
 }
 
 class AuthApiServiceImpl extends AuthApiService {
@@ -55,7 +62,7 @@ class AuthApiServiceImpl extends AuthApiService {
   }
 
   @override
-  Future<Either> login(LoginRequest loginRequest) async {
+  Future<Either<String, dynamic>> login(LoginRequest loginRequest) async {
     try {
       final response = await serviceLocator<DioClient>().post(
         ApiUrlConstant.login,
@@ -103,6 +110,37 @@ class AuthApiServiceImpl extends AuthApiService {
       return Right(response);
     } on DioException catch (error) {
       return Left(error.response!.data['message']);
+    }
+  }
+
+  @override
+  Future<GoogleSignInAccount?> signInWithGoogle() async {
+    return await GoogleSignIn().signIn();
+  }
+
+  @override
+  Future<Either<String, dynamic>> googleLoginFromApp(GoogleSignInAccount googleProfile) async {
+    try {
+      print('Attempting Google login from app for user: ${googleProfile.email}');
+      final Map<String, dynamic> body = {
+        'id': googleProfile.id,
+        'email': googleProfile.email,
+        'displayName': googleProfile.displayName,
+        'photoUrl': googleProfile.photoUrl,
+      };
+      print(body);
+      final response = await serviceLocator<DioClient>().post(
+        ApiUrlConstant.googleLoginFromApp,
+        data: jsonEncode(body),
+        options: Options(headers: {
+          'Content-Type': 'application/json'
+        }),
+      );
+      print('Google login response: ${response.data}');
+      return Right(response);
+    } on DioException catch (error) {
+      print('Google login failed: ${error.message}');
+      return Left(error.response?.data['message'] ?? 'An error occurred during Google login');
     }
   }
 }

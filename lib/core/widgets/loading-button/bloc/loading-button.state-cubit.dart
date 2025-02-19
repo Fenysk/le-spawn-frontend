@@ -6,17 +6,22 @@ import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.stat
 class LoadingButtonCubit extends Cubit<LoadingButtonState> {
   LoadingButtonCubit() : super(LoadingButtonInitialState());
 
-  void execute({dynamic params, required Usecase usecase}) async {
+  Future<void> execute({dynamic params, required Usecase usecase}) async {
+    if (isClosed) return;
+
     emit(LoadingButtonLoadingState());
 
     try {
       Either result = await usecase.execute(request: params);
 
+      if (isClosed) return;
+
       result.fold(
-        (error) => emit(LoadingButtonFailureState(errorMessage: error)),
+        (error) => emit(LoadingButtonFailureState(errorMessage: error.toString())),
         (data) => emit(LoadingButtonSuccessState()),
       );
     } catch (error) {
+      if (isClosed) return;
       emit(LoadingButtonFailureState(errorMessage: error.toString()));
     }
   }

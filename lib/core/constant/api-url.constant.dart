@@ -8,6 +8,7 @@ class ApiUrlConstant {
   static String get login => '$baseUrl/auth/login';
   static String get logout => '$baseUrl/auth/logout';
   static String get refresh => '$baseUrl/auth/refresh';
+  static String get googleLoginFromApp => '$baseUrl/auth/google/login-from-app';
 
   // Users
   static String get getMyProfile => '$baseUrl/users/my-profile';

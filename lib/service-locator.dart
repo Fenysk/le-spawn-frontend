@@ -5,6 +5,7 @@ import 'package:le_spawn_fr/features/auth/1_data/source/auth-api.service.dart';
 import 'package:le_spawn_fr/features/auth/1_data/source/auth-local.service.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/repository/auth.repository.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/usecase/is-logged-in.usercase.dart';
+import 'package:le_spawn_fr/features/auth/2_domain/usecase/login-with-google.usecase.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/usecase/login.usecase.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/usecase/logout.usecase.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/usecase/register.usecase.dart';
@@ -65,4 +66,5 @@ void setupServiceLocator() {
   serviceLocator.registerSingleton<SearchGamesInProvidersUsecase>(SearchGamesInProvidersUsecase());
   serviceLocator.registerSingleton<AddGameItemToCollectionUsecase>(AddGameItemToCollectionUsecase());
   serviceLocator.registerSingleton<AddBarcodeToGameUsecase>(AddBarcodeToGameUsecase());
+  serviceLocator.registerSingleton<LoginWithGoogleUsecase>(LoginWithGoogleUsecase());
 }
