@@ -24,7 +24,7 @@ class _GameSearchTabState extends State<GameSearchTab> {
     super.initState();
   }
 
-  void _showBarcodeDrawer({bool isDebug = true}) {
+  void _showBarcodeDrawer({bool isDebug = false}) {
     if (!mounted) return;
 
     final cubit = BlocProvider.of<AddNewGameCubit>(context);

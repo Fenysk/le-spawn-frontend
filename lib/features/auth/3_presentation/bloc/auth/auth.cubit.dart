@@ -22,8 +22,7 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await serviceLocator<LoginWithGoogleUsecase>().execute();
     result.fold(
       (errorMessage) => emit(UnauthenticatedState(errorMessage: errorMessage)),
-      // (data) => emit(AuthenticatedState(user: data.user, isFirstTime: data.isFirstTime)),
-      (data) => emit(AuthenticatedState(user: data.user, isFirstTime: true)), // TODO: Delete this line after finishing onboarding
+      (data) => emit(AuthenticatedState(user: data.user, isFirstTime: data.isFirstTime)),
     );
   }
 }
