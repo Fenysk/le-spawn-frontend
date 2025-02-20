@@ -40,4 +40,23 @@ class GamesRepositoryImpl implements GamesRepository {
       },
     );
   }
+
+  @override
+  Future<Either<String, List<GameEntity>>> searchGamesFromBarcode(SearchGamesRequest? request) async {
+    if (request == null || request.barcode == null) return Left('Barcode is missing');
+
+    Either<String, dynamic> response = await serviceLocator<GamesApiService>().searchGamesFromBarcode(request.barcode!);
+
+    return response.fold(
+      (error) => Left(error),
+      (data) {
+        if (data is List) {
+          List<GameModel> games = data.map((e) => GameModel.fromMap(e as Map<String, dynamic>)).toList();
+          List<GameEntity> gameEntities = games.map((e) => e.toEntity()).toList();
+          return Right(gameEntities);
+        }
+        return Left('Unexpected response format from API');
+      },
+    );
+  }
 }

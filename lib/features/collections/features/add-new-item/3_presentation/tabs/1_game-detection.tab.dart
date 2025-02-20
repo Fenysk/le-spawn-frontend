@@ -22,7 +22,7 @@ class _GameDetectionTabState extends State<GameDetectionTab> {
     super.initState();
   }
 
-  void _showBarcodeDrawer({bool isDebug = false}) {
+  void _showBarcodeDrawer({bool isDebug = true}) {
     if (!mounted) return;
 
     final cubit = BlocProvider.of<AddNewGameCubit>(context);

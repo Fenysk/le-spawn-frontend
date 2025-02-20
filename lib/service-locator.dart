@@ -12,6 +12,7 @@ import 'package:le_spawn_fr/features/auth/2_domain/usecase/register.usecase.dart
 import 'package:le_spawn_fr/features/bank/features/games/1_data/repository/games.repository-impl.dart';
 import 'package:le_spawn_fr/features/bank/features/games/1_data/source/games-api.service.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/repository/games.repository.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/seach-games-from-barcode.usecase.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/search-games-in-bank.usecase.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/search-games-in-provider.usecase.dart';
 import 'package:le_spawn_fr/features/collections/1_data/repository/collections.repository-impl.dart';
@@ -64,6 +65,7 @@ void setupServiceLocator() {
   serviceLocator.registerSingleton<GetMyCollectionsUsecase>(GetMyCollectionsUsecase());
   serviceLocator.registerSingleton<SearchGamesInBankUsecase>(SearchGamesInBankUsecase());
   serviceLocator.registerSingleton<SearchGamesInProvidersUsecase>(SearchGamesInProvidersUsecase());
+  serviceLocator.registerSingleton<SearchGamesFromBarcodeUsecase>(SearchGamesFromBarcodeUsecase());
   serviceLocator.registerSingleton<AddGameItemToCollectionUsecase>(AddGameItemToCollectionUsecase());
   serviceLocator.registerSingleton<AddBarcodeToGameUsecase>(AddBarcodeToGameUsecase());
   serviceLocator.registerSingleton<LoginWithGoogleUsecase>(LoginWithGoogleUsecase());

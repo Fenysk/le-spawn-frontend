@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:le_spawn_fr/core/utils/debouce.util.dart';
 import 'package:le_spawn_fr/features/bank/features/games/1_data/dto/search-games.request.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/seach-games-from-barcode.usecase.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/search-games-in-bank.usecase.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/search-games-in-provider.usecase.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-barcode-to-game.request.dart';
@@ -29,7 +30,7 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
 
     _selectedBarcode = barcode;
 
-    final result = await serviceLocator<SearchGamesInBankUsecase>().execute(request: SearchGamesRequest(barcode: barcode));
+    final result = await serviceLocator<SearchGamesFromBarcodeUsecase>().execute(request: SearchGamesRequest(barcode: barcode));
 
     result.fold(
       (failure) async {

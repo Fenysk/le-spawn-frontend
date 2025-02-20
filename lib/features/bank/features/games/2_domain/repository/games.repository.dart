@@ -5,4 +5,5 @@ import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.en
 abstract class GamesRepository {
   Future<Either<String, List<GameEntity>>> searchGamesInBank(SearchGamesRequest? request);
   Future<Either<String, List<GameEntity>>> searchGamesInProviders(SearchGamesRequest? request);
+  Future<Either<String, List<GameEntity>>> searchGamesFromBarcode(SearchGamesRequest? request);
 }
