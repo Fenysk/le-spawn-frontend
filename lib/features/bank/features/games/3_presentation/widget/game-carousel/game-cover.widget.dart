@@ -9,6 +9,7 @@ class GameCoverWidget extends StatelessWidget {
   final double height;
   final double? _width;
   final double borderRadius;
+  final VoidCallback? onTap;
 
   double get width => _width ?? height * 2 / 3;
 
@@ -19,6 +20,7 @@ class GameCoverWidget extends StatelessWidget {
     required this.height,
     double? width,
     this.borderRadius = 8,
+    this.onTap,
   }) : _width = width;
 
   @override
@@ -28,41 +30,44 @@ class GameCoverWidget extends StatelessWidget {
     final double elevation = max(0, 8 * (1 - intensity.abs() / 2));
     final int shadowAlpha = ((1 - intensity.abs() / 2) * 255).round();
 
-    return Transform(
-      transform: Matrix4.identity()
-        ..setEntry(3, 2, 0.001)
-        ..rotateY(rotationAngle)
-        ..scale(scale),
-      alignment: Alignment.center,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(shadowAlpha),
-              blurRadius: elevation,
-              offset: Offset(elevation / 2, elevation / 2),
-            ),
-          ],
-        ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Transform(
+        transform: Matrix4.identity()
+          ..setEntry(3, 2, 0.001)
+          ..rotateY(rotationAngle)
+          ..scale(scale),
+        alignment: Alignment.center,
         child: Container(
+          width: width,
+          height: height,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: Colors.black,
-              width: 1.5,
-            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(shadowAlpha),
+                blurRadius: elevation,
+                offset: Offset(elevation / 2, elevation / 2),
+              ),
+            ],
           ),
-          clipBehavior: Clip.antiAlias,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius),
-            child: Image.network(
-              game.coverUrl!,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => const Icon(
-                Icons.error,
-                size: 48,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(
+                color: Colors.black,
+                width: 1.5,
+              ),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: Image.network(
+                game.coverUrl!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                  Icons.error,
+                  size: 48,
+                ),
               ),
             ),
           ),

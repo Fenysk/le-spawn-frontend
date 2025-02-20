@@ -22,6 +22,9 @@ class ApiUrlConstant {
   static String get updateCollection => '$baseUrl/collections';
   static String get deleteCollection => '$baseUrl/collections';
 
+  // GameItems
+  static String get deleteGameItem => '$baseUrl/collections/games';
+
   // GamesBank
   static String get searchGamesInBank => '$baseUrl/games/bank';
   static String get searchGamesInProviders => '$baseUrl/games/providers';

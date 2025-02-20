@@ -11,6 +11,7 @@ abstract class CollectionsApiService {
   Future<Either<String, dynamic>> createCollection(String title);
   Future<Either<String, dynamic>> updateCollection(String collectionId, String title);
   Future<Either<String, String>> deleteCollection(String collectionId);
+  Future<Either<String, String>> deleteGameItem(String gameItemId);
 }
 
 class CollectionsApiServiceImpl implements CollectionsApiService {
@@ -95,6 +96,22 @@ class CollectionsApiServiceImpl implements CollectionsApiService {
         }),
       );
       return Right('Collection deleted successfully');
+    } on DioException catch (error) {
+      return Left(error.response?.data['message'] ?? error.message ?? 'An error occurred');
+    }
+  }
+
+  @override
+  Future<Either<String, String>> deleteGameItem(String gameItemId) async {
+    try {
+      final accessToken = await serviceLocator<AuthLocalService>().getAccessToken();
+      await serviceLocator<DioClient>().delete(
+        '${ApiUrlConstant.deleteGameItem}/$gameItemId',
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken'
+        }),
+      );
+      return Right('Game item deleted successfully');
     } on DioException catch (error) {
       return Left(error.response?.data['message'] ?? error.message ?? 'An error occurred');
     }

@@ -18,6 +18,7 @@ import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/search
 import 'package:le_spawn_fr/features/collections/1_data/repository/collections.repository-impl.dart';
 import 'package:le_spawn_fr/features/collections/1_data/source/collections-api.service.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/repository/collections.repository.dart';
+import 'package:le_spawn_fr/features/collections/2_domain/usecase/delete-game-item.usecase.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/usecase/get-my-collections.usecase.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/repository/new-item.repository-impl.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/source/new-item-api.service.dart';
@@ -69,4 +70,5 @@ void setupServiceLocator() {
   serviceLocator.registerSingleton<AddGameItemToCollectionUsecase>(AddGameItemToCollectionUsecase());
   serviceLocator.registerSingleton<AddBarcodeToGameUsecase>(AddBarcodeToGameUsecase());
   serviceLocator.registerSingleton<LoginWithGoogleUsecase>(LoginWithGoogleUsecase());
+  serviceLocator.registerSingleton<DeleteGameItemUsecase>(DeleteGameItemUsecase());
 }

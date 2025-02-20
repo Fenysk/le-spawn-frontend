@@ -1,4 +1,19 @@
 class LitteralsUtil {
+  static String getState(String state) {
+    switch (state) {
+      case 'Bad':
+        return 'Mauvais';
+      case 'Good':
+        return 'Bon';
+      case 'Mint':
+        return 'Excellent';
+      case 'New':
+        return 'Nouveau';
+      default:
+        return 'Inconnu';
+    }
+  }
+
   static String getGameCategory(String category) {
     switch (category) {
       case 'mainGame':
