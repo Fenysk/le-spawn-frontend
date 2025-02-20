@@ -20,90 +20,105 @@ class NewItemFormTab extends StatefulWidget {
 
 class _NewItemFormTabState extends State<NewItemFormTab> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _stateBoxController = TextEditingController();
-  final TextEditingController _stateGameController = TextEditingController();
-  final TextEditingController _statePaperController = TextEditingController();
   bool _hasBox = false;
   bool _hasGame = false;
   bool _hasPaper = false;
+  double _stateBox = 1;
+  double _stateGame = 1;
+  double _statePaper = 1;
+
+  static const List<String> _states = [
+    'Bad',
+    'Good',
+    'Mint',
+    'New',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ImageOverlay(
-          image: widget.game.coverUrl!,
-          distance: 0.4,
-          sides: [
-            EdgeType.bottomEdge
-          ],
-          color: Colors.white,
-          height: 150,
-          disableGradient: false,
-        ),
+        _buildImageOverlay(),
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SwitchListTile(
-                      title: Text('Has Box'),
-                      value: _hasBox,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _hasBox = value;
-                        });
-                      },
-                    ),
-                    SwitchListTile(
-                      title: Text('Has Game'),
-                      value: _hasGame,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _hasGame = value;
-                        });
-                      },
-                    ),
-                    SwitchListTile(
-                      title: Text('Has Paper'),
-                      value: _hasPaper,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _hasPaper = value;
-                        });
-                      },
-                    ),
-                    TextFormField(
-                      controller: _stateBoxController,
-                      decoration: InputDecoration(labelText: 'State Box'),
-                    ),
-                    TextFormField(
-                      controller: _stateGameController,
-                      decoration: InputDecoration(labelText: 'State Game'),
-                    ),
-                    TextFormField(
-                      controller: _statePaperController,
-                      decoration: InputDecoration(labelText: 'State Paper'),
-                    ),
-                    ElevatedButton(
-                      onPressed: _submitForm,
-                      child: Text('Submit'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          child: _buildForm(),
         ),
       ],
     );
   }
 
-  void _submitForm() async {
+  Widget _buildImageOverlay() {
+    return ImageOverlay(
+      image: widget.game.coverUrl!,
+      distance: 0.4,
+      sides: const [
+        EdgeType.bottomEdge
+      ],
+      color: Colors.white,
+      height: 150,
+      disableGradient: false,
+    );
+  }
+
+  Widget _buildForm() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSwitchListTile('Has Box', _hasBox, (value) => _hasBox = value),
+              _buildSwitchListTile('Has Game', _hasGame, (value) => _hasGame = value),
+              _buildSwitchListTile('Has Paper', _hasPaper, (value) => _hasPaper = value),
+              const SizedBox(height: 24),
+              _buildStateSlider('State Box', _stateBox, (value) => _stateBox = value),
+              _buildStateSlider('State Game', _stateGame, (value) => _stateGame = value),
+              _buildStateSlider('State Paper', _statePaper, (value) => _statePaper = value),
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: const Text('Submit'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwitchListTile(String title, bool value, ValueChanged<bool> onChanged) {
+    return SwitchListTile(
+      title: Text(title),
+      value: value,
+      onChanged: (bool newValue) {
+        setState(() {
+          onChanged(newValue);
+        });
+      },
+    );
+  }
+
+  Widget _buildStateSlider(String title, double value, ValueChanged<double> onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('$title: ${_states[value.round()]}'),
+        Slider(
+          value: value,
+          min: 0,
+          max: 3,
+          divisions: 3,
+          onChanged: (double newValue) {
+            setState(() {
+              onChanged(newValue);
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Future<void> _submitForm() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final dto = AddGameItemToCollectionRequest(
@@ -112,23 +127,34 @@ class _NewItemFormTabState extends State<NewItemFormTab> {
       hasBox: _hasBox,
       hasGame: _hasGame,
       hasPaper: _hasPaper,
-      stateBox: _stateBoxController.text,
-      stateGame: _stateGameController.text,
-      statePaper: _statePaperController.text,
+      stateBox: _states[_stateBox.round()],
+      stateGame: _states[_stateGame.round()],
+      statePaper: _states[_statePaper.round()],
     );
 
     final response = await serviceLocator<AddGameItemToCollectionUsecase>().execute(request: dto);
 
     response.fold(
-      (failure) => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(failure),
-          backgroundColor: Colors.red,
-        ),
+      (failure) => _showErrorSnackBar(failure),
+      (_) => _navigateToCollections(),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
       ),
-      (_) => context.goNamed(AppRoutesConfig.collections, queryParameters: {
+    );
+  }
+
+  void _navigateToCollections() {
+    context.goNamed(
+      AppRoutesConfig.collections,
+      queryParameters: {
         'shouldRefresh': 'true'
-      }),
+      },
     );
   }
 }

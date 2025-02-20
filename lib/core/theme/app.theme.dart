@@ -18,6 +18,37 @@ class AppTheme {
         primaryColor: accentRed,
         scaffoldBackgroundColor: primaryBackground,
         fontFamily: FontConstant.acephimere,
+        inputDecorationTheme: InputDecorationTheme(
+          focusColor: primaryText,
+          filled: true,
+          fillColor: Colors.white,
+          hintStyle: const TextStyle(color: Colors.black54),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black, width: 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: primaryText, width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: error, width: 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: error, width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          labelStyle: TextStyle(color: Colors.grey),
+          floatingLabelStyle: TextStyle(color: primaryText),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: primaryText,
+        ),
         textTheme: TextTheme(
           titleLarge: TextStyle(
             color: primaryBackground,

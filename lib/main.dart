@@ -35,6 +35,7 @@ class MainApp extends StatelessWidget {
           ImageConstant.joystickPath,
           width: MediaQuery.of(context).size.width * 0.7,
         ),
+        animationDuration: const Duration(milliseconds: 500),
         backgroundColor: AppTheme.accentRed,
         nextScreen: MaterialApp.router(
           title: 'Le Spawn',

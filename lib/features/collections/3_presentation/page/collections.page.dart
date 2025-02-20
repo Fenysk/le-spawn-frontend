@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/widget/collection-game-list.widget.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/widget/button-add-new-item.widget.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/widget/button-add-new-item.widget.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/widget/collection-list.widget.dart';
 import 'package:outlined_text/outlined_text.dart';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/widget/scan-barcode-button.widget.dart';
 import 'package:outlined_text/outlined_text.dart';
 
 class WelcomeTab extends StatefulWidget {
@@ -33,33 +34,12 @@ class _WelcomeTabState extends State<WelcomeTab> {
             ),
           ),
           Spacer(),
-          ElevatedButton(
-            onPressed: widget.onScanFirstGamePressed,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryBackground,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.qr_code_scanner,
-                  color: AppTheme.primaryText,
-                  size: 32,
-                ),
-                const SizedBox(width: 16),
-                Text(
-                  'Scan ton premier jeu',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
+          ScanBarcodeButtonWidget(
+            text: 'Scan ton premier jeu',
+            onScanFirstGamePressed: widget.onScanFirstGamePressed,
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+            fontSize: 20,
+            iconSize: 32,
           ),
           Spacer(),
         ],
