@@ -150,26 +150,6 @@ class _AuthPageState extends State<AuthPage> with SingleTickerProviderStateMixin
               );
             }),
           ),
-          const SizedBox(height: 16),
-          IgnorePointer(
-            child: Opacity(
-              opacity: 0.7,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                ),
-                icon: const Icon(
-                  IonIcons.logo_apple,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  "Continuer avec Apple (Bientôt)",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () {},
-              ),
-            ),
-          ),
         ],
       ),
     );
