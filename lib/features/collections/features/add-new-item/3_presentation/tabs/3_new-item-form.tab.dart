@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
+import 'package:le_spawn_fr/core/constant/items.constant.dart';
 import 'package:le_spawn_fr/core/widgets/image-overlay.widget.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/repository/collections.repository.dart';
@@ -23,16 +24,50 @@ class _NewItemFormTabState extends State<NewItemFormTab> {
   bool _hasBox = false;
   bool _hasGame = false;
   bool _hasPaper = false;
-  double _stateBox = 1;
-  double _stateGame = 1;
-  double _statePaper = 1;
 
-  static const List<String> _states = [
-    'Bad',
-    'Good',
-    'Mint',
-    'New',
-  ];
+  double? _stateBox;
+  double? _stateGame;
+  double? _statePaper;
+
+  Future<void> _submitForm() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    final dto = AddGameItemToCollectionRequest(
+      collectionId: serviceLocator<CollectionsRepository>().collectionsCache.first.id,
+      gameId: widget.game.id,
+      hasBox: _hasBox,
+      hasGame: _hasGame,
+      hasPaper: _hasPaper,
+      stateBox: _hasBox ? ItemsConstant.states[_stateBox!.round()] : null,
+      stateGame: _hasGame ? ItemsConstant.states[_stateGame!.round()] : null,
+      statePaper: _hasPaper ? ItemsConstant.states[_statePaper!.round()] : null,
+    );
+
+    final response = await serviceLocator<AddGameItemToCollectionUsecase>().execute(request: dto);
+
+    response.fold(
+      (failure) => _showErrorSnackBar(failure),
+      (_) => _navigateToCollections(),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  void _navigateToCollections() {
+    context.goNamed(
+      AppRoutesConfig.collections,
+      queryParameters: {
+        'shouldRefresh': 'true'
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +103,31 @@ class _NewItemFormTabState extends State<NewItemFormTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSwitchListTile('Has Box', _hasBox, (value) => _hasBox = value),
-              _buildSwitchListTile('Has Game', _hasGame, (value) => _hasGame = value),
-              _buildSwitchListTile('Has Paper', _hasPaper, (value) => _hasPaper = value),
+              _buildSwitchListTile(
+                  'Has Box',
+                  _hasBox,
+                  (value) => setState(() {
+                        _hasBox = value;
+                        _stateBox = value ? 1.0 : null;
+                      })),
+              _buildSwitchListTile(
+                  'Has Game',
+                  _hasGame,
+                  (value) => setState(() {
+                        _hasGame = value;
+                        _stateGame = value ? 1.0 : null;
+                      })),
+              _buildSwitchListTile(
+                  'Has Paper',
+                  _hasPaper,
+                  (value) => setState(() {
+                        _hasPaper = value;
+                        _statePaper = value ? 1.0 : null;
+                      })),
               const SizedBox(height: 24),
-              _buildStateSlider('State Box', _stateBox, (value) => _stateBox = value),
-              _buildStateSlider('State Game', _stateGame, (value) => _stateGame = value),
-              _buildStateSlider('State Paper', _statePaper, (value) => _statePaper = value),
+              if (_hasBox) _buildStateSlider('State Box', _stateBox!, (value) => _stateBox = value, key: UniqueKey()),
+              if (_hasGame) _buildStateSlider('State Game', _stateGame!, (value) => _stateGame = value, key: UniqueKey()),
+              if (_hasPaper) _buildStateSlider('State Paper', _statePaper!, (value) => _statePaper = value, key: UniqueKey()),
               ElevatedButton(
                 onPressed: _submitForm,
                 child: const Text('Submit'),
@@ -90,19 +143,16 @@ class _NewItemFormTabState extends State<NewItemFormTab> {
     return SwitchListTile(
       title: Text(title),
       value: value,
-      onChanged: (bool newValue) {
-        setState(() {
-          onChanged(newValue);
-        });
-      },
+      onChanged: onChanged,
     );
   }
 
-  Widget _buildStateSlider(String title, double value, ValueChanged<double> onChanged) {
+  Widget _buildStateSlider(String title, double value, ValueChanged<double> onChanged, {required Key key}) {
     return Column(
+      key: key,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$title: ${_states[value.round()]}'),
+        Text('$title: ${ItemsConstant.states[value.round()]}'),
         Slider(
           value: value,
           min: 0,
@@ -115,46 +165,6 @@ class _NewItemFormTabState extends State<NewItemFormTab> {
           },
         ),
       ],
-    );
-  }
-
-  Future<void> _submitForm() async {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-
-    final dto = AddGameItemToCollectionRequest(
-      collectionId: serviceLocator<CollectionsRepository>().collectionsCache.first.id,
-      gameId: widget.game.id,
-      hasBox: _hasBox,
-      hasGame: _hasGame,
-      hasPaper: _hasPaper,
-      stateBox: _states[_stateBox.round()],
-      stateGame: _states[_stateGame.round()],
-      statePaper: _states[_statePaper.round()],
-    );
-
-    final response = await serviceLocator<AddGameItemToCollectionUsecase>().execute(request: dto);
-
-    response.fold(
-      (failure) => _showErrorSnackBar(failure),
-      (_) => _navigateToCollections(),
-    );
-  }
-
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-  void _navigateToCollections() {
-    context.goNamed(
-      AppRoutesConfig.collections,
-      queryParameters: {
-        'shouldRefresh': 'true'
-      },
     );
   }
 }
