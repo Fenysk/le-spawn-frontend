@@ -31,6 +31,7 @@ dependencies:
   package_info_plus: ^8.2.1
   webview_flutter: ^4.10.0
   google_sign_in: ^6.2.2
+  another_flutter_splash_screen: ^1.2.1
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,9 @@
+import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:le_spawn_fr/core/configs/go-router.config.dart';
+import 'package:le_spawn_fr/core/constant/image.constant.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
 import 'package:le_spawn_fr/service-locator.dart';
 
@@ -26,16 +28,25 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Le Spawn',
-      routerConfig: goRouterConfig,
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        ...GlobalMaterialLocalizations.delegates,
-        GlobalMaterialLocalizations.delegate,
-      ],
-      themeMode: ThemeMode.light,
-      theme: AppTheme.leSpawnTheme,
+    return MaterialApp(
+      home: FlutterSplashScreen.scale(
+        childWidget: Image.asset(
+          ImageConstant.joystickPath,
+          width: MediaQuery.of(context).size.width * 0.7,
+        ),
+        backgroundColor: AppTheme.accentRed,
+        nextScreen: MaterialApp.router(
+          title: 'Le Spawn',
+          routerConfig: goRouterConfig,
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            ...GlobalMaterialLocalizations.delegates,
+            GlobalMaterialLocalizations.delegate,
+          ],
+          themeMode: ThemeMode.light,
+          theme: AppTheme.leSpawnTheme,
+        ),
+      ),
     );
   }
 }
