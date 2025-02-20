@@ -85,7 +85,13 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
   void resetGame() {
     _selectedGame = null;
     _selectedBarcode = null;
+    _fetchedGames = [];
     emit(AddNewGameInitialState());
+  }
+
+  void selectGame(String gameId) async {
+    _selectedGame = _fetchedGames.firstWhere((game) => game.id == gameId);
+    emit(AddNewGameConfirmationGameState(game: _selectedGame!));
   }
 
   void confirmGame(String gameId) async {

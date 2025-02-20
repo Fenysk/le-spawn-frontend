@@ -8,6 +8,7 @@ class GameCoverWidget extends StatelessWidget {
   final double intensity;
   final double height;
   final double? _width;
+  final double borderRadius;
 
   double get width => _width ?? height * 2 / 3;
 
@@ -17,6 +18,7 @@ class GameCoverWidget extends StatelessWidget {
     this.intensity = 0,
     required this.height,
     double? width,
+    this.borderRadius = 8,
   }) : _width = width;
 
   @override
@@ -46,7 +48,7 @@ class GameCoverWidget extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
               color: Colors.black,
               width: 1.5,
@@ -54,7 +56,7 @@ class GameCoverWidget extends StatelessWidget {
           ),
           clipBehavior: Clip.antiAlias,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(borderRadius),
             child: Image.network(
               game.coverUrl!,
               fit: BoxFit.cover,

@@ -23,6 +23,17 @@ class AddNewGameLoadedGamesState extends AddNewGameState {
       ];
 }
 
+class AddNewGameConfirmationGameState extends AddNewGameState {
+  final GameEntity game;
+
+  const AddNewGameConfirmationGameState({required this.game});
+
+  @override
+  List<Object> get props => [
+        game
+      ];
+}
+
 class AddNewGameItemInfoState extends AddNewGameState {
   final GameEntity game;
 

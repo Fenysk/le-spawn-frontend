@@ -46,3 +46,4 @@ app.*.map.json
 .env
 .version
 version.sh
+android/app/.cxx/Debug/*
