@@ -33,6 +33,7 @@ dependencies:
   google_sign_in: ^6.2.2
   another_flutter_splash_screen: ^1.2.1
   icons_plus: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
 
 
 dev_dependencies:
