@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
+import 'package:le_spawn_fr/core/theme/app.theme.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth/auth.cubit.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth/auth.state.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
@@ -20,27 +21,29 @@ class SkeletonPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthCubit>(
-      create: (context) => AuthCubit()..appStarted(),
-      child: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          return switch (state) {
-            AuthLoadingState() => buildLoadingContent(),
-            UnauthenticatedState() => _handleUnauthenticated(context),
-            AuthenticatedState() => _buildAuthenticatedLayout(context),
-            _ => Container(),
-          };
-        },
+    return Scaffold(
+      body: BlocProvider<AuthCubit>(
+        create: (context) => AuthCubit()..appStarted(),
+        child: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            return switch (state) {
+              AuthLoadingState() => buildLoadingContent(),
+              UnauthenticatedState() => _handleUnauthenticated(context),
+              AuthenticatedState() => _buildAuthenticatedLayout(context),
+              _ => Container(color: AppTheme.accentRed),
+            };
+          },
+        ),
       ),
     );
   }
 
   Widget buildLoadingContent() => const Center(
         child: Column(
+          spacing: 16,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Le Spawn'),
-            SizedBox(height: 16),
             CircularProgressIndicator(),
           ],
         ),

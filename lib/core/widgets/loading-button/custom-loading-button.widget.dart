@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:le_spawn_fr/core/theme/app.theme.dart';
 import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.state-cubit.dart';
 import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.state.dart';
 
@@ -14,63 +15,47 @@ class CustomLoadingButton extends StatelessWidget {
     return BlocBuilder<LoadingButtonCubit, LoadingButtonState>(
       builder: (context, state) {
         return switch (state) {
-          LoadingButtonLoadingState() => _buildLoading(context),
-          LoadingButtonSuccessState() => _buildSuccess(context),
-          LoadingButtonFailureState() => _buildFailure(context, state),
-          _ => _buildInitial(context),
+          LoadingButtonLoadingState() => _buildLoading(),
+          LoadingButtonSuccessState() => _buildSuccess(),
+          LoadingButtonFailureState() => _buildFailure(state),
+          _ => _buildInitial(),
         };
       },
     );
   }
 
-  Widget _buildLoading(BuildContext context) {
-    final themeData = Theme.of(context);
-
+  Widget _buildLoading() {
     return ElevatedButton(
-      onPressed: () {},
-      style: themeData.elevatedButtonTheme.style,
+      onPressed: null,
       child: const CircularProgressIndicator(),
     );
   }
 
-  Widget _buildInitial(BuildContext context) {
-    final themeData = Theme.of(context);
-
+  Widget _buildInitial() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppTheme.accentYellow,
+      ),
       onPressed: onPressed,
-      style: themeData.elevatedButtonTheme.style,
       child: Text(
         text,
-        style: themeData.textTheme.bodyMedium!.copyWith(color: themeData.primaryColor),
+        style: TextStyle(color: AppTheme.primaryText),
       ),
     );
   }
 
-  Widget _buildSuccess(BuildContext context) {
-    final themeData = Theme.of(context);
-
+  Widget _buildSuccess() {
     return ElevatedButton(
       onPressed: null,
-      style: themeData.elevatedButtonTheme.style,
-      child: Text(
-        'Success',
-        style: themeData.textTheme.bodyMedium,
-      ),
+      child: const Text('Success'),
     );
   }
 
-  Widget _buildFailure(BuildContext context, LoadingButtonFailureState state) {
-    final themeData = Theme.of(context);
-
+  Widget _buildFailure(LoadingButtonFailureState state) {
     return ElevatedButton(
       onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
-      ),
-      child: Text(
-        state.errorMessage,
-        style: themeData.textTheme.bodyMedium,
-      ),
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+      child: Text(state.errorMessage),
     );
   }
 }

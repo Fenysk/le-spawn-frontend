@@ -25,9 +25,9 @@ class AppTheme {
             fontFamily: FontConstant.grobold,
             letterSpacing: 1,
             shadows: [
-              Shadow(
+              const Shadow(
                 color: Colors.black,
-                offset: const Offset(2, 3),
+                offset: Offset(2, 3),
               ),
             ],
           ),

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +6,6 @@ import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.stat
 import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.state.dart';
 import 'package:le_spawn_fr/core/widgets/loading-button/custom-loading-button.widget.dart';
 import 'package:le_spawn_fr/features/auth/1_data/dto/register.request.dart';
-import 'package:le_spawn_fr/features/auth/2_domain/usecase/login-with-google.usecase.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/usecase/register.usecase.dart';
 import 'package:le_spawn_fr/features/user/2_domain/repository/users.repository.dart';
 import 'package:le_spawn_fr/service-locator.dart';
@@ -122,17 +119,20 @@ class _RegisterTabState extends State<RegisterTab> {
               SnackBar(
                 content: Text(
                   'Error creating account: ${state.errorMessage}',
-                  style: themeData.textTheme.bodyMedium,
+                  style: themeData.textTheme.bodyMedium?.copyWith(
+                    color: themeData.colorScheme.onError,
+                  ),
                 ),
+                backgroundColor: themeData.colorScheme.error,
               ),
             );
           }
         },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Form(
-              key: _formKey,
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -188,15 +188,6 @@ class _RegisterTabState extends State<RegisterTab> {
                       );
                     },
                   ),
-                  if (Platform.isAndroid || Platform.isIOS)
-                    Builder(builder: (buttonContext) {
-                      return CustomLoadingButton(
-                        text: 'Sign in With Google',
-                        onPressed: () => buttonContext.read<LoadingButtonCubit>().execute(
-                              usecase: serviceLocator<LoginWithGoogleUsecase>(),
-                            ),
-                      );
-                    }),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: widget.onGoToLoginTab,
