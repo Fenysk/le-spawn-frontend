@@ -11,8 +11,6 @@ class UserDisplayCubit extends Cubit<UserDisplayState> {
   void displayUser({String? userId}) async {
     final Either result;
 
-    print('\x1B[31m---- \x1B[0m$userId');
-
     if (userId == null || userId.isEmpty)
       result = await serviceLocator<GetMyProfileUsecase>().execute();
     else

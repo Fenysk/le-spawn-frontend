@@ -14,7 +14,7 @@ class AuthenticatedState extends AuthState {
   final UserEntity? user;
   final bool isFirstTime;
 
-  const AuthenticatedState({this.user, this.isFirstTime = false});
+  const AuthenticatedState({this.user, this.isFirstTime = true});
 
   @override
   List<Object?> get props => [

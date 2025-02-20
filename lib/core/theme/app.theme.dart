@@ -37,5 +37,11 @@ class AppTheme {
           secondary: secondaryText,
           error: error,
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+          ),
+        ),
       );
 }

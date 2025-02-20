@@ -18,7 +18,7 @@ final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
 final goRouterConfig = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutesConfig.collections,
+  initialLocation: AppRoutesConfig.auth, // TODO: Change to collections after finishing onboarding
   debugLogDiagnostics: true,
   routes: [
     GoRoute(
