@@ -6,6 +6,7 @@ import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.stat
 import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.state.dart';
 import 'package:le_spawn_fr/core/widgets/loading-button/custom-loading-button.widget.dart';
 import 'package:le_spawn_fr/features/auth/1_data/dto/register.request.dart';
+import 'package:le_spawn_fr/features/auth/1_data/repository/auth.repository-impl.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/usecase/register.usecase.dart';
 import 'package:le_spawn_fr/features/user/2_domain/repository/users.repository.dart';
 import 'package:le_spawn_fr/service-locator.dart';
@@ -111,7 +112,17 @@ class _RegisterTabState extends State<RegisterTab> {
       child: BlocListener<LoadingButtonCubit, LoadingButtonState>(
         listener: (context, state) {
           if (state is LoadingButtonSuccessState) {
-            context.go(AppRoutesConfig.collections);
+            print('LoadingButtonSuccessState received');
+            if (state.data is! AuthenticatedDataResponse) {
+              print('Unexpected data type: ${state.data.runtimeType}');
+              return;
+            }
+
+            final data = state.data as AuthenticatedDataResponse;
+            print('AuthenticatedDataResponse: isFirstTime=${data.isFirstTime}');
+            final route = data.isFirstTime ? AppRoutesConfig.onboarding : AppRoutesConfig.collections;
+            print('Navigating to: $route');
+            context.go(route);
           }
 
           if (state is LoadingButtonFailureState) {

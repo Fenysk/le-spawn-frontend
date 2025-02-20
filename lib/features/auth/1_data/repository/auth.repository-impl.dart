@@ -11,11 +11,26 @@ import 'package:le_spawn_fr/features/user/1_data/source/user-local.service.dart'
 import 'package:le_spawn_fr/features/user/2_domain/entity/user.entity.dart';
 import 'package:le_spawn_fr/service-locator.dart';
 
+class AuthenticatedDataResponse {
+  final String accessToken;
+  final String refreshToken;
+  final bool isFirstTime;
+  final UserEntity user;
+
+  AuthenticatedDataResponse({
+    required this.accessToken,
+    required this.refreshToken,
+    required this.isFirstTime,
+    required this.user,
+  });
+}
+
 class AuthRepositoryImpl extends AuthRepository {
-  Future<Either<String, UserEntity>> _handleAuthResponse(Response response) async {
+  Future<Either<String, AuthenticatedDataResponse>> _handleAuthResponse(Response response) async {
     final accessToken = response.data['tokens']['accessToken'];
     final refreshToken = response.data['tokens']['refreshToken'];
     final user = response.data['user'];
+    final isFirstTime = response.data['isFirstTime'] as bool;
 
     if (accessToken != null) await serviceLocator<AuthLocalService>().setAccessToken(accessToken);
     if (refreshToken != null) await serviceLocator<AuthLocalService>().setRefreshToken(refreshToken);
@@ -23,7 +38,12 @@ class AuthRepositoryImpl extends AuthRepository {
     final userModel = UserModel.fromMap(user);
     if (user != null) await serviceLocator<UserLocalService>().setCurrentUser(userModel);
 
-    return Right(userModel.toEntity());
+    return Right(AuthenticatedDataResponse(
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      isFirstTime: isFirstTime,
+      user: userModel.toEntity(),
+    ));
   }
 
   @override
@@ -32,7 +52,7 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either<String, UserEntity>> register(RegisterRequest registerRequest) async {
+  Future<Either<String, AuthenticatedDataResponse>> register(RegisterRequest registerRequest) async {
     Either result = await serviceLocator<AuthApiService>().register(registerRequest);
 
     return result.fold(
@@ -42,7 +62,7 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either<String, UserEntity>> login(LoginRequest loginRequest) async {
+  Future<Either<String, AuthenticatedDataResponse>> login(LoginRequest loginRequest) async {
     Either<String, dynamic> result = await serviceLocator<AuthApiService>().login(loginRequest);
 
     return result.fold(
@@ -52,16 +72,19 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either> logout() async {
+  Future<Either<String, void>> logout() async {
     Either result = await serviceLocator<AuthApiService>().logout();
 
     await serviceLocator<AuthLocalService>().clearTokens();
 
-    return result;
+    return result.fold(
+      (error) => Left(error),
+      (data) => Right(null),
+    );
   }
 
   @override
-  Future<Either> refresh() async {
+  Future<Either<String, AuthenticatedDataResponse>> refresh() async {
     final refreshToken = await serviceLocator<AuthLocalService>().getRefreshToken();
 
     Either result = await serviceLocator<AuthApiService>().refresh(refreshToken);
@@ -76,32 +99,21 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either<String, UserEntity>> loginWithGoogle() async {
+  Future<Either<String, AuthenticatedDataResponse>> loginWithGoogle() async {
     try {
-      print('Starting Google Sign-In process');
       final GoogleSignInAccount? googleUser = await serviceLocator<AuthApiService>().signInWithGoogle();
 
       if (googleUser == null) {
-        print('Google Sign-In aborted by user');
         return Left('Sign-in aborted by user');
       }
 
-      print('Google Sign-In successful, user: ${googleUser.email}');
-      print('Initiating server-side authentication');
       final response = await serviceLocator<AuthApiService>().googleLoginFromApp(googleUser);
 
       return response.fold(
-        (error) {
-          print('Server-side authentication failed: $error');
-          return Left(error);
-        },
-        (data) {
-          print('Server-side authentication successful');
-          return _handleAuthResponse(data);
-        },
+        (error) => Left(error),
+        (data) => _handleAuthResponse(data),
       );
     } catch (e) {
-      print('Google Sign-In failed with exception: ${e.toString()}');
       return Left('Google Sign-In failed: ${e.toString()}');
     }
   }

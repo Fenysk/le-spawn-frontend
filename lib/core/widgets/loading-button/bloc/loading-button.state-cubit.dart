@@ -18,7 +18,7 @@ class LoadingButtonCubit extends Cubit<LoadingButtonState> {
 
       result.fold(
         (error) => emit(LoadingButtonFailureState(errorMessage: error.toString())),
-        (data) => emit(LoadingButtonSuccessState()),
+        (data) => emit(LoadingButtonSuccessState(data: data)),
       );
     } catch (error) {
       if (isClosed) return;

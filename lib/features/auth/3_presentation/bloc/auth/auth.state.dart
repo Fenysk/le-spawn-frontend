@@ -12,12 +12,14 @@ class AuthLoadingState extends AuthState {}
 
 class AuthenticatedState extends AuthState {
   final UserEntity? user;
+  final bool isFirstTime;
 
-  const AuthenticatedState({this.user});
+  const AuthenticatedState({this.user, this.isFirstTime = false});
 
   @override
   List<Object?> get props => [
         user,
+        isFirstTime,
       ];
 }
 

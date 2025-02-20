@@ -7,6 +7,7 @@ import 'package:le_spawn_fr/features/bank/3_presentation/page/bank.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/page/add-new-game.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/page/collections.page.dart';
+import 'package:le_spawn_fr/features/onboarding/3_presentation/page/onboarding.page.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/page/skeleton.page.dart';
 import 'package:le_spawn_fr/features/user/3_presentation/page/profile.page.dart';
 
@@ -20,6 +21,15 @@ final goRouterConfig = GoRouter(
   initialLocation: AppRoutesConfig.collections,
   debugLogDiagnostics: true,
   routes: [
+    GoRoute(
+      path: AppRoutesConfig.onboarding,
+      name: AppRoutesConfig.onboarding,
+      pageBuilder: (context, state) => CustomTransitionPage<void>(
+        key: state.pageKey,
+        child: const OnboardingPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child),
+      ),
+    ),
     GoRoute(
       path: AppRoutesConfig.auth,
       name: AppRoutesConfig.auth,

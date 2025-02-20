@@ -2,12 +2,15 @@ import 'dart:io';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
 import 'package:le_spawn_fr/core/constant/image.constant.dart';
-import 'package:le_spawn_fr/features/auth/2_domain/usecase/login-with-google.usecase.dart';
+import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth/auth.cubit.dart';
+import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth/auth.state.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/tab/login.tab.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/tab/register.tab.dart';
-import 'package:le_spawn_fr/service-locator.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -43,41 +46,44 @@ class _AuthPageState extends State<AuthPage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: SafeArea(
-        top: true,
-        bottom: true,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 32),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                height: _showSocialLogin ? 150 : 80,
-                child: Center(
-                  child: Image.asset(
-                    ImageConstant.logoTextTransparentPath,
-                    height: 70,
-                    fit: BoxFit.contain,
+    return BlocProvider(
+      create: (context) => AuthCubit(),
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        body: SafeArea(
+          top: true,
+          bottom: true,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 32),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  height: _showSocialLogin ? 150 : 80,
+                  child: Center(
+                    child: Image.asset(
+                      ImageConstant.logoTextTransparentPath,
+                      height: 70,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Flexible(
-              child: Column(
-                children: [
-                  Flexible(
-                    child: _showSocialLogin ? buildSocialContent() : buildCredentialsContent(),
-                  ),
-                  if (Platform.isAndroid || Platform.isIOS) buildSwitchButton(),
-                ],
+              Flexible(
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: _showSocialLogin ? buildSocialContent() : buildCredentialsContent(),
+                    ),
+                    if (Platform.isAndroid || Platform.isIOS) buildSwitchButton(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -123,14 +129,26 @@ class _AuthPageState extends State<AuthPage> with SingleTickerProviderStateMixin
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-            icon: const Icon(
-              IonIcons.logo_google,
-              color: Colors.black,
-            ),
-            label: const Text("Continuer avec Google", style: TextStyle(color: Colors.black)),
-            onPressed: () => serviceLocator<LoginWithGoogleUsecase>().execute(),
+          BlocListener<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state is AuthenticatedState) {
+                if (state.isFirstTime)
+                  context.go(AppRoutesConfig.onboarding);
+                else
+                  context.go(AppRoutesConfig.collections);
+              }
+            },
+            child: Builder(builder: (context) {
+              return ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                icon: const Icon(
+                  IonIcons.logo_google,
+                  color: Colors.black,
+                ),
+                label: const Text("Continuer avec Google", style: TextStyle(color: Colors.black)),
+                onPressed: () => BlocProvider.of<AuthCubit>(context).signInWithGoogle(),
+              );
+            }),
           ),
           const SizedBox(height: 16),
           IgnorePointer(
