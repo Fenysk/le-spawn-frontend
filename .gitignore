@@ -49,3 +49,4 @@ version.sh
 android/app/.cxx/Debug/*
 configure_fingerprint.bin
 .cursorrules
+.cursor/*

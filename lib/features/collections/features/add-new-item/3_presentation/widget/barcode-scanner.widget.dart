@@ -7,10 +7,11 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 class BarcodeScannerWidget extends StatefulWidget {
   final AddNewGameCubit addNewGameCubit;
   final bool isDebug;
-
+  final VoidCallback onGamesFetched;
   const BarcodeScannerWidget({
     super.key,
     required this.addNewGameCubit,
+    required this.onGamesFetched,
     this.isDebug = false,
   });
 
@@ -114,9 +115,7 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
       value: widget.addNewGameCubit,
       child: BlocListener<AddNewGameCubit, AddNewGameState>(
         listener: (context, state) {
-          if (state is AddNewGameLoadedGamesState) {
-            if (mounted) Navigator.of(context).pop();
-          }
+          if (state is AddNewGameLoadedGamesState) widget.onGamesFetched();
         },
         child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
           builder: (context, state) {
