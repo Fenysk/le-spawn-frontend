@@ -4,6 +4,7 @@ import 'package:le_spawn_fr/core/utils/litterals.util.dart';
 import 'package:le_spawn_fr/features/bank/features/games/3_presentation/widget/game-carousel/game-cover.widget.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
+import 'package:le_spawn_fr/features/reports/3_presentation/widget/report-game-dialog.widget.dart';
 
 class GameItemDetailsWidget extends StatelessWidget {
   final GameItemEntity gameItem;
@@ -286,36 +287,55 @@ class GameItemDetailsWidget extends StatelessWidget {
   }
 
   Widget _buildDeleteButton(BuildContext context) {
-    return FilledButton.icon(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (dialogContext) => AlertDialog(
-            title: const Text('Confirmation'),
-            content: Text('Voulez-vous vraiment supprimer ${gameItem.game.name} de votre collection ?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: const Text('Annuler'),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FilledButton.icon(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (dialogContext) => AlertDialog(
+                title: const Text('Confirmation'),
+                content: Text('Voulez-vous vraiment supprimer ${gameItem.game.name} de votre collection ?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: const Text('Annuler'),
+                  ),
+                  FilledButton(
+                    onPressed: () {
+                      BlocProvider.of<CollectionsCubit>(context).deleteGameItem(gameItem);
+                      Navigator.pop(dialogContext);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Supprimer'),
+                  ),
+                ],
               ),
-              FilledButton(
-                onPressed: () {
-                  BlocProvider.of<CollectionsCubit>(context).deleteGameItem(gameItem);
-                  Navigator.pop(dialogContext);
-                  Navigator.pop(context);
-                },
-                child: const Text('Supprimer'),
-              ),
-            ],
+            );
+          },
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
           ),
-        );
-      },
-      style: FilledButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.errorContainer,
-        foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
-      ),
-      icon: const Icon(Icons.delete_outline),
-      label: const Text('Supprimer'),
+          icon: const Icon(Icons.delete_outline),
+          label: const Text('Supprimer'),
+        ),
+        const SizedBox(width: 16),
+        TextButton.icon(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => ReportGameDialog(game: gameItem.game),
+            );
+          },
+          icon: const Icon(Icons.report_problem_outlined),
+          label: const Text('Signaler un problème'),
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).colorScheme.error,
+          ),
+        ),
+      ],
     );
   }
 }
