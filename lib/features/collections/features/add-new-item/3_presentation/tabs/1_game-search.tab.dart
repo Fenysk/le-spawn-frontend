@@ -106,28 +106,42 @@ class _GameSearchTabState extends State<GameSearchTab> {
         itemBuilder: (context, index) {
           final game = games[index];
 
-          return ListTile(
-            leading: GameCoverWidget(
-              game: game,
-              height: 60,
-              borderRadius: 4,
-            ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(game.name),
-                if (game.platforms.isNotEmpty)
-                  Text(
-                    game.platforms.map((platform) => platform.name).join(', '),
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-              ],
-            ),
-            trailing: Text(LitteralsUtil.getGameCategory(game.category.name)),
-            onTap: () => context.read<AddNewGameCubit>().selectGame(game.id),
-          );
+          return GameTile(game: game);
         },
       ),
+    );
+  }
+}
+
+class GameTile extends StatelessWidget {
+  const GameTile({
+    super.key,
+    required this.game,
+  });
+
+  final GameEntity game;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: GameCoverWidget(
+        game: game,
+        height: 60,
+        borderRadius: 4,
+      ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(game.name),
+          if (game.platforms.isNotEmpty)
+            Text(
+              game.platforms.map((platform) => platform.name).join(', '),
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+        ],
+      ),
+      trailing: Text(LitteralsUtil.getGameCategory(game.category.name)),
+      onTap: () => context.read<AddNewGameCubit>().selectGame(game.id),
     );
   }
 }

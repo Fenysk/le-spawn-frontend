@@ -4,6 +4,7 @@ import 'package:le_spawn_fr/core/utils/litterals.util.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/bank/features/games/3_presentation/widget/game-carousel/game-cover.widget.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/reports/3_presentation/widget/report-game-dialog.widget.dart';
 
 class ConfirmGameTab extends StatefulWidget {
   final GameEntity game;
@@ -63,6 +64,23 @@ class _ConfirmGameTabState extends State<ConfirmGameTab> {
                 child: const Text('Oui, c\'est bon'),
               ),
             ],
+          ),
+          const SizedBox(height: 16),
+          TextButton.icon(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (dialogContext) => ReportGameDialog(
+                  game: widget.game,
+                  parentContext: context,
+                ),
+              );
+            },
+            icon: const Icon(Icons.report_problem_outlined),
+            label: const Text('Signaler un problème'),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
           ),
         ],
       ),

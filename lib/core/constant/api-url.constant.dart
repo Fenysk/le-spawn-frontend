@@ -33,4 +33,10 @@ class ApiUrlConstant {
 
   // New Item
   static String get addGameToCollection => '$baseUrl/collections/games';
+
+  // Reports
+  static String get createGameReport => '$baseUrl/game-reports';
+  static String get getGameReports => '$baseUrl/game-reports/game';
+  static String get getMyReports => '$baseUrl/game-reports/user';
+  static String get updateReportStatus => '$baseUrl/game-reports';
 }
