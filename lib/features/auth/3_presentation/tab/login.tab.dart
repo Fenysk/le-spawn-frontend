@@ -7,7 +7,7 @@ import 'package:le_spawn_fr/core/widgets/loading-button/bloc/loading-button.stat
 import 'package:le_spawn_fr/core/widgets/loading-button/custom-loading-button.widget.dart';
 import 'package:le_spawn_fr/features/auth/1_data/dto/login.request.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/usecase/login.usecase.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 class LoginTab extends StatefulWidget {
   final VoidCallback onGoToRegisterTab;

@@ -1,5 +1,5 @@
 import 'package:le_spawn_fr/features/auth/2_domain/repository/auth.repository.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 

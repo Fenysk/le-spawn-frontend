@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:le_spawn_fr/features/user/2_domain/usecase/get-my-profile.usecase.dart';
 import 'package:le_spawn_fr/features/user/2_domain/usecase/get-user-profile.usecase.dart';
 import 'package:le_spawn_fr/features/user/3_presentation/bloc/user-display.state.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 class UserDisplayCubit extends Cubit<UserDisplayState> {
   UserDisplayCubit() : super(UserDisplayLoading());

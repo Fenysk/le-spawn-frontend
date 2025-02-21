@@ -8,7 +8,7 @@ import 'package:le_spawn_fr/features/bank/features/games/2_domain/usecase/search
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-barcode-to-game.request.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/usecase/add-barcode-to-game.usecase.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.state.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 class AddNewGameCubit extends Cubit<AddNewGameState> {
   List<GameEntity> _fetchedGames = [];

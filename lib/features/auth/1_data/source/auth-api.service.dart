@@ -8,7 +8,7 @@ import 'package:le_spawn_fr/core/network/dio_client.dart';
 import 'package:le_spawn_fr/features/auth/1_data/dto/login.request.dart';
 import 'package:le_spawn_fr/features/auth/1_data/dto/register.request.dart';
 import 'package:le_spawn_fr/features/auth/1_data/source/auth-local.service.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 abstract class AuthApiService {
   Future<Either> register(RegisterRequest registerRequest);

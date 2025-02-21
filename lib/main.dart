@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:le_spawn_fr/core/configs/go-router.config.dart';
 import 'package:le_spawn_fr/core/constant/image.constant.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -4,7 +4,7 @@ import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.enti
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/usecase/delete-game-item.usecase.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/usecase/get-my-collections.usecase.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 part 'collections.state.dart';
 

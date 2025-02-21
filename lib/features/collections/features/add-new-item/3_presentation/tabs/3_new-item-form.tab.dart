@@ -6,7 +6,7 @@ import 'package:le_spawn_fr/core/widgets/image-overlay.widget.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/repository/collections.repository.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/usecase/add-game-item-to-collection.usecase.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 import 'package:soft_edge_blur/soft_edge_blur.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-new-game-to-collection.request.dart';
 

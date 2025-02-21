@@ -4,7 +4,7 @@ import 'package:le_spawn_fr/features/bank/features/games/1_data/model/game.model
 import 'package:le_spawn_fr/features/bank/features/games/1_data/source/games-api.service.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/repository/games.repository.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 class GamesRepositoryImpl implements GamesRepository {
   @override

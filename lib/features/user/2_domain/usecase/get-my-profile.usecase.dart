@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:le_spawn_fr/core/usecase/usecase.dart';
 import 'package:le_spawn_fr/features/user/2_domain/repository/users.repository.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 class GetMyProfileUsecase implements Usecase<Either, dynamic> {
   @override

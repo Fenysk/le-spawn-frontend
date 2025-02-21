@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:le_spawn_fr/core/network/dio_client.dart';
 import 'package:le_spawn_fr/features/auth/1_data/source/auth-local.service.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/repository/auth.repository.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 class RefreshTokenInterceptor extends Interceptor {
   @override

@@ -5,7 +5,7 @@ import 'package:le_spawn_fr/core/constant/api-url.constant.dart';
 import 'package:le_spawn_fr/core/network/dio_client.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-new-game-to-collection.request.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-barcode-to-game.request.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 abstract class NewItemApiService {
   Future<Either<String, dynamic>> addGameToCollection(AddGameItemToCollectionRequest dto);

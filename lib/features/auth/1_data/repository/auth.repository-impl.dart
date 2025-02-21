@@ -9,7 +9,7 @@ import 'package:le_spawn_fr/features/auth/2_domain/repository/auth.repository.da
 import 'package:le_spawn_fr/features/user/1_data/model/user.model.dart';
 import 'package:le_spawn_fr/features/user/1_data/source/user-local.service.dart';
 import 'package:le_spawn_fr/features/user/2_domain/entity/user.entity.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 
 class AuthenticatedDataResponse {
   final String accessToken;

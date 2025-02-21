@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/bank/features/games/3_presentation/widget/game-carousel/game-cover.widget.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.entity.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';

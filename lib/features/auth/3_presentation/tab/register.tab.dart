@@ -9,7 +9,7 @@ import 'package:le_spawn_fr/features/auth/1_data/dto/register.request.dart';
 import 'package:le_spawn_fr/features/auth/1_data/repository/auth.repository-impl.dart';
 import 'package:le_spawn_fr/features/auth/2_domain/usecase/register.usecase.dart';
 import 'package:le_spawn_fr/features/user/2_domain/repository/users.repository.dart';
-import 'package:le_spawn_fr/service-locator.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
 import 'dart:async';
 
 class RegisterTab extends StatefulWidget {
