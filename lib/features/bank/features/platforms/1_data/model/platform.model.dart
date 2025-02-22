@@ -7,7 +7,7 @@ class PlatformModel {
   final String id;
   final int? igdbPlatformId;
   final String name;
-  final String abbreviation;
+  final String? abbreviation;
   final int? generation;
   final List<GameModel>? games;
 
@@ -15,7 +15,7 @@ class PlatformModel {
     required this.id,
     this.igdbPlatformId,
     required this.name,
-    required this.abbreviation,
+    this.abbreviation,
     this.generation,
     this.games,
   });
@@ -25,7 +25,7 @@ class PlatformModel {
       id: map['id'] as String,
       igdbPlatformId: map['igdbPlatformId'] as int?,
       name: map['name'] as String,
-      abbreviation: map['abbreviation'] as String,
+      abbreviation: map['abbreviation'] as String?,
       generation: map['generation'] as int?,
       games: map['games'] != null
           ? List<GameModel>.from(

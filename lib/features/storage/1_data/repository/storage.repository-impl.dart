@@ -1,37 +1,30 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
-import '../../2_domain/repository/storage.repository.dart';
-import '../../2_domain/entity/uploaded-file.entity.dart';
-import '../model/uploaded-file.model.dart';
+import 'package:le_spawn_fr/core/di/service-locator.dart';
+import 'package:le_spawn_fr/features/storage/1_data/model/uploaded-file.model.dart';
+import 'package:le_spawn_fr/features/storage/1_data/source/storage-api.service.dart';
+import 'package:le_spawn_fr/features/storage/2_domain/entity/uploaded-file.entity.dart';
+import 'package:le_spawn_fr/features/storage/2_domain/repository/storage.repository.dart';
 
 class StorageRepositoryImpl implements StorageRepository {
-  final Dio _dio;
-
-  StorageRepositoryImpl(this._dio);
-
   @override
   Future<Either<String, UploadedFileEntity>> uploadFile(
     File file, {
     String? bucket,
   }) async {
-    try {
-      final formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(file.path),
-        if (bucket != null) 'bucket': bucket,
-      });
+    final result = await serviceLocator<StorageApiService>().uploadFile(
+      file,
+      bucket: bucket,
+    );
 
-      final response = await _dio.post(
-        '/storage/upload',
-        data: formData,
-      );
-
-      final model = UploadedFileModel.fromJson(response.data);
-      return Right(model.toEntity());
-    } catch (e) {
-      return Left('Failed to upload file: $e');
-    }
+    return result.fold(
+      (error) => Left(error),
+      (data) {
+        final model = UploadedFileModel.fromJson(data);
+        return Right(model.toEntity());
+      },
+    );
   }
 
   @override
@@ -39,18 +32,14 @@ class StorageRepositoryImpl implements StorageRepository {
     String url, {
     String? bucket,
   }) async {
-    try {
-      final response = await _dio.delete(
-        '/storage/url',
-        data: {
-          'url': url,
-          if (bucket != null) 'bucket': bucket,
-        },
-      );
+    final result = await serviceLocator<StorageApiService>().deleteFileFromUrl(
+      url,
+      bucket: bucket,
+    );
 
-      return Right(response.data as String);
-    } catch (e) {
-      return Left('Failed to delete file: $e');
-    }
+    return result.fold(
+      (error) => Left(error),
+      (data) => Right(data as String),
+    );
   }
 }

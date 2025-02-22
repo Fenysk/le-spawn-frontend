@@ -64,6 +64,9 @@ class GamesApiServiceImpl implements GamesApiService {
 
       return Right(response.data);
     } on DioException catch (error) {
+      if (error.response?.statusCode == 404) {
+        return Left('404 - Game not found');
+      }
       return Left(error.response?.data['message'] ?? error.message ?? 'An error occurred');
     }
   }
@@ -71,14 +74,18 @@ class GamesApiServiceImpl implements GamesApiService {
   @override
   Future<Either<String, dynamic>> fetchGamesFromImages(GetGamesFromImagesRequest request) async {
     try {
+      final accessToken = await serviceLocator<AuthLocalService>().getAccessToken();
       final response = await serviceLocator<DioClient>().get(
-        '/bank/games/images',
+        ApiUrlConstant.searchGamesFromImages,
         data: request.toJson(),
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken'
+        }),
       );
 
       return Right(response.data);
-    } catch (e) {
-      return Left(e.toString());
+    } on DioException catch (error) {
+      return Left(error.response?.data['message'] ?? error.message ?? 'An error occurred');
     }
   }
 }

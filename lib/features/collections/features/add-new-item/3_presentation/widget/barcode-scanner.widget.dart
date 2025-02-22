@@ -6,13 +6,14 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 class BarcodeScannerWidget extends StatefulWidget {
   final AddNewGameCubit addNewGameCubit;
-  final bool isDebug;
   final VoidCallback onGamesFetched;
+  final VoidCallback onClose;
+
   const BarcodeScannerWidget({
     super.key,
     required this.addNewGameCubit,
     required this.onGamesFetched,
-    this.isDebug = false,
+    required this.onClose,
   });
 
   @override
@@ -27,22 +28,6 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
   void initState() {
     super.initState();
     cameraController = MobileScannerController();
-    widget.addNewGameCubit.resetGame();
-    initDebugMode();
-  }
-
-  void initDebugMode() async {
-    if (!widget.isDebug) return;
-
-    await Future.delayed(const Duration(seconds: 2));
-    onDetect(BarcodeCapture(
-      barcodes: [
-        Barcode(rawValue: '711719000013')
-      ],
-      image: null,
-    ));
-
-    if (!mounted) Navigator.of(context).pop();
   }
 
   void onDetect(BarcodeCapture capture) async {
@@ -55,10 +40,82 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
       final barcode = barcodes.first;
       if (barcode.rawValue == null) return;
 
+      await cameraController?.stop();
       widget.addNewGameCubit.fetchGamesFromBarcode(barcode: barcode.rawValue!);
     } catch (e) {
       debugPrint('Error in barcode detection: $e');
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (cameraController == null) {
+      return const Center(child: Text('Camera initialization failed'));
+    }
+
+    return BlocListener<AddNewGameCubit, AddNewGameState>(
+      bloc: widget.addNewGameCubit,
+      listener: (context, state) {
+        if (state is AddNewGameLoadedGamesState) {
+          widget.onGamesFetched();
+        } else if (state is AddNewGameNoResultState) {
+          debugPrint('📸 Stopping camera for NoResultState');
+          cameraController?.stop();
+          widget.onClose();
+        }
+      },
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        isTorchOn ? Icons.flash_on : Icons.flash_off,
+                        color: isTorchOn ? Colors.yellow : Colors.grey,
+                      ),
+                      onPressed: () async {
+                        if (cameraController != null) {
+                          await cameraController!.toggleTorch();
+                          setState(() {
+                            isTorchOn = !isTorchOn;
+                          });
+                        }
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.cameraswitch),
+                      onPressed: () => cameraController?.switchCamera(),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: MobileScanner(
+                  controller: cameraController!,
+                  onDetect: onDetect,
+                ),
+              ),
+            ],
+          ),
+          BlocBuilder<AddNewGameCubit, AddNewGameState>(
+            bloc: widget.addNewGameCubit,
+            builder: (context, state) {
+              if (state is AddNewGameLoadingState) {
+                return _buildLoadingOverlay();
+              } else if (state is AddNewGameFailureState) {
+                return _buildErrorOverlay(state.errorMessage);
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildLoadingOverlay() {
@@ -71,7 +128,7 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
             CircularProgressIndicator(),
             SizedBox(height: 16),
             Text(
-              "Loading...",
+              "Recherche du jeu...",
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -100,69 +157,6 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
               textAlign: TextAlign.center,
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (cameraController == null) {
-      return const Center(child: Text('Camera initialization failed'));
-    }
-
-    return BlocProvider.value(
-      value: widget.addNewGameCubit,
-      child: BlocListener<AddNewGameCubit, AddNewGameState>(
-        listener: (context, state) {
-          if (state is AddNewGameLoadedGamesState) widget.onGamesFetched();
-        },
-        child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
-          builder: (context, state) {
-            return Stack(
-              children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              isTorchOn ? Icons.flash_on : Icons.flash_off,
-                              color: isTorchOn ? Colors.yellow : Colors.grey,
-                            ),
-                            onPressed: () async {
-                              if (cameraController != null) {
-                                await cameraController!.toggleTorch();
-                                setState(() {
-                                  isTorchOn = !isTorchOn;
-                                });
-                              }
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.cameraswitch),
-                            onPressed: () => cameraController?.switchCamera(),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (!widget.isDebug)
-                      Expanded(
-                        child: MobileScanner(
-                          controller: cameraController!,
-                          onDetect: onDetect,
-                        ),
-                      ),
-                  ],
-                ),
-                if (state is AddNewGameLoadingState) _buildLoadingOverlay(),
-                if (state is AddNewGameFailureState) _buildErrorOverlay(state.errorMessage),
-              ],
-            );
-          },
         ),
       ),
     );

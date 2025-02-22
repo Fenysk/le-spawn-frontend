@@ -7,6 +7,7 @@ import 'package:le_spawn_fr/features/bank/features/games/3_presentation/widget/g
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.state.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/widget/barcode-scanner.widget.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/widget/game-cover-capture.widget.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/widget/scan-barcode-button.widget.dart';
 
 class GameSearchTab extends StatefulWidget {
@@ -26,21 +27,6 @@ class _GameSearchTabState extends State<GameSearchTab> {
     super.initState();
   }
 
-  void _showBarcodeDrawer({bool isDebug = false}) {
-    if (!mounted) return;
-
-    final cubit = BlocProvider.of<AddNewGameCubit>(context);
-    showModalBottomSheet<void>(
-      context: context,
-      useSafeArea: false,
-      builder: (BuildContext modalContext) => BarcodeScannerWidget(
-        addNewGameCubit: cubit,
-        isDebug: isDebug,
-        onGamesFetched: () => Navigator.of(modalContext).pop(),
-      ),
-    );
-  }
-
   _clearSearch() {
     _searchController.clear();
     context.read<AddNewGameCubit>().resetGame();
@@ -48,6 +34,22 @@ class _GameSearchTabState extends State<GameSearchTab> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<AddNewGameCubit, AddNewGameState>(
+      listener: (context, state) {
+        debugPrint('🎮 Current state: ${state.runtimeType}');
+      },
+      builder: (context, state) {
+        return switch (state) {
+          AddNewGameScanningState() => _buildScannerView(),
+          AddNewGameCapturingPhotoState() => _buildCaptureView(state.barcode!),
+          AddNewGameNoResultState() => _buildNoResultView(context, state.barcode!),
+          _ => _buildSearchView(),
+        };
+      },
+    );
+  }
+
+  Widget _buildSearchView() {
     return SizedBox.expand(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -55,7 +57,7 @@ class _GameSearchTabState extends State<GameSearchTab> {
           const SizedBox(height: 24),
           ScanBarcodeButtonWidget(
             text: 'Scanner un code-barre',
-            onScanFirstGamePressed: _showBarcodeDrawer,
+            onScanFirstGamePressed: () => context.read<AddNewGameCubit>().startScanning(),
           ),
           SeparationWidget(
             padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 100),
@@ -95,7 +97,21 @@ class _GameSearchTabState extends State<GameSearchTab> {
     );
   }
 
-  Widget _buildLoadingSpinner() => Expanded(child: const Center(child: CircularProgressIndicator()));
+  Widget _buildScannerView() {
+    return BarcodeScannerWidget(
+      addNewGameCubit: context.read<AddNewGameCubit>(),
+      onGamesFetched: () {},
+      onClose: () {},
+    );
+  }
+
+  Widget _buildCaptureView(String barcode) {
+    return GameCoverCaptureWidget(
+      barcode: barcode,
+    );
+  }
+
+  Widget _buildLoadingSpinner() => const Center(child: CircularProgressIndicator());
 
   Widget _buildGamesList(List<GameEntity> games) {
     return Expanded(
@@ -105,9 +121,42 @@ class _GameSearchTabState extends State<GameSearchTab> {
         separatorBuilder: (context, index) => const Divider(height: 32),
         itemBuilder: (context, index) {
           final game = games[index];
-
           return GameTile(game: game);
         },
+      ),
+    );
+  }
+
+  Widget _buildNoResultView(BuildContext context, String barcode) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.error_outline,
+            color: Colors.red,
+            size: 48,
+          ),
+          const SizedBox(height: 16),
+          const Text('Jeu non trouvé'),
+          const SizedBox(height: 8),
+          const Text('Voulez-vous prendre une photo de la couverture ?'),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () => context.read<AddNewGameCubit>().resetGame(),
+                child: const Text('Annuler'),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () => context.read<AddNewGameCubit>().startPhotoCapture(barcode),
+                child: const Text('Prendre une photo'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
