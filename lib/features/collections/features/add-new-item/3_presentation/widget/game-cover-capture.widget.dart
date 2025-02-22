@@ -40,16 +40,30 @@ class _GameCoverCaptureWidgetState extends State<GameCoverCaptureWidget> with Wi
     final cameras = await availableCameras();
     if (cameras.isEmpty) return;
 
+    // Sélectionner la caméra arrière
+    final rearCamera = cameras.firstWhere(
+      (camera) => camera.lensDirection == CameraLensDirection.back,
+      orElse: () => cameras.first,
+    );
+
     _controller = CameraController(
-      cameras.first,
-      ResolutionPreset.high,
+      rearCamera,
+      ResolutionPreset.max,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
     try {
       await _controller?.initialize();
-      await _controller?.lockCaptureOrientation(DeviceOrientation.portraitUp);
+
+      // Configuration native de la caméra
+      await Future.wait([
+        _controller!.lockCaptureOrientation(DeviceOrientation.portraitUp),
+        _controller!.setFlashMode(FlashMode.off),
+        _controller!.setFocusMode(FocusMode.auto),
+        _controller!.setExposureMode(ExposureMode.auto),
+      ]);
+
       setState(() => _isCameraInitialized = true);
     } catch (e) {
       debugPrint('Error initializing camera: $e');
@@ -165,12 +179,16 @@ class _GameCoverCaptureWidgetState extends State<GameCoverCaptureWidget> with Wi
 
     return Stack(
       children: [
-        Transform.scale(
-          scale: 1.0,
-          child: Center(
-            child: AspectRatio(
-              aspectRatio: 1 / _controller!.value.aspectRatio,
-              child: CameraPreview(_controller!),
+        SizedBox.expand(
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: _controller!.value.previewSize?.width ?? 0,
+              height: _controller!.value.previewSize?.height ?? 0,
+              child: Transform.rotate(
+                angle: 90 * 3.1415927 / 180,
+                child: CameraPreview(_controller!),
+              ),
             ),
           ),
         ),
@@ -247,11 +265,6 @@ class _GameCoverCaptureWidgetState extends State<GameCoverCaptureWidget> with Wi
       builder: (context, state) {
         return Scaffold(
           backgroundColor: Colors.black,
-          appBar: AppBar(
-            title: const Text('Photographier la couverture'),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ),
           body: Stack(
             children: [
               _buildCameraPreview(),
