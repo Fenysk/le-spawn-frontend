@@ -5,6 +5,7 @@ import 'package:le_spawn_fr/features/bank/features/games/1_data/source/games-api
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/repository/games.repository.dart';
 import 'package:le_spawn_fr/core/di/service-locator.dart';
+import '../dto/get-games-from-images-request.dto.dart';
 
 class GamesRepositoryImpl implements GamesRepository {
   @override
@@ -46,6 +47,23 @@ class GamesRepositoryImpl implements GamesRepository {
     if (request == null || request.barcode == null) return Left('Barcode is missing');
 
     Either<String, dynamic> response = await serviceLocator<GamesApiService>().searchGamesFromBarcode(request.barcode!);
+
+    return response.fold(
+      (error) => Left(error),
+      (data) {
+        if (data is List) {
+          List<GameModel> games = data.map((e) => GameModel.fromMap(e as Map<String, dynamic>)).toList();
+          List<GameEntity> gameEntities = games.map((e) => e.toEntity()).toList();
+          return Right(gameEntities);
+        }
+        return Left('Unexpected response format from API');
+      },
+    );
+  }
+
+  @override
+  Future<Either<String, List<GameEntity>>> fetchGamesFromImages(GetGamesFromImagesRequest request) async {
+    Either<String, dynamic> response = await serviceLocator<GamesApiService>().fetchGamesFromImages(request);
 
     return response.fold(
       (error) => Left(error),

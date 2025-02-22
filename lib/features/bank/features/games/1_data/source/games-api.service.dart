@@ -5,11 +5,13 @@ import 'package:le_spawn_fr/core/constant/api-url.constant.dart';
 import 'package:le_spawn_fr/core/network/dio_client.dart';
 import 'package:le_spawn_fr/features/bank/features/games/1_data/dto/search-games.request.dart';
 import 'package:le_spawn_fr/core/di/service-locator.dart';
+import '../dto/get-games-from-images-request.dto.dart';
 
 abstract class GamesApiService {
   Future<Either<String, dynamic>> searchGamesInBank(SearchGamesRequest? searchGameRequest);
   Future<Either<String, dynamic>> searchGamesInProviders(SearchGamesRequest? searchGameRequest);
   Future<Either<String, dynamic>> searchGamesFromBarcode(String barcode);
+  Future<Either<String, dynamic>> fetchGamesFromImages(GetGamesFromImagesRequest request);
 }
 
 class GamesApiServiceImpl implements GamesApiService {
@@ -63,6 +65,20 @@ class GamesApiServiceImpl implements GamesApiService {
       return Right(response.data);
     } on DioException catch (error) {
       return Left(error.response?.data['message'] ?? error.message ?? 'An error occurred');
+    }
+  }
+
+  @override
+  Future<Either<String, dynamic>> fetchGamesFromImages(GetGamesFromImagesRequest request) async {
+    try {
+      final response = await serviceLocator<DioClient>().get(
+        '/bank/games/images',
+        data: request.toJson(),
+      );
+
+      return Right(response.data);
+    } catch (e) {
+      return Left(e.toString());
     }
   }
 }
