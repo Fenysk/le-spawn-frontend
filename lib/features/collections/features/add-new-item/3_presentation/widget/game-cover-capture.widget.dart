@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.state.dart';
@@ -43,10 +44,12 @@ class _GameCoverCaptureWidgetState extends State<GameCoverCaptureWidget> with Wi
       cameras.first,
       ResolutionPreset.high,
       enableAudio: false,
+      imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
     try {
       await _controller?.initialize();
+      await _controller?.lockCaptureOrientation(DeviceOrientation.portraitUp);
       setState(() => _isCameraInitialized = true);
     } catch (e) {
       debugPrint('Error initializing camera: $e');
@@ -162,7 +165,15 @@ class _GameCoverCaptureWidgetState extends State<GameCoverCaptureWidget> with Wi
 
     return Stack(
       children: [
-        CameraPreview(_controller!),
+        Transform.scale(
+          scale: 1.0,
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: 1 / _controller!.value.aspectRatio,
+              child: CameraPreview(_controller!),
+            ),
+          ),
+        ),
         Positioned(
           left: 0,
           right: 0,
