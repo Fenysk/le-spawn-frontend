@@ -55,11 +55,11 @@ class AddNewGameFailureState extends AddNewGameState {
 }
 
 class AddNewGameNoResultState extends AddNewGameState {
-  const AddNewGameNoResultState({required String barcode}) : super(barcode: barcode);
+  const AddNewGameNoResultState({super.barcode});
 }
 
 class AddNewGameCapturingPhotoState extends AddNewGameState {
-  const AddNewGameCapturingPhotoState({required String barcode}) : super(barcode: barcode);
+  const AddNewGameCapturingPhotoState({super.barcode});
 }
 
 class AddNewGameUploadingPhotoState extends AddNewGameState {

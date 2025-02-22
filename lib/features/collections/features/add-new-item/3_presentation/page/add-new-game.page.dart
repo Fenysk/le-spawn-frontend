@@ -21,6 +21,7 @@ class _AddNewGamePageState extends State<AddNewGamePage> with SingleTickerProvid
         create: (context) => AddNewGameCubit(),
         child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
             builder: (context, state) => switch (state) {
+                  AddNewGameInitialState() => const GameSearchTab(),
                   AddNewGameItemInfoState() => NewItemFormTab(game: state.game),
                   AddNewGameConfirmationGameState() => ConfirmGameTab(
                       game: state.game,

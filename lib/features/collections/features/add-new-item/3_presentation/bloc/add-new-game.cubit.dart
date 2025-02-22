@@ -28,7 +28,7 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
     emit(AddNewGameScanningState());
   }
 
-  void startPhotoCapture(String barcode) {
+  void startPhotoCapture({String? barcode}) {
     emit(AddNewGameCapturingPhotoState(barcode: barcode));
   }
 
@@ -74,7 +74,7 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
     );
   }
 
-  Future<void> searchGamesFromImage(File imageFile, String barcode) async {
+  Future<void> searchGamesFromImage(File imageFile, String? barcode) async {
     debugPrint('🔍 Starting image search with barcode: $barcode');
     emit(AddNewGameUploadingPhotoState(barcode: barcode));
 
@@ -82,7 +82,7 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
       debugPrint('📤 Uploading image to storage...');
       final uploadResult = await serviceLocator<StorageRepository>().uploadFile(imageFile);
 
-      final uploadedFile = await uploadResult.fold(
+      final uploadedFile = uploadResult.fold(
         (error) {
           debugPrint('❌ Error uploading image: $error');
           throw Exception(error);
@@ -138,7 +138,7 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
     }
   }
 
-  void searchGames(String query) {
+  void searchGamesFromQuery(String query) {
     _debouncer.run(() async {
       emit(AddNewGameLoadingState());
 
@@ -187,7 +187,7 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
       _selectedGame = _fetchedGames.firstWhere((game) => game.id == gameId);
       debugPrint('🎮 Confirming game: ${_selectedGame?.name} (ID: $gameId)');
 
-      final shouldAddBarcode = _selectedGame != null && _selectedBarcode != null && _selectedGame!.barcodes.isEmpty;
+      final shouldAddBarcode = _selectedGame != null && _selectedBarcode != null && !_selectedGame!.barcodes.contains(_selectedBarcode);
 
       if (shouldAddBarcode) {
         debugPrint('📝 Adding barcode ${_selectedBarcode!} to game $gameId');

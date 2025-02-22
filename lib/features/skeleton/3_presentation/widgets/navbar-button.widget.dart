@@ -20,6 +20,7 @@ class NavbarButtonWidget extends StatelessWidget {
   final bool isActive;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
+  final bool shouldDisable;
 
   const NavbarButtonWidget({
     super.key,
@@ -27,6 +28,7 @@ class NavbarButtonWidget extends StatelessWidget {
     required this.isActive,
     this.onTap,
     this.onLongPress,
+    this.shouldDisable = false,
   });
 
   @override
@@ -36,49 +38,52 @@ class NavbarButtonWidget extends StatelessWidget {
       child: SizedBox(
         height: double.infinity,
         child: MouseRegion(
-          cursor: SystemMouseCursors.click,
+          cursor: shouldDisable ? SystemMouseCursors.basic : SystemMouseCursors.click,
           child: InkWell(
-            onTap: onTap,
-            onLongPress: onLongPress,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(
-                    getIconData(type: type, isFilled: isActive),
-                    color: isActive ? AppTheme.primaryBackground : themeData.colorScheme.onSurface,
-                    shadows: [
-                      if (isActive)
-                        BoxShadow(
-                          color: AppTheme.primaryText,
-                          offset: const Offset(1, 2),
-                          blurRadius: 1,
-                        ),
-                    ],
+            onTap: shouldDisable ? null : onTap,
+            onLongPress: shouldDisable ? null : onLongPress,
+            child: Opacity(
+              opacity: shouldDisable ? 0.5 : 1.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      getIconData(type: type, isFilled: isActive),
+                      color: isActive ? AppTheme.primaryBackground : themeData.colorScheme.onSurface,
+                      shadows: [
+                        if (isActive)
+                          BoxShadow(
+                            color: AppTheme.primaryText,
+                            offset: const Offset(1, 2),
+                            blurRadius: 1,
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 200),
-                  style: themeData.textTheme.bodySmall!.copyWith(
-                    fontSize: isActive ? 14 : 12,
-                    fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-                    color: isActive ? AppTheme.primaryBackground : themeData.colorScheme.onSurface,
-                    shadows: [
-                      if (isActive)
-                        BoxShadow(
-                          color: AppTheme.primaryText,
-                          offset: const Offset(1, 2),
-                          blurRadius: 1,
-                        ),
-                    ],
-                  ),
-                  child: Text(getLabelData(type: type)),
-                )
-              ],
+                  const SizedBox(height: 2),
+                  AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 200),
+                    style: themeData.textTheme.bodySmall!.copyWith(
+                      fontSize: isActive ? 14 : 12,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                      color: isActive ? AppTheme.primaryBackground : themeData.colorScheme.onSurface,
+                      shadows: [
+                        if (isActive)
+                          BoxShadow(
+                            color: AppTheme.primaryText,
+                            offset: const Offset(1, 2),
+                            blurRadius: 1,
+                          ),
+                      ],
+                    ),
+                    child: Text(getLabelData(type: type)),
+                  )
+                ],
+              ),
             ),
           ),
         ),
