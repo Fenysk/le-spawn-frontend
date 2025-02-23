@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/game-search/game-search.cubit.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class BarcodeScannerWidget extends StatefulWidget {
@@ -36,7 +36,7 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
       if (barcode.rawValue == null) return;
 
       await cameraController?.stop();
-      context.read<AddNewGameCubit>().fetchGamesFromBarcode(barcode: barcode.rawValue!);
+      context.read<GameSearchCubit>().fetchGamesFromBarcode(barcode: barcode.rawValue!);
     } catch (e) {
       debugPrint('Error in barcode detection: $e');
     }

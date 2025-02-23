@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/game-search/game-search.cubit.dart';
 
 class GameCoverCaptureWidget extends StatefulWidget {
   final String? barcode;
@@ -56,7 +56,7 @@ class _GameCoverCaptureWidgetState extends State<GameCoverCaptureWidget> {
       if (image == null) return;
 
       if (mounted) {
-        context.read<AddNewGameCubit>().searchGamesFromImage(
+        context.read<GameSearchCubit>().searchGamesFromImage(
               File(image.path),
               widget.barcode,
             );
@@ -74,19 +74,19 @@ class _GameCoverCaptureWidgetState extends State<GameCoverCaptureWidget> {
 
     return Stack(
       children: [
-        CameraPreview(_controller!),
-        Positioned(
-          bottom: 32,
-          left: 0,
-          right: 0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FloatingActionButton(
-                onPressed: _captureImage,
-                child: const Icon(Icons.camera),
-              ),
-            ],
+        CameraPreview(
+          _controller!,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  onPressed: _captureImage,
+                  child: const Icon(Icons.camera),
+                ),
+              ],
+            ),
           ),
         ),
       ],

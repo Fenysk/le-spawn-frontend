@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.state.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.state.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/tabs/1_game-search.tab.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/tabs/2_confirm-game.tab.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/tabs/3_new-item-form.tab.dart';
@@ -17,6 +17,7 @@ class _AddNewGamePageState extends State<AddNewGamePage> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: BlocProvider(
         create: (context) => AddNewGameCubit(),
         child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
