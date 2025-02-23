@@ -14,29 +14,27 @@ class GameSearchTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GameSearchCubit(),
-      child: BlocConsumer<GameSearchCubit, GameSearchState>(
-        listener: (context, state) {
-          debugPrint('🎮 Current state: ${state.runtimeType}');
-          if (state is GameSearchLoadedGamesState && state.games.length == 1) {
-            context.read<AddNewGameCubit>().selectGame(state.games.first.id);
-          }
-        },
-        builder: (context, state) {
-          return switch (state) {
-            GameSearchScanningState() => BarcodeScannerWidget(
-                onClose: () => context.read<GameSearchCubit>().reset(),
-              ),
-            GameSearchCapturingPhotoState() => GameCoverCaptureWidget(
-                barcode: state.barcode,
-              ),
-            GameSearchNoResultState() => GameNoResultView(barcode: state.barcode),
-            GameSearchUploadingPhotoState() => const GameUploadingPhotoView(),
-            _ => const GameSearchView(),
-          };
-        },
-      ),
+    return BlocConsumer<GameSearchCubit, GameSearchState>(
+      listener: (context, state) {
+        debugPrint('🎮 Current state: ${state.runtimeType}');
+        if (state is GameSearchLoadedGamesState && state.games.length == 1 && state.barcode != null) {
+          debugPrint('🎮 Auto-selecting single game: ${state.games.first.name}');
+          context.read<AddNewGameCubit>().selectGame(state.games.first);
+        }
+      },
+      builder: (context, state) {
+        return switch (state) {
+          GameSearchScanningState() => BarcodeScannerWidget(
+              onClose: () => context.read<GameSearchCubit>().reset(),
+            ),
+          GameSearchCapturingPhotoState() => GameCoverCaptureWidget(
+              barcode: state.barcode,
+            ),
+          GameSearchNoResultState() => GameNoResultView(barcode: state.barcode),
+          GameSearchUploadingPhotoState() => const GameUploadingPhotoView(),
+          _ => const GameSearchView(),
+        };
+      },
     );
   }
 }

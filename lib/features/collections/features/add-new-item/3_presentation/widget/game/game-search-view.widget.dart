@@ -48,28 +48,22 @@ class GameSearchView extends StatelessWidget {
           Flexible(
             child: BlocBuilder<GameSearchCubit, GameSearchState>(
               builder: (context, state) {
-                if (state is GameSearchLoadedGamesState && state.games.isNotEmpty) {
-                  final loadedState = state;
-                  return Expanded(
-                    child: BlocBuilder<GameSearchCubit, GameSearchState>(
-                      builder: (context, state) {
-                        return GameList(
-                          games: loadedState.games,
-                          onGameSelected: (gameId) {
-                            final game = context.read<GameSearchCubit>().getGameById(gameId);
-                            if (game != null) {
-                              context.read<AddNewGameCubit>().selectGame(gameId);
-                            }
-                          },
-                        );
+                return switch (state) {
+                  GameSearchLoadedGamesState() => GameList(
+                      games: state.games,
+                      onGameSelected: (gameId) {
+                        debugPrint('🎮 Game selected: $gameId');
+                        final game = context.read<GameSearchCubit>().getGameById(gameId);
+                        if (game != null) {
+                          context.read<AddNewGameCubit>().selectGame(game);
+                        } else {
+                          debugPrint('❌ Could not find game with ID: $gameId');
+                        }
                       },
                     ),
-                  );
-                } else if (state is GameSearchLoadingState) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return const SizedBox.shrink();
-                }
+                  GameSearchLoadingState() => const Center(child: CircularProgressIndicator()),
+                  _ => const SizedBox.shrink(),
+                };
               },
             ),
           ),

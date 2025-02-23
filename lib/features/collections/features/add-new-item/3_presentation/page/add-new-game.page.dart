@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.cubit.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.state.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/game-search/game-search.cubit.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/tabs/1_game-search.tab.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/tabs/2_confirm-game.tab.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/tabs/3_new-item-form.tab.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/tabs/4_success.tab.dart';
 
 class AddNewGamePage extends StatefulWidget {
   const AddNewGamePage({super.key});
@@ -18,18 +20,25 @@ class _AddNewGamePageState extends State<AddNewGamePage> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: BlocProvider(
-        create: (context) => AddNewGameCubit(),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => GameSearchCubit()),
+          BlocProvider(
+            create: (context) => AddNewGameCubit(context.read<GameSearchCubit>()),
+          ),
+        ],
         child: BlocBuilder<AddNewGameCubit, AddNewGameState>(
-            builder: (context, state) => switch (state) {
-                  AddNewGameInitialState() => const GameSearchTab(),
-                  AddNewGameItemInfoState() => NewItemFormTab(game: state.game),
-                  AddNewGameConfirmationGameState() => ConfirmGameTab(
-                      game: state.game,
-                      onGoBack: () => BlocProvider.of<AddNewGameCubit>(context).resetGame(),
-                    ),
-                  _ => GameSearchTab(),
-                }),
+          builder: (context, state) => switch (state) {
+            AddNewGameInitialState() => const GameSearchTab(),
+            AddNewGameItemInfoState() => NewItemFormTab(game: state.game),
+            AddNewGameConfirmationGameState() => ConfirmGameTab(
+                game: state.game,
+                onGoBack: () => context.read<AddNewGameCubit>().resetGame(),
+              ),
+            AddNewGameSuccessState() => SuccessTab(game: state.game),
+            _ => const GameSearchTab(),
+          },
+        ),
       ),
     );
   }

@@ -14,15 +14,16 @@ import 'package:le_spawn_fr/features/storage/2_domain/repository/storage.reposit
 import 'package:le_spawn_fr/core/di/service-locator.dart';
 import 'package:flutter/foundation.dart';
 import 'add-new-game.state.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/game-search/game-search.cubit.dart';
 
 class AddNewGameCubit extends Cubit<AddNewGameState> {
-  List<GameEntity> _fetchedGames = [];
+  final GameSearchCubit _gameSearchCubit;
   GameEntity? _selectedGame;
   String? _selectedBarcode;
 
   final Debouncer _debouncer = Debouncer();
 
-  AddNewGameCubit() : super(AddNewGameInitialState());
+  AddNewGameCubit(this._gameSearchCubit) : super(AddNewGameInitialState());
 
   void startScanning() {
     emit(AddNewGameScanningState());
@@ -65,7 +66,6 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
       },
       (games) {
         debugPrint('✅ Games found: ${games.length}');
-        _fetchedGames = games;
         emit(AddNewGameLoadedGamesState(
           games: games,
           barcode: barcode,
@@ -121,7 +121,6 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
             debugPrint('⚠️ No games found for barcode: $barcode');
             emit(AddNewGameNoResultState(barcode: barcode));
           } else {
-            _fetchedGames = games;
             emit(AddNewGameLoadedGamesState(
               games: games,
               barcode: barcode,
@@ -157,13 +156,11 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
               emit(AddNewGameFailureState(errorMessage: failure));
             },
             (games) {
-              _fetchedGames = games;
               emit(AddNewGameLoadedGamesState(games: games));
             },
           );
         },
         (games) {
-          _fetchedGames = games;
           emit(AddNewGameLoadedGamesState(games: games));
         },
       );
@@ -173,18 +170,24 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
   void resetGame() {
     _selectedGame = null;
     _selectedBarcode = null;
-    _fetchedGames = [];
     emit(AddNewGameInitialState());
+    _gameSearchCubit.reset();
   }
 
-  void selectGame(String gameId) async {
-    _selectedGame = _fetchedGames.firstWhere((game) => game.id == gameId);
-    emit(AddNewGameConfirmationGameState(game: _selectedGame!));
+  void selectGame(GameEntity game) {
+    _selectedGame = game;
+    emit(AddNewGameConfirmationGameState(game: game));
   }
 
   void confirmGame(String gameId) async {
     try {
-      _selectedGame = _fetchedGames.firstWhere((game) => game.id == gameId);
+      if (_selectedGame == null) {
+        debugPrint('❌ No game selected');
+        return emit(AddNewGameFailureState(
+          errorMessage: 'Aucun jeu sélectionné',
+        ));
+      }
+
       debugPrint('🎮 Confirming game: ${_selectedGame?.name} (ID: $gameId)');
 
       final shouldAddBarcode = _selectedGame != null && _selectedBarcode != null && !_selectedGame!.barcodes.contains(_selectedBarcode);
@@ -222,6 +225,10 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
         barcode: _selectedBarcode ?? '',
       ));
     }
+  }
+
+  void setSuccess(GameEntity game) {
+    emit(AddNewGameSuccessState(game: game));
   }
 
   @override

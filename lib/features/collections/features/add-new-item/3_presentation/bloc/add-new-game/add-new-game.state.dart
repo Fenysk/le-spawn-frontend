@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
-abstract class AddNewGameState extends Equatable {
+sealed class AddNewGameState extends Equatable {
   final String? barcode;
 
   const AddNewGameState({this.barcode});
@@ -96,6 +96,21 @@ class AddNewGameItemInfoState extends AddNewGameState {
   final GameEntity game;
 
   const AddNewGameItemInfoState({
+    required this.game,
+    super.barcode,
+  });
+
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        game
+      ];
+}
+
+class AddNewGameSuccessState extends AddNewGameState {
+  final GameEntity game;
+
+  const AddNewGameSuccessState({
     required this.game,
     super.barcode,
   });

@@ -161,7 +161,12 @@ class GameSearchCubit extends Cubit<GameSearchState> {
   }
 
   GameEntity? getGameById(String gameId) {
-    return _fetchedGames.firstWhere((game) => game.id == gameId);
+    try {
+      return _fetchedGames.firstWhere((game) => game.id == gameId);
+    } catch (e) {
+      debugPrint('❌ Game not found: $gameId');
+      return null;
+    }
   }
 
   @override
