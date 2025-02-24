@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/widget/scan-barcode-button.widget.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/widget/camera/big-button.widget.dart';
 import 'package:outlined_text/outlined_text.dart';
 
 class WelcomeTab extends StatefulWidget {
@@ -34,12 +34,10 @@ class _WelcomeTabState extends State<WelcomeTab> {
             ),
           ),
           Spacer(),
-          ScanBarcodeButtonWidget(
-            text: 'Scan ton premier jeu',
-            onScanFirstGamePressed: widget.onScanFirstGamePressed,
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-            fontSize: 20,
-            iconSize: 32,
+          BigButton(
+            onPressed: widget.onScanFirstGamePressed,
+            text: 'Scanner un code-barre',
+            icon: Icons.qr_code_scanner,
           ),
           Spacer(),
         ],

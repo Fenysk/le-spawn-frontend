@@ -1,7 +1,7 @@
 name: le_spawn_fr
 description: "L'application ultime des collectionneurs !"
 publish_to: 'none'
-version: 0.3.5-beta+3b892d6
+version: 0.5.2-dev+97cfb1a
 
 environment:
   sdk: ^3.6.1
@@ -34,7 +34,7 @@ dependencies:
   another_flutter_splash_screen: ^1.2.1
   icons_plus: ^5.0.0
   flutter_launcher_icons: ^0.14.3
-
+  camera: ^0.11.1
 
 dev_dependencies:
   flutter_test:

@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:le_spawn_fr/core/utils/litterals.util.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/bank/features/games/3_presentation/widget/game-carousel/game-cover.widget.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.state.dart';
 import 'package:le_spawn_fr/features/reports/3_presentation/widget/report-game-dialog.widget.dart';
 
 class ConfirmGameTab extends StatefulWidget {
@@ -23,16 +24,20 @@ class ConfirmGameTab extends StatefulWidget {
 class _ConfirmGameTabState extends State<ConfirmGameTab> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      child: Column(
-        children: [
-          Expanded(
-            child: _buildOneGameDetailsSection(context, widget.game),
+    return BlocBuilder<AddNewGameCubit, AddNewGameState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          child: Column(
+            children: [
+              Expanded(
+                child: _buildOneGameDetailsSection(context, widget.game),
+              ),
+              _buildConfirmationSection(context),
+            ],
           ),
-          _buildConfirmationSection(context),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -60,7 +65,10 @@ class _ConfirmGameTabState extends State<ConfirmGameTab> {
               ),
               const SizedBox(width: 24),
               ElevatedButton(
-                onPressed: () => BlocProvider.of<AddNewGameCubit>(context).confirmGame(widget.game.id),
+                onPressed: () {
+                  debugPrint('🎮 Confirming game: ${widget.game.name}');
+                  context.read<AddNewGameCubit>().confirmGame(widget.game.id);
+                },
                 child: const Text('Oui, c\'est bon'),
               ),
             ],
@@ -110,6 +118,68 @@ class _ConfirmGameTabState extends State<ConfirmGameTab> {
                 Text('Date de sortie:', style: Theme.of(context).textTheme.titleMedium),
                 Text(game.firstReleaseDate!.toString().split(' ')[0]),
                 const SizedBox(height: 16),
+              ],
+              if (game.gameLocalizations.isNotEmpty) ...[
+                Text('Régions:', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                ...game.gameLocalizations.map((loc) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.outlineVariant,
+                            width: 1,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.secondaryContainer,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  loc.region.abbreviation,
+                                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      loc.region.name,
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                    ),
+                                    if (loc.name != null) ...[
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        loc.name!,
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )),
+                const SizedBox(height: 8),
               ],
               if (game.summary != null) ..._buildTextSection('Résumé:', game.summary!),
               if (game.storyline != null) ..._buildTextSection('Histoire:', game.storyline!),

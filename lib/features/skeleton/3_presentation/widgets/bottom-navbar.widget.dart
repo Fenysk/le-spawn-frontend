@@ -30,11 +30,12 @@ class BottomNavbarWidget extends StatelessWidget {
                 isActive: currentIndex == 0,
                 onTap: () => onTabTapped(0),
               ),
-              NavbarButtonWidget(
-                type: TabType.bank,
-                isActive: currentIndex == 1,
-                onTap: () => onTabTapped(1),
-              ),
+              ///// TODO: Make discovery page
+              //   NavbarButtonWidget(
+              //     type: TabType.bank,
+              //     isActive: currentIndex == 1,
+              //     onTap: () => onTabTapped(1),
+              //   ),
               NavbarButtonWidget(
                 type: TabType.profile,
                 isActive: currentIndex == 2,

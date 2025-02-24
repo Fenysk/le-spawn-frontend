@@ -7,17 +7,19 @@ class PlatformModel {
   final String id;
   final int? igdbPlatformId;
   final String name;
-  final String abbreviation;
+  final String? abbreviation;
   final int? generation;
   final List<GameModel>? games;
+  final String? logoUrl;
 
   PlatformModel({
     required this.id,
     this.igdbPlatformId,
     required this.name,
-    required this.abbreviation,
+    this.abbreviation,
     this.generation,
     this.games,
+    this.logoUrl,
   });
 
   factory PlatformModel.fromMap(Map<String, dynamic> map) {
@@ -25,7 +27,7 @@ class PlatformModel {
       id: map['id'] as String,
       igdbPlatformId: map['igdbPlatformId'] as int?,
       name: map['name'] as String,
-      abbreviation: map['abbreviation'] as String,
+      abbreviation: map['abbreviation'] as String?,
       generation: map['generation'] as int?,
       games: map['games'] != null
           ? List<GameModel>.from(
@@ -34,6 +36,7 @@ class PlatformModel {
               ),
             )
           : null,
+      logoUrl: map['logoUrl'] as String?,
     );
   }
 
@@ -44,7 +47,8 @@ class PlatformModel {
       'name': name,
       'abbreviation': abbreviation,
       'generation': generation,
-      'games': games?.map((game) => game.toMap()).toList(),
+      'games': games?.map((game) => game.toJson()).toList(),
+      'logoUrl': logoUrl,
     };
   }
 
@@ -61,5 +65,6 @@ extension PlatformModelExtension on PlatformModel {
         abbreviation: abbreviation,
         generation: generation,
         games: games?.map((game) => game.toEntity()).toList(),
+        logoUrl: logoUrl,
       );
 }

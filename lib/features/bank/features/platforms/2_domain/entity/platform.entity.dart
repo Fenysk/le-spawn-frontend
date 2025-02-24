@@ -4,16 +4,18 @@ class PlatformEntity {
   final String id;
   final int? igdbPlatformId;
   final String name;
-  final String abbreviation;
+  final String? abbreviation;
   final int? generation;
   final List<GameEntity>? games;
+  final String? logoUrl;
 
   PlatformEntity({
     required this.id,
     this.igdbPlatformId,
     required this.name,
-    required this.abbreviation,
+    this.abbreviation,
     this.generation,
     this.games,
+    this.logoUrl,
   });
 }

@@ -3,13 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
+import 'package:le_spawn_fr/features/app/3_presentation/widget/update-required.widget.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth/auth.cubit.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth/auth.state.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_cubit.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/bloc/tabs_state.dart';
+import 'package:le_spawn_fr/features/skeleton/3_presentation/widgets/app-loading.widget.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/widgets/bottom-navbar.widget.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/widgets/top-app-bar.widget.dart';
+import 'package:le_spawn_fr/features/app/3_presentation/bloc/update-checker.cubit.dart';
 
 class SkeletonPage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -22,15 +25,23 @@ class SkeletonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider<AuthCubit>(
-        create: (context) => AuthCubit()..appStarted(),
-        child: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-            return switch (state) {
-              AuthLoadingState() => buildLoadingContent(),
-              UnauthenticatedState() => _handleUnauthenticated(context),
-              AuthenticatedState() => _buildAuthenticatedLayout(context),
-              _ => Container(color: AppTheme.accentRed),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider<UpdateCheckerCubit>(
+            create: (context) => UpdateCheckerCubit()..checkForUpdate(),
+          ),
+          BlocProvider<AuthCubit>(
+            create: (context) => AuthCubit(),
+          ),
+        ],
+        child: BlocBuilder<UpdateCheckerCubit, UpdateCheckerState>(
+          builder: (context, updateState) {
+            print(updateState.runtimeType);
+            return switch (updateState) {
+              UpdateCheckerLoadingState() => AppLoadingWidget(),
+              UpdateCheckerNeedUpdateState() => UpdateRequiredWidget(),
+              UpdateCheckerGoodVersionState() => buildCorrectVersionContent(),
+              _ => AppLoadingWidget(),
             };
           },
         ),
@@ -38,16 +49,19 @@ class SkeletonPage extends StatelessWidget {
     );
   }
 
-  Widget buildLoadingContent() => const Center(
-        child: Column(
-          spacing: 16,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Le Spawn'),
-            CircularProgressIndicator(),
-          ],
-        ),
-      );
+  Widget buildCorrectVersionContent() {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        context.read<AuthCubit>().checkIfAuthenticated();
+        return switch (state) {
+          AuthLoadingState() => AppLoadingWidget(),
+          UnauthenticatedState() => _handleUnauthenticated(context),
+          AuthenticatedState() => _buildAuthenticatedLayout(context),
+          _ => Container(color: AppTheme.accentRed),
+        };
+      },
+    );
+  }
 
   Widget _handleUnauthenticated(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {

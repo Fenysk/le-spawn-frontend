@@ -16,9 +16,9 @@ class ButtonAddNewItemWidget extends StatelessWidget {
       child: FloatingActionButton.extended(
         backgroundColor: AppTheme.accentYellow,
         onPressed: onPressed,
-        tooltip: 'Add new item',
+        tooltip: 'Add new game',
         icon: const Icon(Icons.add, color: AppTheme.primaryText),
-        label: const Text('Add new item', style: TextStyle(color: AppTheme.primaryText)),
+        label: const Text('Add new game', style: TextStyle(color: AppTheme.primaryText, fontWeight: FontWeight.bold)),
       ),
     );
   }

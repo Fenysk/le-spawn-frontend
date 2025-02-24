@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:le_spawn_fr/core/constant/items.constant.dart';
 import 'package:le_spawn_fr/core/widgets/image-overlay.widget.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
@@ -9,6 +8,7 @@ import 'package:le_spawn_fr/features/collections/features/add-new-item/2_domain/
 import 'package:le_spawn_fr/core/di/service-locator.dart';
 import 'package:soft_edge_blur/soft_edge_blur.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-new-game-to-collection.request.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.cubit.dart';
 
 class NewItemFormTab extends StatefulWidget {
   final GameEntity game;
@@ -47,7 +47,7 @@ class _NewItemFormTabState extends State<NewItemFormTab> {
 
     response.fold(
       (failure) => _showErrorSnackBar(failure),
-      (_) => _navigateToCollections(),
+      (_) => context.read<AddNewGameCubit>().setSuccess(widget.game),
     );
   }
 
@@ -57,15 +57,6 @@ class _NewItemFormTabState extends State<NewItemFormTab> {
         content: Text(message),
         backgroundColor: Colors.red,
       ),
-    );
-  }
-
-  void _navigateToCollections() {
-    context.goNamed(
-      AppRoutesConfig.collections,
-      queryParameters: {
-        'shouldRefresh': 'true'
-      },
     );
   }
 

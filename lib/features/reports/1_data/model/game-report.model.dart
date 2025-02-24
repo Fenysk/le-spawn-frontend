@@ -27,7 +27,7 @@ class GameReportModel {
       'id': id,
       'explication': explication,
       'status': status,
-      'game': game.toMap(),
+      'game': game.toJson(),
       'reporter': reporter.toMap(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
