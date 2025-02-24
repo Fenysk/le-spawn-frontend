@@ -7,7 +7,7 @@ import 'package:le_spawn_fr/core/di/service-locator.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthLoadingState());
 
-  void appStarted() async {
+  void checkIfAuthenticated() async {
     final isLoggedIn = await serviceLocator<IsLoggedInUsecase>().execute();
 
     if (isLoggedIn) {
