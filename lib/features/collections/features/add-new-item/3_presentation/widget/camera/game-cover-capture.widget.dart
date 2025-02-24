@@ -74,18 +74,22 @@ class _GameCoverCaptureWidgetState extends State<GameCoverCaptureWidget> {
 
     return Stack(
       children: [
-        CameraPreview(
-          _controller!,
+        SizedBox.expand(
+          child: AspectRatio(
+            aspectRatio: _controller!.value.aspectRatio,
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: CameraPreview(_controller!),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  onPressed: _captureImage,
-                  child: const Icon(Icons.camera),
-                ),
-              ],
+            child: FloatingActionButton(
+              onPressed: _captureImage,
+              child: const Icon(Icons.camera),
             ),
           ),
         ),
