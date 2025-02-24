@@ -30,7 +30,7 @@ class GameCoverWidget extends StatelessWidget {
     final double elevation = max(0, 8 * (1 - intensity.abs() / 2));
     final int shadowAlpha = ((1 - intensity.abs() / 2) * 255).round();
 
-    final String? coverUrl = game.gameLocalizations.isNotEmpty ? game.gameLocalizations.firstWhere((loc) => loc.region.abbreviation == 'EU', orElse: () => game.gameLocalizations.first).coverUrl : game.coverUrl;
+    final String? coverUrl = game.gameLocalizations.isNotEmpty && game.gameLocalizations.first.coverUrl != null ? game.gameLocalizations.firstWhere((loc) => loc.region.abbreviation == 'EU', orElse: () => game.gameLocalizations.first).coverUrl : game.coverUrl;
 
     return GestureDetector(
       onTap: onTap,

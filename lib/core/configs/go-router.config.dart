@@ -10,6 +10,8 @@ import 'package:le_spawn_fr/features/collections/3_presentation/page/collections
 import 'package:le_spawn_fr/features/onboarding/3_presentation/page/onboarding.page.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/page/skeleton.page.dart';
 import 'package:le_spawn_fr/features/user/3_presentation/page/profile.page.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.cubit.dart';
+import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/game-search/game-search.cubit.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _collectionsNavigatorKey = GlobalKey<NavigatorState>();
@@ -57,7 +59,15 @@ final goRouterConfig = GoRouter(
                   name: "${AppRoutesConfig.collections}/${AppRoutesConfig.addNewGamePath}",
                   pageBuilder: (context, state) => CustomTransitionPage(
                     key: state.pageKey,
-                    child: const AddNewGamePage(),
+                    child: MultiBlocProvider(
+                      providers: [
+                        BlocProvider(create: (context) => GameSearchCubit()),
+                        BlocProvider(
+                          create: (context) => AddNewGameCubit(context.read<GameSearchCubit>()),
+                        ),
+                      ],
+                      child: const AddNewGamePage(),
+                    ),
                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                       return SlideTransition(
                         position: Tween<Offset>(
