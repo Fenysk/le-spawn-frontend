@@ -1,7 +1,7 @@
 name: le_spawn_fr
 description: "L'application ultime des collectionneurs !"
 publish_to: 'none'
-version: 0.4.4-dev+a6bf7e1
+version: 0.5.0-dev+bf9eb0a
 
 environment:
   sdk: ^3.6.1
