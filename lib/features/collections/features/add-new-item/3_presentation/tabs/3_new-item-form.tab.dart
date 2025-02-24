@@ -9,7 +9,6 @@ import 'package:le_spawn_fr/core/di/service-locator.dart';
 import 'package:soft_edge_blur/soft_edge_blur.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/1_data/dto/add-new-game-to-collection.request.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.cubit.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.state.dart';
 
 class NewItemFormTab extends StatefulWidget {
   final GameEntity game;

@@ -38,7 +38,7 @@ class GameItemModel {
       'statePaper': statePaper,
       'gameId': gameId,
       'collectionId': collectionId,
-      'game': game.toMap(),
+      'game': game.toJson(),
     };
   }
 

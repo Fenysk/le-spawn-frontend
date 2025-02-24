@@ -212,6 +212,84 @@ class GameItemDetailsWidget extends StatelessWidget {
                 ],
               ),
             ],
+            if (gameItem.game.gameLocalizations.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.language, size: 20, color: Theme.of(context).colorScheme.secondary),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Régions',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ...gameItem.game.gameLocalizations.map((loc) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.outlineVariant,
+                              width: 1,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.secondaryContainer,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    loc.region.abbreviation,
+                                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                          color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        loc.region.name,
+                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                      ),
+                                      if (loc.name != null) ...[
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          loc.name!,
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                              ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )),
+                ],
+              ),
+            ],
           ],
         ),
       ),

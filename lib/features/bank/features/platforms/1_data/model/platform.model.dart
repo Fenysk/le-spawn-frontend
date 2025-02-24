@@ -44,7 +44,7 @@ class PlatformModel {
       'name': name,
       'abbreviation': abbreviation,
       'generation': generation,
-      'games': games?.map((game) => game.toMap()).toList(),
+      'games': games?.map((game) => game.toJson()).toList(),
     };
   }
 

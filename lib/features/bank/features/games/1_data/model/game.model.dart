@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:le_spawn_fr/core/enums/game-category.enum.dart';
+import 'package:le_spawn_fr/features/bank/features/games/1_data/model/game-localization.model.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 import 'package:le_spawn_fr/features/bank/features/platforms/1_data/model/platform.model.dart';
 import 'package:le_spawn_fr/features/collections/1_data/model/game-item.model.dart';
@@ -19,6 +20,7 @@ class GameModel {
   final String? summary;
   final List<PlatformModel> platforms;
   final List<GameItemModel> gameCollectionItem;
+  final List<GameLocalizationModel> gameLocalizations;
 
   GameModel({
     required this.id,
@@ -35,6 +37,7 @@ class GameModel {
     this.summary,
     required this.platforms,
     required this.gameCollectionItem,
+    required this.gameLocalizations,
   });
 
   static GameModel get empty => GameModel(
@@ -52,10 +55,11 @@ class GameModel {
         summary: null,
         platforms: [],
         gameCollectionItem: [],
+        gameLocalizations: [],
       );
 
-  Map<String, dynamic> toMap() {
-    return {
+  String toJson() {
+    return json.encode({
       'id': id,
       'igdbGameId': igdbGameId,
       'barcodes': barcodes,
@@ -68,31 +72,31 @@ class GameModel {
       'screenshotsUrl': screenshotsUrl,
       'storyline': storyline,
       'summary': summary,
-      'platforms': platforms.map((platform) => platform.toMap()).toList(),
-      'gameCollectionItem': gameCollectionItem.map((item) => item.toMap()).toList(),
-    };
+      'platforms': platforms.map((platform) => platform.toJson()).toList(),
+      'gameCollectionItem': gameCollectionItem.map((item) => item.toJson()).toList(),
+      'gameLocalizations': gameLocalizations.map((localization) => localization.toJson()).toList(),
+    });
   }
 
   factory GameModel.fromMap(Map<String, dynamic> map) {
     return GameModel(
       id: map['id'],
       igdbGameId: map['igdbGameId'],
-      barcodes: List<String>.from(map['barcodes']),
+      barcodes: List<String>.from(map['barcodes'] ?? []),
       category: GameCategoryEnum.values.firstWhere((e) => e.toString().split('.').last == map['category']),
       coverUrl: map['coverUrl'],
       firstReleaseDate: map['firstReleaseDate'] != null ? DateTime.parse(map['firstReleaseDate']) : null,
-      franchises: List<String>.from(map['franchises']),
-      genres: List<String>.from(map['genres']),
+      franchises: List<String>.from(map['franchises'] ?? []),
+      genres: List<String>.from(map['genres'] ?? []),
       name: map['name'],
-      screenshotsUrl: List<String>.from(map['screenshotsUrl']),
+      screenshotsUrl: List<String>.from(map['screenshotsUrl'] ?? []),
       storyline: map['storyline'],
       summary: map['summary'],
       platforms: (map['platformsRelation'] as List<dynamic>?)?.map((relation) => PlatformModel.fromMap(relation['platform'] as Map<String, dynamic>)).toList() ?? [],
       gameCollectionItem: List<GameItemModel>.from(map['gameCollectionItem']?.map((x) => GameItemModel.fromMap(x)) ?? []),
+      gameLocalizations: List<GameLocalizationModel>.from(map['gameLocalizations']?.map((x) => GameLocalizationModel.fromMap(x as Map<String, dynamic>)) ?? []),
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory GameModel.fromJson(String source) => GameModel.fromMap(json.decode(source));
 }
@@ -113,5 +117,6 @@ extension GameModelExtension on GameModel {
         summary: summary,
         platforms: platforms.map((platform) => platform.toEntity()).toList(),
         gameItems: gameCollectionItem.map((item) => item.toEntity()).toList(),
+        gameLocalizations: gameLocalizations.map((localization) => localization.toEntity()).toList(),
       );
 }
