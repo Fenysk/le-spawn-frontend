@@ -7,6 +7,7 @@ class PlatformEntity {
   final String? abbreviation;
   final int? generation;
   final List<GameEntity>? games;
+  final String? logoUrl;
 
   PlatformEntity({
     required this.id,
@@ -15,5 +16,6 @@ class PlatformEntity {
     this.abbreviation,
     this.generation,
     this.games,
+    this.logoUrl,
   });
 }

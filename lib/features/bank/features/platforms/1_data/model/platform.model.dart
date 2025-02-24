@@ -10,6 +10,7 @@ class PlatformModel {
   final String? abbreviation;
   final int? generation;
   final List<GameModel>? games;
+  final String? logoUrl;
 
   PlatformModel({
     required this.id,
@@ -18,6 +19,7 @@ class PlatformModel {
     this.abbreviation,
     this.generation,
     this.games,
+    this.logoUrl,
   });
 
   factory PlatformModel.fromMap(Map<String, dynamic> map) {
@@ -34,6 +36,7 @@ class PlatformModel {
               ),
             )
           : null,
+      logoUrl: map['logoUrl'] as String?,
     );
   }
 
@@ -45,6 +48,7 @@ class PlatformModel {
       'abbreviation': abbreviation,
       'generation': generation,
       'games': games?.map((game) => game.toJson()).toList(),
+      'logoUrl': logoUrl,
     };
   }
 
@@ -61,5 +65,6 @@ extension PlatformModelExtension on PlatformModel {
         abbreviation: abbreviation,
         generation: generation,
         games: games?.map((game) => game.toEntity()).toList(),
+        logoUrl: logoUrl,
       );
 }
