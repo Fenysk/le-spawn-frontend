@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
+import 'package:le_spawn_fr/features/app/3_presentation/widget/update-required.widget.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth/auth.cubit.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/bloc/auth/auth.state.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
@@ -38,7 +39,7 @@ class SkeletonPage extends StatelessWidget {
             print(updateState.runtimeType);
             return switch (updateState) {
               UpdateCheckerLoadingState() => AppLoadingWidget(),
-              UpdateCheckerNeedUpdateState() => buildUpdateRequiredContent(),
+              UpdateCheckerNeedUpdateState() => UpdateRequiredWidget(),
               UpdateCheckerGoodVersionState() => buildCorrectVersionContent(),
               _ => AppLoadingWidget(),
             };
@@ -61,17 +62,6 @@ class SkeletonPage extends StatelessWidget {
       },
     );
   }
-
-  Widget buildUpdateRequiredContent() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Une mise à jour est nécessaire'),
-            SizedBox(height: 16),
-            Text('Veuillez mettre à jour l\'application pour continuer'),
-          ],
-        ),
-      );
 
   Widget _handleUnauthenticated(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
