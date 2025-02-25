@@ -94,10 +94,13 @@ class SkeletonPage extends StatelessWidget {
   }
 
   void _onTabTapped(BuildContext context, int index) {
+    if (index == 0) context.read<CollectionsCubit>().loadCollections();
+
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
     );
+
     context.read<TabsCubit>().setTabIndex(index);
   }
 }

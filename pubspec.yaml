@@ -1,7 +1,7 @@
 name: le_spawn_fr
 description: "L'application ultime des collectionneurs !"
 publish_to: 'none'
-version: 0.5.3-beta+b662418
+version: 0.6.2-dev+c15cbff
 
 environment:
   sdk: ^3.6.1
@@ -35,6 +35,8 @@ dependencies:
   icons_plus: ^5.0.0
   flutter_launcher_icons: ^0.14.3
   camera: ^0.11.1
+  rive: ^0.13.20
+  confetti: ^0.8.0
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +48,7 @@ flutter:
   uses-material-design: true 
   assets:
     - assets/images/
+    - assets/rive/
     - .env
   fonts:
     - family: Acephimere

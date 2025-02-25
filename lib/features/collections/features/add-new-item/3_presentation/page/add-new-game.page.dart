@@ -20,32 +20,27 @@ class AddNewGamePage extends StatefulWidget {
 class _AddNewGamePageState extends State<AddNewGamePage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            if (context.read<AddNewGameCubit>().state is AddNewGameSuccessState) {
-              context.read<CollectionsCubit>().loadCollections();
-            }
-
-            context.goNamed(AppRoutesConfig.collections, queryParameters: {
-              'shouldRefresh': 'true'
-            });
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        if (details.delta.dx > 20) {
+          context.goNamed(AppRoutesConfig.collections, queryParameters: {
+            'shouldRefresh': 'true'
+          });
+        }
+      },
+      child: Scaffold(
+        body: BlocBuilder<AddNewGameCubit, AddNewGameState>(
+          builder: (context, state) => switch (state) {
+            AddNewGameInitialState() => const GameSearchTab(),
+            AddNewGameItemInfoState() => NewItemFormTab(game: state.game),
+            AddNewGameConfirmationGameState() => ConfirmGameTab(
+                game: state.game,
+                onGoBack: () => context.read<AddNewGameCubit>().resetGame(),
+              ),
+            AddNewGameSuccessState() => SuccessTab(game: state.game),
+            _ => const GameSearchTab(),
           },
         ),
-      ),
-      body: BlocBuilder<AddNewGameCubit, AddNewGameState>(
-        builder: (context, state) => switch (state) {
-          AddNewGameInitialState() => const GameSearchTab(),
-          AddNewGameItemInfoState() => NewItemFormTab(game: state.game),
-          AddNewGameConfirmationGameState() => ConfirmGameTab(
-              game: state.game,
-              onGoBack: () => context.read<AddNewGameCubit>().resetGame(),
-            ),
-          AddNewGameSuccessState() => SuccessTab(game: state.game),
-          _ => const GameSearchTab(),
-        },
       ),
     );
   }

@@ -6,7 +6,6 @@ import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entit
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/widget/collection-card.widget.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/widget/game-item-details.widget.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class CollectionGameListWidget extends StatefulWidget {
   const CollectionGameListWidget({super.key});
@@ -50,7 +49,7 @@ class _CollectionGameListWidgetState extends State<CollectionGameListWidget> {
   }
 
   Widget _buildLoadedContent(List<CollectionEntity> collections) {
-    final collection = collections[0];
+    final collection = collections[0].sortGamesByTitle();
     return Center(
       child: Wrap(
         spacing: 8,
@@ -89,12 +88,10 @@ class _CollectionGameListWidgetState extends State<CollectionGameListWidget> {
   }
 
   Widget _buildLoadingContent() {
-    return Skeletonizer(
-      enabled: true,
-      child: Skeleton.leaf(
-        child: CollectionCard(
-          collection: CollectionEntity.empty(),
-        ),
+    return SizedBox(
+      height: 200,
+      child: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +9,7 @@ import 'package:le_spawn_fr/core/configs/go-router.config.dart';
 import 'package:le_spawn_fr/core/constant/image.constant.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
 import 'package:le_spawn_fr/core/di/service-locator.dart';
+import 'package:rive/rive.dart' show RiveFile;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +26,8 @@ void main() async {
   }
 
   setupServiceLocator();
+
+  unawaited(RiveFile.initialize());
 
   runApp(
     const MainApp(),

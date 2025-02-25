@@ -17,7 +17,7 @@ import 'add-new-game.state.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/game-search/game-search.cubit.dart';
 
 class AddNewGameCubit extends Cubit<AddNewGameState> {
-  final GameSearchCubit _gameSearchCubit;
+  final GameSearchCubit? _gameSearchCubit;
   GameEntity? _selectedGame;
   String? _selectedBarcode;
 
@@ -171,7 +171,7 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
     _selectedGame = null;
     _selectedBarcode = null;
     emit(AddNewGameInitialState());
-    _gameSearchCubit.reset();
+    _gameSearchCubit?.reset();
   }
 
   void selectGame(GameEntity game) {
@@ -201,7 +201,7 @@ class AddNewGameCubit extends Cubit<AddNewGameState> {
           ),
         );
 
-        await result.fold(
+        result.fold(
           (error) {
             debugPrint('❌ Error adding barcode: $error');
             emit(AddNewGameFailureState(
