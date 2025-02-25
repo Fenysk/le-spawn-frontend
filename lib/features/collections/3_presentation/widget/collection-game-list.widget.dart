@@ -6,7 +6,6 @@ import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entit
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/widget/collection-card.widget.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/widget/game-item-details.widget.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class CollectionGameListWidget extends StatefulWidget {
   const CollectionGameListWidget({super.key});

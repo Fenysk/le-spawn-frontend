@@ -3,19 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 import 'package:le_spawn_fr/core/constant/rive.constant.dart';
 
-class AnimatedCollectionCardOverviewBackgroundWidget extends StatefulWidget {
+class AnimatedYellowBarsBackgroundWidget extends StatefulWidget {
   final BoxFit fit;
 
-  const AnimatedCollectionCardOverviewBackgroundWidget({
+  const AnimatedYellowBarsBackgroundWidget({
     super.key,
     this.fit = BoxFit.fill,
   });
 
   @override
-  State<AnimatedCollectionCardOverviewBackgroundWidget> createState() => _AnimatedCollectionCardOverviewBackgroundWidgetState();
+  State<AnimatedYellowBarsBackgroundWidget> createState() => _AnimatedYellowBarsBackgroundWidgetState();
 }
 
-class _AnimatedCollectionCardOverviewBackgroundWidgetState extends State<AnimatedCollectionCardOverviewBackgroundWidget> {
+class _AnimatedYellowBarsBackgroundWidgetState extends State<AnimatedYellowBarsBackgroundWidget> {
   Artboard? _riveArtBoard;
   StateMachineController? _riveController;
 

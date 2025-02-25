@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
-import 'package:le_spawn_fr/core/widgets/animated-collection-card-overview-background.widget.dart';
+import 'package:le_spawn_fr/core/widgets/animated-yellow-bars-background.widget.dart';
 import 'package:le_spawn_fr/features/bank/features/games/3_presentation/widget/game-carousel/game-carousel.widget.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.entity.dart';
 
@@ -35,7 +35,7 @@ class CollectionCard extends StatelessWidget {
         child: Stack(
           children: [
             const Positioned.fill(
-              child: AnimatedCollectionCardOverviewBackgroundWidget(),
+              child: AnimatedYellowBarsBackgroundWidget(),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
