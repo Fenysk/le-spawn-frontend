@@ -14,7 +14,6 @@ class CollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gamesToShow = collection.gameItems.map((gameItem) => gameItem.game).toList();
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -44,7 +43,7 @@ class CollectionCard extends StatelessWidget {
                   children: [
                     _buildTitle(context),
                     GameCarouselWidget(
-                      games: gamesToShow,
+                      games: collection.getLastGames(limit: 6),
                       debugMode: false,
                       height: 200.0,
                       coverHeight: 170.0,

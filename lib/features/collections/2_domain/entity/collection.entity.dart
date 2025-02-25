@@ -1,4 +1,5 @@
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
+import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
 class CollectionEntity {
   final String id;
@@ -19,4 +20,17 @@ class CollectionEntity {
         gameItems: [],
         userId: '',
       );
+
+  List<GameEntity> getLastGames({int? limit}) => limit == null ? gameItems.map((gameItem) => gameItem.game).toList() : gameItems.take(limit).map((gameItem) => gameItem.game).toList();
+
+  CollectionEntity sortGamesByTitle() {
+    final sortedGameItems = gameItems..sort((a, b) => a.game.name.compareTo(b.game.name));
+
+    return CollectionEntity(
+      id: id,
+      title: title,
+      gameItems: sortedGameItems,
+      userId: userId,
+    );
+  }
 }

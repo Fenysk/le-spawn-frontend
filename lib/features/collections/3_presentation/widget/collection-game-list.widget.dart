@@ -49,7 +49,7 @@ class _CollectionGameListWidgetState extends State<CollectionGameListWidget> {
   }
 
   Widget _buildLoadedContent(List<CollectionEntity> collections) {
-    final collection = collections[0];
+    final collection = collections[0].sortGamesByTitle();
     return Center(
       child: Wrap(
         spacing: 8,
