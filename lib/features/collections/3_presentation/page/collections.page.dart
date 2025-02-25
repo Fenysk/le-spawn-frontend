@@ -13,41 +13,45 @@ class CollectionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appTheme = Theme.of(context);
-    return Stack(
-      children: [
-        RiveAnimation.asset(
-          RiveConstant.whiteBackgroundLoop,
-          fit: BoxFit.cover,
-        ),
-        SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CollectionListWidget(),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: OutlinedText(
-                    text: Text(
-                      'Ma collection',
-                      style: appTheme.textTheme.titleLarge,
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height,
+      child: Stack(
+        children: [
+          RiveAnimation.asset(
+            RiveConstant.whiteBackgroundLoopPath,
+            fit: BoxFit.cover,
+          ),
+          SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CollectionListWidget(),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: OutlinedText(
+                      text: Text(
+                        'Ma collection',
+                        style: appTheme.textTheme.titleLarge,
+                      ),
+                      strokes: [
+                        OutlinedTextStroke(width: 4, color: AppTheme.primaryText),
+                      ],
                     ),
-                    strokes: [
-                      OutlinedTextStroke(width: 4, color: AppTheme.primaryText),
-                    ],
                   ),
-                ),
-                const SizedBox(height: 16),
-                CollectionGameListWidget(),
-                const SizedBox(height: 96),
-              ],
+                  const SizedBox(height: 16),
+                  CollectionGameListWidget(),
+                  const SizedBox(height: 96),
+                ],
+              ),
             ),
           ),
-        ),
-        ButtonAddNewItemWidget(),
-      ],
+          ButtonAddNewItemWidget(),
+        ],
+      ),
     );
   }
 }
