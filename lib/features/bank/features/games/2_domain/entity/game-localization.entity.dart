@@ -1,4 +1,4 @@
-import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/region.entity.dart';
+import 'package:le_spawn_fr/features/bank/2_domain/entity/region.entity.dart';
 
 class GameLocalizationEntity {
   final String id;

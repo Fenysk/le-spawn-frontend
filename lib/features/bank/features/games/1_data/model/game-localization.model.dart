@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:le_spawn_fr/features/bank/features/games/1_data/model/region.model.dart';
+import 'package:le_spawn_fr/features/bank/1_data/model/region.model.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game-localization.entity.dart';
 
 class GameLocalizationModel {
