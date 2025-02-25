@@ -20,7 +20,7 @@ class UpdateRequiredWidget extends StatelessWidget {
               image: AssetImage(ImageConstant.logoTextTransparentPath),
               height: 80,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Icon(
               Icons.system_update,
               size: 64,
