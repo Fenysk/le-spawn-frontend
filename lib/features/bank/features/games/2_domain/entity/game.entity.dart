@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:le_spawn_fr/core/enums/game-category.enum.dart';
 import 'package:le_spawn_fr/features/bank/features/platforms/2_domain/entity/platform.entity.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
@@ -37,4 +38,24 @@ class GameEntity {
     required this.gameItems,
     required this.gameLocalizations,
   });
+
+  String toJson() {
+    return jsonEncode({
+      'id': id,
+      'igdbGameId': igdbGameId,
+      'barcodes': barcodes,
+      'category': category.toString(),
+      'coverUrl': coverUrl,
+      'firstReleaseDate': firstReleaseDate?.toIso8601String(),
+      'franchises': franchises,
+      'genres': genres,
+      'name': name,
+      'screenshotsUrl': screenshotsUrl,
+      'storyline': storyline,
+      'summary': summary,
+      'platforms': platforms.map((platform) => platform.toJson()).toList(),
+      'gameItems': gameItems.map((gameItem) => gameItem.toJson()).toList(),
+      'gameLocalizations': gameLocalizations.map((localization) => localization.toJson()).toList(),
+    });
+  }
 }

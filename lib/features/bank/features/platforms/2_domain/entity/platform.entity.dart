@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
 class PlatformEntity {
@@ -18,4 +19,16 @@ class PlatformEntity {
     this.games,
     this.logoUrl,
   });
+
+  String toJson() {
+    return jsonEncode({
+      'id': id,
+      'igdbPlatformId': igdbPlatformId,
+      'name': name,
+      'abbreviation': abbreviation,
+      'generation': generation,
+      'games': games?.map((game) => game.toJson()).toList(),
+      'logoUrl': logoUrl,
+    });
+  }
 }

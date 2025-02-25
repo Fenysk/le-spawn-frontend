@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
 class GameItemEntity {
@@ -24,4 +25,19 @@ class GameItemEntity {
     required this.game,
     required this.collectionId,
   });
+
+  String toJson() {
+    return jsonEncode({
+      'id': id,
+      'hasBox': hasBox,
+      'hasGame': hasGame,
+      'hasPaper': hasPaper,
+      'stateBox': stateBox,
+      'stateGame': stateGame,
+      'statePaper': statePaper,
+      'gameId': gameId,
+      'game': game.toJson(),
+      'collectionId': collectionId,
+    });
+  }
 }
