@@ -7,6 +7,7 @@ import 'package:le_spawn_fr/features/bank/3_presentation/page/bank.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/page/add-new-game.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/page/collections.page.dart';
+import 'package:le_spawn_fr/features/home_widget/3_presentation/page/home_widget.page.dart';
 import 'package:le_spawn_fr/features/onboarding/3_presentation/page/onboarding.page.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/page/skeleton.page.dart';
 import 'package:le_spawn_fr/features/user/3_presentation/page/profile.page.dart';
@@ -36,6 +37,11 @@ final goRouterConfig = GoRouter(
       path: AppRoutesConfig.auth,
       name: AppRoutesConfig.auth,
       builder: (context, state) => const AuthPage(),
+    ),
+    GoRoute(
+      path: AppRoutesConfig.homeWidget,
+      name: AppRoutesConfig.homeWidget,
+      builder: (context, state) => const HomeWidgetPage(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
