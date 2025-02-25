@@ -30,17 +30,6 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 30),
             UserDisplayWidget(userId: userId),
             const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: ElevatedButton.icon(
-                onPressed: () => context.go(AppRoutesConfig.homeWidget),
-                icon: const Icon(Icons.widgets),
-                label: const Text('Configurer Widget Écran d\'Accueil'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
-              ),
-            ),
             const LogoutButton(),
           ],
         ),

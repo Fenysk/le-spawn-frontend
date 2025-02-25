@@ -50,3 +50,4 @@ android/app/.cxx/Debug/*
 configure_fingerprint.bin
 .cursorrules
 .cursor/*
+templates/
