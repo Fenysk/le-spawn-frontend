@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/collection.entity.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/widget/collection-card.widget.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class CollectionListWidget extends StatelessWidget {
   const CollectionListWidget({super.key});
@@ -14,7 +13,7 @@ class CollectionListWidget extends StatelessWidget {
       builder: (context, state) => switch (state) {
         CollectionsSuccessState() => _buildLoadedContent(state.collections),
         CollectionsLoadingState() => _buildLoadingContent(),
-        CollectionsFailureState() => _buildFailureContent(state.errorMessage),
+        CollectionsFailureState() => _buildEmptyContent(),
         _ => const SizedBox.shrink(),
       },
     );
@@ -25,17 +24,17 @@ class CollectionListWidget extends StatelessWidget {
   }
 
   Widget _buildLoadingContent() {
-    return Skeletonizer(
-      enabled: true,
-      child: Skeleton.leaf(
-        child: CollectionCard(
-          collection: CollectionEntity.empty(),
-        ),
+    return const SizedBox(
+      height: 200,
+      child: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }
 
-  Widget _buildFailureContent(String message) {
-    return CollectionCard(collection: CollectionEntity.empty());
+  Widget _buildEmptyContent() {
+    return CollectionCard(
+      collection: CollectionEntity.empty(),
+    );
   }
 }

@@ -89,12 +89,10 @@ class _CollectionGameListWidgetState extends State<CollectionGameListWidget> {
   }
 
   Widget _buildLoadingContent() {
-    return Skeletonizer(
-      enabled: true,
-      child: Skeleton.leaf(
-        child: CollectionCard(
-          collection: CollectionEntity.empty(),
-        ),
+    return SizedBox(
+      height: 200,
+      child: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }

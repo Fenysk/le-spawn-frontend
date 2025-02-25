@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
 import 'package:le_spawn_fr/core/constant/font.constant.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
-import 'package:le_spawn_fr/core/widgets/animated-background.widget.dart';
+import 'package:le_spawn_fr/core/widgets/animated-main-button-background.widget.dart';
 
 class ButtonAddNewItemWidget extends StatefulWidget {
   const ButtonAddNewItemWidget({super.key});
