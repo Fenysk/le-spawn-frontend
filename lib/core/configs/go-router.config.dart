@@ -7,6 +7,7 @@ import 'package:le_spawn_fr/features/bank/3_presentation/page/bank.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/page/add-new-game.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/page/collections.page.dart';
+import 'package:le_spawn_fr/features/collections/features/new-game-item/3_presentation/page/new-game-item.page.dart';
 import 'package:le_spawn_fr/features/onboarding/3_presentation/page/onboarding.page.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/page/skeleton.page.dart';
 import 'package:le_spawn_fr/features/user/3_presentation/page/profile.page.dart';
@@ -68,6 +69,28 @@ final goRouterConfig = GoRouter(
                       ],
                       child: const AddNewGamePage(),
                     ),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      return SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(1.0, 0.0),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeInOut,
+                          ),
+                        ),
+                        child: child,
+                      );
+                    },
+                  ),
+                ),
+                GoRoute(
+                  path: AppRoutesConfig.newGameItemPath,
+                  name: "${AppRoutesConfig.collections}/${AppRoutesConfig.newGameItemPath}",
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const NewGameItemPage(),
                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                       return SlideTransition(
                         position: Tween<Offset>(

@@ -8,4 +8,5 @@ class AppRoutesConfig {
 
   // Sub-routes paths (without leading slash)
   static const String addNewGamePath = 'add-new-game';
+  static const String newGameItemPath = 'new-game-item';
 }
