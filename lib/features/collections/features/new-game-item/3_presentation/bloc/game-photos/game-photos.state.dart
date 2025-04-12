@@ -26,15 +26,15 @@ class GamePhotosUploadingState extends GamePhotosState {
 
 class GamePhotosProcessingBarcodesState extends GamePhotosState {
   final File frontImage;
-  final File backImage;
+  final File? backImage;
   final String frontImageUrl;
-  final String backImageUrl;
+  final String? backImageUrl;
 
   GamePhotosProcessingBarcodesState({
     required this.frontImage,
-    required this.backImage,
+    this.backImage,
     required this.frontImageUrl,
-    required this.backImageUrl,
+    this.backImageUrl,
   });
 
   @override
@@ -48,17 +48,17 @@ class GamePhotosProcessingBarcodesState extends GamePhotosState {
 
 class GamePhotosUploadedState extends GamePhotosState {
   final File frontImage;
-  final File backImage;
+  final File? backImage;
   final String frontImageUrl;
-  final String backImageUrl;
+  final String? backImageUrl;
   final String? frontBarcodeValue;
   final String? backBarcodeValue;
 
   GamePhotosUploadedState({
     required this.frontImage,
-    required this.backImage,
+    this.backImage,
     required this.frontImageUrl,
-    required this.backImageUrl,
+    this.backImageUrl,
     this.frontBarcodeValue,
     this.backBarcodeValue,
   });

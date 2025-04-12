@@ -32,7 +32,7 @@ class ApiUrlConstant {
   static String get addBarcodeToGame => '$baseUrl/bank/games/barcode';
 
   // New Item
-  static String get addGameToCollection => '$baseUrl/collections/games';
+  static String get newGameItem => '$baseUrl/collections/games';
   static String get searchGamesFromImages => '$baseUrl/bank/games/images';
   static String get addGameFromCover => '$baseUrl/bank/games/cover';
 

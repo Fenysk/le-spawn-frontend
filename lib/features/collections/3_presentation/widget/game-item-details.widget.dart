@@ -18,6 +18,10 @@ class GameItemDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (gameItem.game == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       child: Container(
@@ -36,11 +40,11 @@ class GameItemDetailsWidget extends StatelessWidget {
                     _buildStateCard(context),
                     const SizedBox(height: 16),
                     _buildInfoCard(context),
-                    if (gameItem.game.summary != null || gameItem.game.storyline != null) const SizedBox(height: 16),
-                    if (gameItem.game.summary != null) _buildDescriptionCard(context, 'Résumé', gameItem.game.summary!, Icons.description),
-                    if (gameItem.game.storyline != null) ...[
+                    if (gameItem.game?.summary != null || gameItem.game?.storyline != null) const SizedBox(height: 16),
+                    if (gameItem.game?.summary != null) _buildDescriptionCard(context, 'Résumé', gameItem.game!.summary!, Icons.description),
+                    if (gameItem.game?.storyline != null) ...[
                       const SizedBox(height: 16),
-                      _buildDescriptionCard(context, 'Histoire', gameItem.game.storyline!, Icons.auto_stories),
+                      _buildDescriptionCard(context, 'Histoire', gameItem.game!.storyline!, Icons.auto_stories),
                     ],
                   ],
                 ),
@@ -68,9 +72,9 @@ class GameItemDetailsWidget extends StatelessWidget {
         children: [
           const SizedBox(height: 24),
           Hero(
-            tag: 'game-cover-${gameItem.game.id}',
+            tag: 'game-cover-${gameItem.game!.id}',
             child: GameCoverWidget(
-              game: gameItem.game,
+              game: gameItem.game!,
               width: 200,
               height: 266,
             ),
@@ -81,7 +85,7 @@ class GameItemDetailsWidget extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  gameItem.game.name,
+                  gameItem.game!.name,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -95,7 +99,7 @@ class GameItemDetailsWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    LitteralsUtil.getGameCategory(gameItem.game.category.name),
+                    LitteralsUtil.getGameCategory(gameItem.game!.category.name),
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSecondaryContainer,
                         ),
@@ -149,7 +153,7 @@ class GameItemDetailsWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -190,29 +194,29 @@ class GameItemDetailsWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            if (gameItem.game.platforms.isNotEmpty) _buildInfoSection(context, 'Plateformes', gameItem.game.platforms.map((p) => '${p.name} (${p.abbreviation})').toList(), Icons.devices),
-            if (gameItem.game.genres.isNotEmpty) ...[
-              if (gameItem.game.platforms.isNotEmpty) const SizedBox(height: 16),
-              _buildInfoSection(context, 'Genres', gameItem.game.genres.toList(), Icons.category),
+            if (gameItem.game!.platforms.isNotEmpty) _buildInfoSection(context, 'Plateformes', gameItem.game!.platforms.map((p) => '${p.name} (${p.abbreviation})').toList(), Icons.devices),
+            if (gameItem.game!.genres.isNotEmpty) ...[
+              if (gameItem.game!.platforms.isNotEmpty) const SizedBox(height: 16),
+              _buildInfoSection(context, 'Genres', gameItem.game!.genres.toList(), Icons.category),
             ],
-            if (gameItem.game.franchises.isNotEmpty) ...[
+            if (gameItem.game!.franchises.isNotEmpty) ...[
               const SizedBox(height: 16),
-              _buildInfoSection(context, 'Franchises', gameItem.game.franchises.toList(), Icons.extension),
+              _buildInfoSection(context, 'Franchises', gameItem.game!.franchises.toList(), Icons.extension),
             ],
-            if (gameItem.game.firstReleaseDate != null) ...[
+            if (gameItem.game!.firstReleaseDate != null) ...[
               const SizedBox(height: 16),
               Row(
                 children: [
                   Icon(Icons.calendar_today, size: 20, color: Theme.of(context).colorScheme.secondary),
                   const SizedBox(width: 8),
                   Text(
-                    'Date de sortie: ${gameItem.game.firstReleaseDate!.toString().split(' ')[0]}',
+                    'Date de sortie: ${gameItem.game!.firstReleaseDate!.toString().split(' ')[0]}',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
               ),
             ],
-            if (gameItem.game.gameLocalizations.isNotEmpty) ...[
+            if (gameItem.game!.gameLocalizations.isNotEmpty) ...[
               const SizedBox(height: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +234,7 @@ class GameItemDetailsWidget extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  ...gameItem.game.gameLocalizations.map((loc) => Padding(
+                  ...gameItem.game!.gameLocalizations.map((loc) => Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Container(
                           decoration: BoxDecoration(
@@ -374,7 +378,7 @@ class GameItemDetailsWidget extends StatelessWidget {
               context: context,
               builder: (dialogContext) => AlertDialog(
                 title: const Text('Confirmation'),
-                content: Text('Voulez-vous vraiment supprimer ${gameItem.game.name} de votre collection ?'),
+                content: Text('Voulez-vous vraiment supprimer ${gameItem.game!.name} de votre collection ?'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogContext),
@@ -405,7 +409,7 @@ class GameItemDetailsWidget extends StatelessWidget {
             showDialog(
               context: context,
               builder: (dialogContext) => ReportGameDialog(
-                game: gameItem.game,
+                game: gameItem.game!,
                 parentContext: context,
               ),
             );

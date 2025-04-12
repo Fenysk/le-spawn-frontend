@@ -80,7 +80,7 @@ class GameCounterWidgetService {
           qualifiedAndroidName: 'fr.le_spawn.GameCounterProvider',
         );
 
-        print('📱 Résultat de la mise à jour #${i + 1}: ${result}');
+        print('📱 Résultat de la mise à jour #${i + 1}: $result');
 
         if (i < 2) await Future.delayed(const Duration(milliseconds: 300));
       }

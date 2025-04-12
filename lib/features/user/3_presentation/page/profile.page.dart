@@ -62,7 +62,7 @@ class ProfilePage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.1),
+                    color: colorScheme.primary.withAlpha(25),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -91,7 +91,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 Icon(
                   Icons.chevron_right,
-                  color: colorScheme.onSurface.withOpacity(0.5),
+                  color: colorScheme.onSurface.withAlpha(50),
                 ),
               ],
             ),

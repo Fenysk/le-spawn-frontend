@@ -10,9 +10,11 @@ class GameItemModel {
   final String? stateBox;
   final String? stateGame;
   final String? statePaper;
-  final String gameId;
+  final String? gameId;
   final String collectionId;
-  final GameModel game;
+  final GameModel? game;
+  final String? frontImageUrl;
+  final String? backImageUrl;
 
   GameItemModel({
     required this.id,
@@ -22,9 +24,11 @@ class GameItemModel {
     this.stateBox,
     this.stateGame,
     this.statePaper,
-    required this.gameId,
+    this.gameId,
     required this.collectionId,
-    required this.game,
+    this.game,
+    this.frontImageUrl,
+    this.backImageUrl,
   });
 
   Map<String, dynamic> toMap() {
@@ -38,7 +42,9 @@ class GameItemModel {
       'statePaper': statePaper,
       'gameId': gameId,
       'collectionId': collectionId,
-      'game': game.toJson(),
+      'game': game?.toJson(),
+      'frontImageUrl': frontImageUrl,
+      'backImageUrl': backImageUrl,
     };
   }
 
@@ -51,9 +57,11 @@ class GameItemModel {
       stateBox: map['stateBox'],
       stateGame: map['stateGame'],
       statePaper: map['statePaper'],
-      gameId: map['gameId'] ?? '',
+      gameId: map['gameId'],
       collectionId: map['collectionId'] ?? '',
-      game: GameModel.fromMap(map['game']),
+      game: map['game'] != null ? GameModel.fromMap(map['game']) : null,
+      frontImageUrl: map['frontImageUrl'],
+      backImageUrl: map['backImageUrl'],
     );
   }
 
@@ -73,6 +81,6 @@ extension GameCollectionItemModelExtension on GameItemModel {
         statePaper: statePaper,
         gameId: gameId,
         collectionId: collectionId,
-        game: game.toEntity(),
+        game: game?.toEntity(),
       );
 }

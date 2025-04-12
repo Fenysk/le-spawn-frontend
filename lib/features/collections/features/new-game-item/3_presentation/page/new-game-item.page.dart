@@ -3,24 +3,64 @@ import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
 import '../bloc/game-photos/game-photos.cubit.dart';
 import '../bloc/game-photos/game-photos.state.dart';
 
 class NewGameItemPage extends StatelessWidget {
-  const NewGameItemPage({super.key});
+  final String collectionId;
+
+  const NewGameItemPage({
+    super.key,
+    required this.collectionId,
+  });
 
   @override
   Widget build(BuildContext context) {
+    if (collectionId.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Erreur'),
+        ),
+        body: const Center(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 48, color: Colors.red),
+                SizedBox(height: 16),
+                Text(
+                  'Vous devez avoir une collection pour ajouter un jeu',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Veuillez créer ou sélectionner une collection avant d\'ajouter un jeu',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return BlocProvider(
       create: (_) => GamePhotosCubit(),
-      child: const _NewGameItemPageContent(),
+      child: _NewGameItemPageContent(collectionId: collectionId),
     );
   }
 }
 
 class _NewGameItemPageContent extends StatefulWidget {
-  const _NewGameItemPageContent();
+  final String collectionId;
+
+  const _NewGameItemPageContent({
+    required this.collectionId,
+  });
 
   @override
   State<_NewGameItemPageContent> createState() => _NewGameItemPageContentState();
@@ -33,9 +73,12 @@ class _NewGameItemPageContentState extends State<_NewGameItemPageContent> with S
   bool _showCaptureEffect = false;
   bool _showTransition = false;
   String _transitionMessage = '';
+  bool _isScanningBarcodes = false;
+  bool _backImageSkipped = false;
 
   File? _frontImage;
   File? _backImage;
+  String? _detectedBarcode;
 
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -124,14 +167,80 @@ class _NewGameItemPageContentState extends State<_NewGameItemPageContent> with S
         print('Back image captured: ${photo.path}');
         setState(() {
           _isTakingPicture = false;
+          _isScanningBarcodes = true;
         });
+
+        await _scanBarcodes();
       }
     } catch (e) {
       debugPrint('Error taking picture: $e');
       setState(() {
         _isTakingPicture = false;
         _showCaptureEffect = false;
+        _isScanningBarcodes = false;
       });
+    }
+  }
+
+  Future<void> _scanBarcodes() async {
+    try {
+      print('Scanning for barcodes...');
+
+      final String? frontBarcode = await _scanBarcodeFromImage(_frontImage!);
+      if (frontBarcode != null) {
+        print('Barcode detected on front image: $frontBarcode');
+        setState(() {
+          _detectedBarcode = frontBarcode;
+          _isScanningBarcodes = false;
+        });
+        return;
+      }
+
+      final String? backBarcode = await _scanBarcodeFromImage(_backImage!);
+      if (backBarcode != null) {
+        print('Barcode detected on back image: $backBarcode');
+        setState(() {
+          _detectedBarcode = backBarcode;
+          _isScanningBarcodes = false;
+        });
+        return;
+      }
+
+      print('No barcodes detected on either image');
+      setState(() {
+        _isScanningBarcodes = false;
+      });
+    } catch (e) {
+      print('Error scanning barcodes: $e');
+      setState(() {
+        _isScanningBarcodes = false;
+      });
+    }
+  }
+
+  Future<String?> _scanBarcodeFromImage(File imageFile) async {
+    final inputImage = InputImage.fromFilePath(imageFile.path);
+    final barcodeScanner = BarcodeScanner(formats: [
+      BarcodeFormat.all
+    ]);
+
+    try {
+      final barcodes = await barcodeScanner.processImage(inputImage);
+
+      if (barcodes.isNotEmpty) {
+        for (final barcode in barcodes) {
+          if (barcode.rawValue != null && barcode.rawValue!.isNotEmpty) {
+            return barcode.rawValue;
+          }
+        }
+      }
+
+      return null;
+    } catch (e) {
+      debugPrint('❌ Error scanning barcode from image: $e');
+      return null;
+    } finally {
+      barcodeScanner.close();
     }
   }
 
@@ -139,16 +248,46 @@ class _NewGameItemPageContentState extends State<_NewGameItemPageContent> with S
     setState(() {
       _frontImage = null;
       _backImage = null;
+      _detectedBarcode = null;
+      _backImageSkipped = false;
     });
   }
 
   Future<void> _uploadImages() async {
-    if (_frontImage != null && _backImage != null) {
+    if (_frontImage != null) {
       context.read<GamePhotosCubit>().uploadGamePhotos(
             frontImage: _frontImage!,
-            backImage: _backImage!,
+            backImage: _backImage,
+            context: context,
+            barcode: _detectedBarcode,
+            collectionId: widget.collectionId,
           );
     }
+  }
+
+  void _skipBackImage() async {
+    setState(() {
+      _isScanningBarcodes = true;
+    });
+
+    if (_frontImage != null) {
+      try {
+        final String? frontBarcode = await _scanBarcodeFromImage(_frontImage!);
+        if (frontBarcode != null) {
+          print('Barcode detected on front image: $frontBarcode');
+          setState(() {
+            _detectedBarcode = frontBarcode;
+          });
+        }
+      } catch (e) {
+        print('Error scanning barcodes: $e');
+      }
+    }
+
+    setState(() {
+      _isScanningBarcodes = false;
+      _backImageSkipped = true;
+    });
   }
 
   @override
@@ -206,14 +345,16 @@ class _NewGameItemPageContentState extends State<_NewGameItemPageContent> with S
           _frontImage == null
               ? 'Capture face avant du jeu'
               : _backImage == null
-                  ? 'Capture face arrière du jeu'
+                  ? _isScanningBarcodes
+                      ? 'Analyse du code-barres'
+                      : 'Capture face arrière du jeu'
                   : 'Vérification des photos',
           style: Theme.of(context).textTheme.labelLarge,
         ),
       ),
       body: Column(
         children: [
-          if (_frontImage == null || _backImage == null)
+          if (_frontImage == null || (_frontImage != null && _backImage == null && !_isScanningBarcodes && !_backImageSkipped))
             Expanded(
               child: Stack(
                 children: [
@@ -297,25 +438,68 @@ class _NewGameItemPageContentState extends State<_NewGameItemPageContent> with S
                 ],
               ),
             )
+          else if (_isScanningBarcodes)
+            const Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text(
+                      'Analyse des photos pour détecter les codes-barres...',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            )
           else
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    const Text(
-                      'Photos capturées',
-                      style: TextStyle(
+                    Text(
+                      _backImage == null ? 'Photo capturée' : 'Photos capturées',
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    if (_detectedBarcode != null) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.qr_code),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Code-barres détecté:',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(_detectedBarcode!),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 16),
                     Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
+                      child: _backImage == null
+                          ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
@@ -335,34 +519,58 @@ class _NewGameItemPageContentState extends State<_NewGameItemPageContent> with S
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            )
+                          : Row(
                               children: [
-                                const Text(
-                                  'Face arrière',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'Face avant',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Expanded(
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(8),
+                                          child: Image.file(
+                                            _frontImage!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(width: 16),
                                 Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.file(
-                                      _backImage!,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'Face arrière',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Expanded(
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(8),
+                                          child: Image.file(
+                                            _backImage!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),
@@ -393,7 +601,7 @@ class _NewGameItemPageContentState extends State<_NewGameItemPageContent> with S
                             ],
                           ),
                         )
-                      : _frontImage == null || _backImage == null
+                      : _frontImage == null
                           ? ElevatedButton(
                               onPressed: (_isTakingPicture || _showTransition) ? null : _takePicture,
                               style: ElevatedButton.styleFrom(
@@ -401,65 +609,120 @@ class _NewGameItemPageContentState extends State<_NewGameItemPageContent> with S
                               ),
                               child: _isTakingPicture
                                   ? const CircularProgressIndicator()
-                                  : Text(
-                                      _frontImage == null ? 'Capturer la face avant' : 'Capturer la face arrière',
-                                      style: const TextStyle(fontSize: 16),
+                                  : const Text(
+                                      'Capturer la face avant',
+                                      style: TextStyle(fontSize: 16),
                                     ),
                             )
-                          : state is GamePhotosUploadedState
-                              ? Column(
-                                  children: [
-                                    if (state.frontBarcodeValue != null || state.backBarcodeValue != null)
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 16.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const Text(
-                                              'Codes-barres détectés:',
-                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            if (state.frontBarcodeValue != null) Text('Face avant: ${state.frontBarcodeValue}'),
-                                            if (state.backBarcodeValue != null) Text('Face arrière: ${state.backBarcodeValue}'),
-                                          ],
-                                        ),
-                                      ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        _resetImages();
-                                        context.read<GamePhotosCubit>().resetState();
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        minimumSize: const Size.fromHeight(50),
-                                      ),
-                                      child: const Text('Nouvelles photos'),
-                                    ),
-                                  ],
-                                )
-                              : Row(
+                          : _backImage == null && _isScanningBarcodes == false && _backImageSkipped == false
+                              ? Row(
                                   children: [
                                     Expanded(
                                       child: OutlinedButton(
-                                        onPressed: _resetImages,
+                                        onPressed: (_isTakingPicture || _showTransition) ? null : _skipBackImage,
                                         style: OutlinedButton.styleFrom(
                                           minimumSize: const Size.fromHeight(50),
                                         ),
-                                        child: const Text('Reprendre les photos'),
+                                        child: const Text('Ignorer la face arrière'),
                                       ),
                                     ),
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: ElevatedButton(
-                                        onPressed: _uploadImages,
+                                        onPressed: (_isTakingPicture || _showTransition) ? null : _takePicture,
                                         style: ElevatedButton.styleFrom(
                                           minimumSize: const Size.fromHeight(50),
                                         ),
-                                        child: const Text('Confirmer'),
+                                        child: _isTakingPicture
+                                            ? const CircularProgressIndicator()
+                                            : const Text(
+                                                'Capturer la face arrière',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
                                       ),
                                     ),
                                   ],
-                                ),
+                                )
+                              : state is GamePhotosUploadedState
+                                  ? Column(
+                                      children: [
+                                        if (state.frontBarcodeValue != null || state.backBarcodeValue != null)
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 16.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'Codes-barres détectés:',
+                                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                if (state.frontBarcodeValue != null) Text('Face avant: ${state.frontBarcodeValue}'),
+                                                if (state.backBarcodeValue != null) Text('Face arrière: ${state.backBarcodeValue}'),
+                                              ],
+                                            ),
+                                          ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            _resetImages();
+                                            context.read<GamePhotosCubit>().resetState();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize: const Size.fromHeight(50),
+                                          ),
+                                          child: const Text('Nouvelles photos'),
+                                        ),
+                                      ],
+                                    )
+                                  : _isScanningBarcodes
+                                      ? const SizedBox.shrink()
+                                      : _backImageSkipped && _frontImage != null
+                                          ? Row(
+                                              children: [
+                                                Expanded(
+                                                  child: OutlinedButton(
+                                                    onPressed: _resetImages,
+                                                    style: OutlinedButton.styleFrom(
+                                                      minimumSize: const Size.fromHeight(50),
+                                                    ),
+                                                    child: const Text('Reprendre les photos'),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 16),
+                                                Expanded(
+                                                  child: ElevatedButton(
+                                                    onPressed: _uploadImages,
+                                                    style: ElevatedButton.styleFrom(
+                                                      minimumSize: const Size.fromHeight(50),
+                                                    ),
+                                                    child: const Text('Confirmer'),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Row(
+                                              children: [
+                                                Expanded(
+                                                  child: OutlinedButton(
+                                                    onPressed: _resetImages,
+                                                    style: OutlinedButton.styleFrom(
+                                                      minimumSize: const Size.fromHeight(50),
+                                                    ),
+                                                    child: const Text('Reprendre les photos'),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 16),
+                                                Expanded(
+                                                  child: ElevatedButton(
+                                                    onPressed: _uploadImages,
+                                                    style: ElevatedButton.styleFrom(
+                                                      minimumSize: const Size.fromHeight(50),
+                                                    ),
+                                                    child: const Text('Confirmer'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
             ),
           ),
         ],

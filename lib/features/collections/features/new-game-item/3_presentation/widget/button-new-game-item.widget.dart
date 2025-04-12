@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
 import 'package:le_spawn_fr/core/constant/font.constant.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
 import 'package:le_spawn_fr/core/widgets/animated-main-button-background.widget.dart';
+import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
 
 class ButtonNewGameItemWidget extends StatefulWidget {
   const ButtonNewGameItemWidget({super.key});
@@ -52,6 +54,21 @@ class _ButtonAddNewItemWidgetState extends State<ButtonNewGameItemWidget> with S
   }
 
   void _onButtonPressed() {
+    final collectionsCubit = BlocProvider.of<CollectionsCubit>(context);
+    final currentCollection = collectionsCubit.getCurrentCollection();
+
+    if (currentCollection == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vous devez avoir une collection pour ajouter un jeu'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+
+      collectionsCubit.loadCollections();
+      return;
+    }
+
     context.goNamed('${AppRoutesConfig.collections}/${AppRoutesConfig.newGameItemPath}');
   }
 

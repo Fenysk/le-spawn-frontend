@@ -72,7 +72,7 @@ class _CollectionGameListWidgetState extends State<CollectionGameListWidget> {
                   ),
                   builder: (context, intensity, child) {
                     return GameCoverWidget(
-                      game: item.game,
+                      game: item.game!,
                       height: 150,
                       width: 100,
                       intensity: intensity,

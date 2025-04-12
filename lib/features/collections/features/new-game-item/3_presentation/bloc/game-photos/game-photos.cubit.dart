@@ -1,23 +1,32 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
-import 'package:image/image.dart' as img;
 import 'package:le_spawn_fr/core/di/service-locator.dart';
+import 'package:le_spawn_fr/core/utils/image.util.dart';
+import 'package:le_spawn_fr/features/collections/features/new-game-item/1_data/dto/submit-game-photos.request.dart';
+import 'package:le_spawn_fr/features/collections/features/new-game-item/2_domain/usecase/submit-game-photos.usecase.dart';
 import 'package:le_spawn_fr/features/storage/2_domain/repository/storage.repository.dart';
 import 'game-photos.state.dart';
 
 class GamePhotosCubit extends Cubit<GamePhotosState> {
   final StorageRepository _storageRepository;
+  final SubmitGamePhotosUsecase _submitGamePhotosUsecase;
 
-  GamePhotosCubit({StorageRepository? storageRepository})
-      : _storageRepository = storageRepository ?? serviceLocator<StorageRepository>(),
+  GamePhotosCubit({
+    StorageRepository? storageRepository,
+    SubmitGamePhotosUsecase? submitGamePhotosUsecase,
+  })  : _storageRepository = storageRepository ?? serviceLocator<StorageRepository>(),
+        _submitGamePhotosUsecase = submitGamePhotosUsecase ?? serviceLocator<SubmitGamePhotosUsecase>(),
         super(GamePhotosInitialState());
 
   Future<void> uploadGamePhotos({
     required File frontImage,
-    required File backImage,
+    File? backImage,
+    required BuildContext context,
+    required String collectionId,
+    String? barcode,
   }) async {
     emit(GamePhotosUploadingState(
       frontImage: frontImage,
@@ -25,8 +34,9 @@ class GamePhotosCubit extends Cubit<GamePhotosState> {
     ));
 
     try {
-      final optimizedFrontImage = await _optimizeImage(frontImage);
-      final optimizedBackImage = await _optimizeImage(backImage);
+      final optimizedFrontImage = await ImageUtil.optimizeImage(frontImage);
+      File? optimizedBackImage;
+      String? backImageUrl;
 
       debugPrint('📤 Uploading front image...');
       final frontImageResult = await _storageRepository.uploadFile(optimizedFrontImage);
@@ -41,32 +51,58 @@ class GamePhotosCubit extends Cubit<GamePhotosState> {
 
       debugPrint('✅ Front image uploaded successfully: ${frontImageFile.url}');
 
-      debugPrint('📤 Uploading back image...');
-      final backImageResult = await _storageRepository.uploadFile(optimizedBackImage);
+      if (backImage != null) {
+        optimizedBackImage = await ImageUtil.optimizeImage(backImage);
 
-      final backImageFile = backImageResult.fold(
-        (error) {
-          debugPrint('❌ Error uploading back image: $error');
-          throw Exception(error);
-        },
-        (file) => file,
-      );
+        debugPrint('📤 Uploading back image...');
+        final backImageResult = await _storageRepository.uploadFile(optimizedBackImage);
 
-      debugPrint('✅ Back image uploaded successfully: ${backImageFile.url}');
+        final backImageFile = backImageResult.fold(
+          (error) {
+            debugPrint('❌ Error uploading back image: $error');
+            throw Exception(error);
+          },
+          (file) => file,
+        );
 
-      emit(GamePhotosProcessingBarcodesState(
-        frontImage: frontImage,
-        backImage: backImage,
-        frontImageUrl: frontImageFile.url,
-        backImageUrl: backImageFile.url,
-      ));
+        backImageUrl = backImageFile.url;
+        debugPrint('✅ Back image uploaded successfully: $backImageUrl');
+      } else {
+        debugPrint('ℹ️ No back image provided, skipping back image upload');
+      }
 
-      await _processGameBarcodes(
-        frontImage: frontImage,
-        backImage: backImage,
-        frontImageUrl: frontImageFile.url,
-        backImageUrl: backImageFile.url,
-      );
+      if (barcode != null) {
+        debugPrint('ℹ️ Using pre-detected barcode: $barcode');
+        await _submitGamePhotosToBackend(
+          frontImageUrl: frontImageFile.url,
+          backImageUrl: backImageUrl,
+          barcode: barcode,
+          collectionId: collectionId,
+          context: context,
+        );
+      } else {
+        emit(GamePhotosProcessingBarcodesState(
+          frontImage: frontImage,
+          backImage: backImage,
+          frontImageUrl: frontImageFile.url,
+          backImageUrl: backImageUrl,
+        ));
+
+        final String? detectedBarcode = await _processGameBarcodes(
+          frontImage: frontImage,
+          backImage: backImage,
+          frontImageUrl: frontImageFile.url,
+          backImageUrl: backImageUrl,
+        );
+
+        await _submitGamePhotosToBackend(
+          frontImageUrl: frontImageFile.url,
+          backImageUrl: backImageUrl,
+          barcode: detectedBarcode,
+          collectionId: collectionId,
+          context: context,
+        );
+      }
     } catch (e) {
       debugPrint('❌ Error during photo upload: $e');
       emit(GamePhotosErrorState(
@@ -75,98 +111,83 @@ class GamePhotosCubit extends Cubit<GamePhotosState> {
     }
   }
 
-  Future<File> _optimizeImage(File imageFile) async {
+  Future<void> _submitGamePhotosToBackend({
+    required String frontImageUrl,
+    String? backImageUrl,
+    required String collectionId,
+    String? barcode,
+    required BuildContext context,
+  }) async {
     try {
-      final bytes = await imageFile.readAsBytes();
-      final originalImage = img.decodeImage(bytes);
+      debugPrint('📤 Submitting game photos to backend...');
+      final request = SubmitGamePhotosRequest(
+        frontGameImageUrl: frontImageUrl,
+        backGameImageUrl: backImageUrl,
+        barcode: barcode,
+        collectionId: collectionId,
+      );
 
-      if (originalImage == null) {
-        return imageFile;
-      }
+      final result = await _submitGamePhotosUsecase.execute(request: request);
 
-      if (bytes.length < 1024 * 1024) {
-        return imageFile;
-      }
+      result.fold(
+        (error) {
+          debugPrint('❌ Error submitting game photos: $error');
+          emit(GamePhotosErrorState(
+            errorMessage: 'Erreur lors de l\'envoi des photos au serveur: $error',
+          ));
+        },
+        (_) {
+          debugPrint('✅ Game photos submitted successfully');
+          emit(GamePhotosUploadedState(
+            frontImage: state is GamePhotosProcessingBarcodesState ? (state as GamePhotosProcessingBarcodesState).frontImage : File(''),
+            backImage: state is GamePhotosProcessingBarcodesState ? (state as GamePhotosProcessingBarcodesState).backImage : null,
+            frontImageUrl: frontImageUrl,
+            backImageUrl: backImageUrl,
+            frontBarcodeValue: barcode,
+            backBarcodeValue: null,
+          ));
 
-      final int maxWidth = 1200;
-      final int maxHeight = 1800;
-
-      img.Image resizedImage = originalImage;
-      if (originalImage.width > maxWidth || originalImage.height > maxHeight) {
-        double ratio = originalImage.width / originalImage.height;
-        int newWidth, newHeight;
-
-        if (ratio > 2 / 3) {
-          newWidth = maxWidth;
-          newHeight = (maxWidth / ratio).round();
-        } else {
-          newHeight = maxHeight;
-          newWidth = (maxHeight * ratio).round();
-        }
-
-        resizedImage = img.copyResize(
-          originalImage,
-          width: newWidth,
-          height: newHeight,
-        );
-      }
-
-      final Uint8List optimizedBytes = img.encodeJpg(resizedImage, quality: 80);
-
-      final optimizedFile = File('${imageFile.path}_optimized.jpg');
-      await optimizedFile.writeAsBytes(optimizedBytes);
-
-      debugPrint('📸 Image optimized: original size: ${bytes.length / 1024}KB, new size: ${optimizedBytes.length / 1024}KB');
-
-      return optimizedFile;
+          context.go('/collections');
+        },
+      );
     } catch (e) {
-      debugPrint('⚠️ Failed to optimize image: $e');
-      return imageFile;
+      debugPrint('❌ Error submitting game photos: $e');
+      emit(GamePhotosErrorState(
+        errorMessage: 'Erreur lors de l\'envoi des photos au serveur: $e',
+      ));
     }
   }
 
-  Future<void> _processGameBarcodes({
+  Future<String?> _processGameBarcodes({
     required File frontImage,
-    required File backImage,
+    File? backImage,
     required String frontImageUrl,
-    required String backImageUrl,
+    String? backImageUrl,
   }) async {
     try {
       debugPrint('🔍 Scanning front image for barcodes...');
       final String? frontBarcodeValue = await _scanBarcodeFromImage(frontImage);
 
-      debugPrint('🔍 Scanning back image for barcodes...');
-      final String? backBarcodeValue = await _scanBarcodeFromImage(backImage);
-
       if (frontBarcodeValue != null) {
         debugPrint('✅ Front barcode detected: $frontBarcodeValue');
-      } else {
-        debugPrint('⚠️ No barcode detected in front image');
+        return frontBarcodeValue;
       }
 
-      if (backBarcodeValue != null) {
-        debugPrint('✅ Back barcode detected: $backBarcodeValue');
-      } else {
-        debugPrint('⚠️ No barcode detected in back image');
+      if (backImage != null) {
+        debugPrint('🔍 Scanning back image for barcodes...');
+        final String? backBarcodeValue = await _scanBarcodeFromImage(backImage);
+
+        if (backBarcodeValue != null) {
+          debugPrint('✅ Back barcode detected: $backBarcodeValue');
+          return backBarcodeValue;
+        }
       }
 
-      emit(GamePhotosUploadedState(
-        frontImage: frontImage,
-        backImage: backImage,
-        frontImageUrl: frontImageUrl,
-        backImageUrl: backImageUrl,
-        frontBarcodeValue: frontBarcodeValue,
-        backBarcodeValue: backBarcodeValue,
-      ));
+      debugPrint('⚠️ No barcodes detected in any image');
+      return null;
     } catch (e) {
       debugPrint('❌ Error scanning barcodes: $e');
-
-      emit(GamePhotosUploadedState(
-        frontImage: frontImage,
-        backImage: backImage,
-        frontImageUrl: frontImageUrl,
-        backImageUrl: backImageUrl,
-      ));
+      return null;
     }
   }
 

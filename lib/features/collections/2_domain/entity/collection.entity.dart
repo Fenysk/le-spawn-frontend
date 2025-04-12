@@ -22,10 +22,13 @@ class CollectionEntity {
         userId: '',
       );
 
-  List<GameEntity> getLastGames({int? limit}) => limit == null ? gameItems.map((gameItem) => gameItem.game).toList() : gameItems.take(limit).map((gameItem) => gameItem.game).toList();
+  List<GameEntity> getLastGames({int? limit}) {
+    final filteredGameItems = gameItems.where((gameItem) => gameItem.game != null).toList();
+    return limit == null ? filteredGameItems.map((gameItem) => gameItem.game!).toList() : filteredGameItems.take(limit).map((gameItem) => gameItem.game!).toList();
+  }
 
   CollectionEntity sortGamesByTitle() {
-    final sortedGameItems = gameItems..sort((a, b) => a.game.name.compareTo(b.game.name));
+    final sortedGameItems = gameItems.where((gameItem) => gameItem.game != null).toList()..sort((a, b) => (a.game?.name ?? '').compareTo(b.game?.name ?? ''));
 
     return CollectionEntity(
       id: id,

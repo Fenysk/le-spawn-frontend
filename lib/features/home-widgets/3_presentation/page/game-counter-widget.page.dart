@@ -264,7 +264,7 @@ class _GameCounterWidgetPageState extends State<GameCounterWidgetPage> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: _statusMessage.contains('succès') ? Colors.green.withOpacity(0.1) : Colors.blue.withOpacity(0.1),
+                          color: _statusMessage.contains('succès') ? Colors.green.withAlpha(25) : Colors.blue.withAlpha(25),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(

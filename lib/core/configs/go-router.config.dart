@@ -5,14 +5,11 @@ import 'package:le_spawn_fr/core/configs/app-routes.config.dart';
 import 'package:le_spawn_fr/features/auth/3_presentation/page/auth.page.dart';
 import 'package:le_spawn_fr/features/bank/3_presentation/page/bank.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/bloc/collections.cubit.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/page/add-new-game.page.dart';
 import 'package:le_spawn_fr/features/collections/3_presentation/page/collections.page.dart';
 import 'package:le_spawn_fr/features/collections/features/new-game-item/3_presentation/page/new-game-item.page.dart';
 import 'package:le_spawn_fr/features/onboarding/3_presentation/page/onboarding.page.dart';
 import 'package:le_spawn_fr/features/skeleton/3_presentation/page/skeleton.page.dart';
 import 'package:le_spawn_fr/features/user/3_presentation/page/profile.page.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/add-new-game/add-new-game.cubit.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/bloc/game-search/game-search.cubit.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _collectionsNavigatorKey = GlobalKey<NavigatorState>();
@@ -56,41 +53,13 @@ final goRouterConfig = GoRouter(
               },
               routes: [
                 GoRoute(
-                  path: AppRoutesConfig.addNewGamePath,
-                  name: "${AppRoutesConfig.collections}/${AppRoutesConfig.addNewGamePath}",
-                  pageBuilder: (context, state) => CustomTransitionPage(
-                    key: state.pageKey,
-                    child: MultiBlocProvider(
-                      providers: [
-                        BlocProvider(create: (context) => GameSearchCubit()),
-                        BlocProvider(
-                          create: (context) => AddNewGameCubit(context.read<GameSearchCubit>()),
-                        ),
-                      ],
-                      child: const AddNewGamePage(),
-                    ),
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      return SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(1.0, 0.0),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeInOut,
-                          ),
-                        ),
-                        child: child,
-                      );
-                    },
-                  ),
-                ),
-                GoRoute(
                   path: AppRoutesConfig.newGameItemPath,
                   name: "${AppRoutesConfig.collections}/${AppRoutesConfig.newGameItemPath}",
                   pageBuilder: (context, state) => CustomTransitionPage(
                     key: state.pageKey,
-                    child: const NewGameItemPage(),
+                    child: NewGameItemPage(
+                      collectionId: BlocProvider.of<CollectionsCubit>(context).getCurrentCollection()?.id ?? '',
+                    ),
                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                       return SlideTransition(
                         position: Tween<Offset>(
