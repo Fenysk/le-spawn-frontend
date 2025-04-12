@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class RegionEntity {
   final String id;
   final String name;
@@ -8,4 +10,12 @@ class RegionEntity {
     required this.name,
     required this.abbreviation,
   });
+
+  String toJson() {
+    return jsonEncode({
+      'id': id,
+      'name': name,
+      'abbreviation': abbreviation,
+    });
+  }
 }

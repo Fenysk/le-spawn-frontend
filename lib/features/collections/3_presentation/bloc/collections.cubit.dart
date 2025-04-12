@@ -30,4 +30,14 @@ class CollectionsCubit extends Cubit<CollectionsState> {
       },
     );
   }
+
+  CollectionEntity? getCurrentCollection() {
+    if (state is CollectionsSuccessState) {
+      final collections = (state as CollectionsSuccessState).collections;
+      if (collections.isNotEmpty) {
+        return collections[0];
+      }
+    }
+    return null;
+  }
 }

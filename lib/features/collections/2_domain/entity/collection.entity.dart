@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:le_spawn_fr/features/collections/2_domain/entity/game-item.entity.dart';
 import 'package:le_spawn_fr/features/bank/features/games/2_domain/entity/game.entity.dart';
 
@@ -21,10 +22,13 @@ class CollectionEntity {
         userId: '',
       );
 
-  List<GameEntity> getLastGames({int? limit}) => limit == null ? gameItems.map((gameItem) => gameItem.game).toList() : gameItems.take(limit).map((gameItem) => gameItem.game).toList();
+  List<GameEntity> getLastGames({int? limit}) {
+    final filteredGameItems = gameItems.where((gameItem) => gameItem.game != null).toList();
+    return limit == null ? filteredGameItems.map((gameItem) => gameItem.game!).toList() : filteredGameItems.take(limit).map((gameItem) => gameItem.game!).toList();
+  }
 
   CollectionEntity sortGamesByTitle() {
-    final sortedGameItems = gameItems..sort((a, b) => a.game.name.compareTo(b.game.name));
+    final sortedGameItems = gameItems.where((gameItem) => gameItem.game != null).toList()..sort((a, b) => (a.game?.name ?? '').compareTo(b.game?.name ?? ''));
 
     return CollectionEntity(
       id: id,
@@ -32,5 +36,14 @@ class CollectionEntity {
       gameItems: sortedGameItems,
       userId: userId,
     );
+  }
+
+  String toJson() {
+    return jsonEncode({
+      'id': id,
+      'title': title,
+      'gameItems': gameItems.map((gameItem) => gameItem.toJson()).toList(),
+      'userId': userId,
+    });
   }
 }

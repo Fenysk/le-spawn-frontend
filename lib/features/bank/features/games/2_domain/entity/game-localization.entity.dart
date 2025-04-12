@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:le_spawn_fr/features/bank/2_domain/entity/region.entity.dart';
 
 class GameLocalizationEntity {
@@ -16,4 +17,15 @@ class GameLocalizationEntity {
     required this.region,
     required this.gameId,
   });
+
+  String toJson() {
+    return jsonEncode({
+      'id': id,
+      'name': name,
+      'coverUrl': coverUrl,
+      'regionId': regionId,
+      'region': region.toJson(),
+      'gameId': gameId,
+    });
+  }
 }

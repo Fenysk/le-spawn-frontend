@@ -6,6 +6,7 @@ import 'package:le_spawn_fr/core/di/games.module.dart';
 import 'package:le_spawn_fr/core/di/reports.module.dart';
 import 'package:le_spawn_fr/core/di/storage.module.dart';
 import 'package:le_spawn_fr/core/di/user.module.dart';
+import 'package:le_spawn_fr/core/di/home-widgets.module.dart';
 import 'update-checker.module.dart';
 
 final serviceLocator = GetIt.instance;
@@ -20,4 +21,5 @@ void setupServiceLocator() {
   ReportsModule.init(serviceLocator);
   StorageModule.init(serviceLocator);
   UpdateCheckerModule.init(serviceLocator);
+  HomeWidgetsModule.init(serviceLocator);
 }

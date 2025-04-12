@@ -64,11 +64,9 @@ class _AnimatedMainButtonBackgroundWidgetState extends State<AnimatedMainButtonB
   Widget build(BuildContext context) {
     if (_riveArtBoard == null) return const SizedBox.shrink();
 
-    return Positioned.fill(
-      child: Rive(
-        artboard: _riveArtBoard!,
-        fit: widget.fit,
-      ),
+    return Rive(
+      artboard: _riveArtBoard!,
+      fit: widget.fit,
     );
   }
 

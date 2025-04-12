@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.le_spawn_frontend"
+    namespace = "fr.le_spawn"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

@@ -18,35 +18,41 @@ class GameItemDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (gameItem.game == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       child: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: SingleChildScrollView(
+        color: Colors.white,
+        child: CustomScrollView(
           controller: scrollController,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildHeader(context),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildStateCard(context),
-                    const SizedBox(height: 16),
-                    _buildInfoCard(context),
-                    if (gameItem.game.summary != null || gameItem.game.storyline != null) const SizedBox(height: 16),
-                    if (gameItem.game.summary != null) _buildDescriptionCard(context, 'Résumé', gameItem.game.summary!, Icons.description),
-                    if (gameItem.game.storyline != null) ...[
-                      const SizedBox(height: 16),
-                      _buildDescriptionCard(context, 'Histoire', gameItem.game.storyline!, Icons.auto_stories),
-                    ],
+          slivers: [
+            SliverToBoxAdapter(
+              child: _buildHeader(context),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  const SizedBox(height: 32),
+                  _buildStateSection(context),
+                  const SizedBox(height: 32),
+                  _buildInfoSection(context),
+                  if (gameItem.game?.summary != null) ...[
+                    const SizedBox(height: 32),
+                    _buildSummarySection(context),
                   ],
-                ),
+                  if (gameItem.game?.storyline != null) ...[
+                    const SizedBox(height: 32),
+                    _buildStorylineSection(context),
+                  ],
+                  const SizedBox(height: 50),
+                ]),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -54,56 +60,52 @@ class GameItemDetailsWidget extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Theme.of(context).colorScheme.primaryContainer,
-            Theme.of(context).colorScheme.surface,
-          ],
-        ),
-      ),
+      color: const Color(0xFFF8F9FA),
       child: Column(
         children: [
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           Hero(
-            tag: 'game-cover-${gameItem.game.id}',
+            tag: 'game-cover-${gameItem.game!.id}',
             child: GameCoverWidget(
-              game: gameItem.game,
-              width: 200,
-              height: 266,
+              game: gameItem.game!,
+              width: 180,
+              height: 240,
             ),
           ),
           const SizedBox(height: 24),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
                 Text(
-                  gameItem.game.name,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  gameItem.game!.name,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF212529),
+                    height: 1.2,
+                  ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    color: const Color(0xFFE9ECEF),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    LitteralsUtil.getGameCategory(gameItem.game.category.name),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSecondaryContainer,
-                        ),
+                    LitteralsUtil.getGameCategory(gameItem.game!.category.name),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF495057),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                _buildDeleteButton(context),
                 const SizedBox(height: 24),
+                _buildActionButtons(context),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -112,269 +114,17 @@ class GameItemDetailsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStateCard(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.inventory_2, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  'État de l\'article',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildStateItem(context, 'Jeu', gameItem.hasGame, gameItem.stateGame),
-            if (gameItem.hasGame) const SizedBox(height: 8),
-            _buildStateItem(context, 'Boîte', gameItem.hasBox, gameItem.stateBox),
-            if (gameItem.hasBox) const SizedBox(height: 8),
-            _buildStateItem(context, 'Notice', gameItem.hasPaper, gameItem.statePaper),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStateItem(BuildContext context, String label, bool hasItem, String? state) {
-    if (!hasItem) return const SizedBox.shrink();
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Text(
-            '$label:',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            state ?? 'Non spécifié',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  'Informations',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (gameItem.game.platforms.isNotEmpty) _buildInfoSection(context, 'Plateformes', gameItem.game.platforms.map((p) => '${p.name} (${p.abbreviation})').toList(), Icons.devices),
-            if (gameItem.game.genres.isNotEmpty) ...[
-              if (gameItem.game.platforms.isNotEmpty) const SizedBox(height: 16),
-              _buildInfoSection(context, 'Genres', gameItem.game.genres.toList(), Icons.category),
-            ],
-            if (gameItem.game.franchises.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _buildInfoSection(context, 'Franchises', gameItem.game.franchises.toList(), Icons.extension),
-            ],
-            if (gameItem.game.firstReleaseDate != null) ...[
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Icon(Icons.calendar_today, size: 20, color: Theme.of(context).colorScheme.secondary),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Date de sortie: ${gameItem.game.firstReleaseDate!.toString().split(' ')[0]}',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-            ],
-            if (gameItem.game.gameLocalizations.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.language, size: 20, color: Theme.of(context).colorScheme.secondary),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Régions',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  ...gameItem.game.gameLocalizations.map((loc) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.outlineVariant,
-                              width: 1,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.secondaryContainer,
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Text(
-                                    loc.region.abbreviation,
-                                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                          color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        loc.region.name,
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                      ),
-                                      if (loc.name != null) ...[
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          loc.name!,
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                              ),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )),
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoSection(BuildContext context, String title, List<String> items, IconData icon) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 20, color: Theme.of(context).colorScheme.secondary),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: items
-              .map((item) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      item,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ))
-              .toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDescriptionCard(BuildContext context, String title, String content, IconData icon) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              content,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDeleteButton(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FilledButton.icon(
-          onPressed: () {
+        GestureDetector(
+          onTap: () {
             showDialog(
               context: context,
               builder: (dialogContext) => AlertDialog(
                 title: const Text('Confirmation'),
-                content: Text('Voulez-vous vraiment supprimer ${gameItem.game.name} de votre collection ?'),
+                content: Text('Voulez-vous vraiment supprimer ${gameItem.game!.name} de votre collection ?'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogContext),
@@ -392,28 +142,373 @@ class GameItemDetailsWidget extends StatelessWidget {
               ),
             );
           },
-          style: FilledButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.errorContainer,
-            foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8D7DA),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.delete_outline, size: 18, color: Color(0xFFDC3545)),
+                const SizedBox(width: 6),
+                const Text(
+                  'Supprimer',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFFDC3545),
+                  ),
+                ),
+              ],
+            ),
           ),
-          icon: const Icon(Icons.delete_outline),
-          label: const Text('Supprimer'),
         ),
         const SizedBox(width: 16),
-        TextButton.icon(
-          onPressed: () {
+        GestureDetector(
+          onTap: () {
             showDialog(
               context: context,
               builder: (dialogContext) => ReportGameDialog(
-                game: gameItem.game,
+                game: gameItem.game!,
                 parentContext: context,
               ),
             );
           },
-          icon: const Icon(Icons.report_problem_outlined),
-          label: const Text('Signaler un problème'),
-          style: TextButton.styleFrom(
-            foregroundColor: Theme.of(context).colorScheme.error,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F3F5),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.report_problem_outlined, size: 18, color: Color(0xFF6C757D)),
+                const SizedBox(width: 6),
+                const Text(
+                  'Signaler',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6C757D),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStateSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.inventory_2, size: 20, color: Color(0xFF6C757D)),
+            SizedBox(width: 8),
+            Text(
+              'État de l\'article',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF212529),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF8F9FA),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              if (gameItem.hasGame) _buildStateItem(context, 'Jeu', gameItem.stateGame),
+              if (gameItem.hasGame && (gameItem.hasBox || gameItem.hasPaper))
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Divider(height: 1, color: Color(0xFFE9ECEF)),
+                ),
+              if (gameItem.hasBox) _buildStateItem(context, 'Boîte', gameItem.stateBox),
+              if (gameItem.hasBox && gameItem.hasPaper)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Divider(height: 1, color: Color(0xFFE9ECEF)),
+                ),
+              if (gameItem.hasPaper) _buildStateItem(context, 'Notice', gameItem.statePaper),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStateItem(BuildContext context, String label, String? state) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF495057),
+          ),
+        ),
+        Text(
+          state ?? 'Non spécifié',
+          style: const TextStyle(
+            fontSize: 15,
+            color: Color(0xFF6C757D),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.info_outline, size: 20, color: Color(0xFF6C757D)),
+            SizedBox(width: 8),
+            Text(
+              'Informations',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF212529),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        if (gameItem.game!.platforms.isNotEmpty) _buildInfoDetailItem(context, 'Plateformes', gameItem.game!.platforms.map((p) => '${p.name} (${p.abbreviation})').toList(), Icons.devices),
+        if (gameItem.game!.genres.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          _buildInfoDetailItem(context, 'Genres', gameItem.game!.genres.toList(), Icons.category),
+        ],
+        if (gameItem.game!.franchises.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          _buildInfoDetailItem(context, 'Franchises', gameItem.game!.franchises.toList(), Icons.extension),
+        ],
+        if (gameItem.game!.firstReleaseDate != null) ...[
+          const SizedBox(height: 20),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.calendar_today, size: 20, color: Color(0xFF6C757D)),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Date de sortie',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF495057),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    gameItem.game!.firstReleaseDate!.toString().split(' ')[0],
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF6C757D),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+        if (gameItem.game!.gameLocalizations.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          const Row(
+            children: [
+              Icon(Icons.language, size: 20, color: Color(0xFF6C757D)),
+              SizedBox(width: 12),
+              Text(
+                'Régions',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF495057),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...gameItem.game!.gameLocalizations.map((loc) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE9ECEF),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          loc.region.abbreviation,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF495057),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              loc.region.name,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF495057),
+                              ),
+                            ),
+                            if (loc.name != null) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                loc.name!,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xFF6C757D),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildInfoDetailItem(BuildContext context, String title, List<String> items, IconData icon) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: const Color(0xFF6C757D)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF495057),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: items
+                    .map((item) => Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF8F9FA),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF6C757D),
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSummarySection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.description, size: 20, color: Color(0xFF6C757D)),
+            SizedBox(width: 8),
+            Text(
+              'Résumé',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF212529),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Text(
+          gameItem.game!.summary!,
+          style: const TextStyle(
+            fontSize: 15,
+            height: 1.5,
+            color: Color(0xFF495057),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStorylineSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.auto_stories, size: 20, color: Color(0xFF6C757D)),
+            SizedBox(width: 8),
+            Text(
+              'Histoire',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF212529),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Text(
+          gameItem.game!.storyline!,
+          style: const TextStyle(
+            fontSize: 15,
+            height: 1.5,
+            color: Color(0xFF495057),
           ),
         ),
       ],

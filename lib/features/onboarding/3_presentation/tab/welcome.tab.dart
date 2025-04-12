@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:le_spawn_fr/core/theme/app.theme.dart';
-import 'package:le_spawn_fr/features/collections/features/add-new-item/3_presentation/widget/camera/big-button.widget.dart';
 import 'package:outlined_text/outlined_text.dart';
 
 class WelcomeTab extends StatefulWidget {
@@ -34,10 +33,14 @@ class _WelcomeTabState extends State<WelcomeTab> {
             ),
           ),
           Spacer(),
-          BigButton(
+          // TODO: Change button style
+          TextButton.icon(
             onPressed: widget.onScanFirstGamePressed,
-            text: 'Scanner un code-barre',
-            icon: Icons.qr_code_scanner,
+            icon: Icon(Icons.qr_code_scanner),
+            label: Text('Scanner un code-barre'),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.white,
+            ),
           ),
           Spacer(),
         ],
