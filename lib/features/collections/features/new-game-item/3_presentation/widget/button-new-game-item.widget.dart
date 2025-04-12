@@ -114,7 +114,9 @@ class _ButtonAddNewItemWidgetState extends State<ButtonNewGameItemWidget> with S
             onTapCancel: () => _onHover(false),
             child: Stack(
               children: [
-                AnimatedMainButtonBackgroundWidget(inputValue: _isHovered),
+                Positioned.fill(
+                  child: AnimatedMainButtonBackgroundWidget(inputValue: _isHovered),
+                ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                   child: RichText(
